@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:i_account/pages/login.dart';
 import 'package:i_account/pages/settingspages/darkmode_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   //透明状态栏
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         builder: (context, darkModeProvider, _) {
           return darkModeProvider.darkMode == 2
               ? MaterialApp(
-            title: 'Flutter Demo',
+            title: 'iAccount',
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),

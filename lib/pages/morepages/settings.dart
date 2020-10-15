@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 520.0,
+      height: 528.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -65,6 +65,49 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               },
             ),
             Divider(),
+            ListTile(
+              title: Text('软件介绍（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('查看软件功能的简单介绍'),
+              leading: Icon(
+                Icons.menu_book,
+                color: Colors.blue[500],
+              ),
+              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('语言（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('切换应用显示语言'),
+              leading: Icon(
+                Icons.language,
+                color: Colors.blue[500],
+              ),
+              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('更新（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('检查是否有新版本'),
+              leading: Icon(
+                Icons.update,
+                color: Colors.blue[500],
+              ),
+              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('清除缓存（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('清除应用缓存'),
+              leading: Icon(
+                Icons.delete,
+                color: Colors.blue[500],
+              ),
+              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              },
+            ),
           ],
         ),
       ),

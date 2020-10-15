@@ -3,6 +3,7 @@ import 'package:i_account/res/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 
+
 class AboutPage extends StatefulWidget {
   @override
   _AboutPageState createState() => _AboutPageState();
@@ -44,7 +45,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               Gaps.vGap(20),
               Text(
-                "V0.1.1",
+                "V0.2.0",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colours.app_main,

@@ -42,7 +42,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
         child: Column(
           children: [
             ListTile(
-              title: Text('账户', style: TextStyle(fontWeight: FontWeight.w500)),
+              title: Text('账户（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text('账户信息管理'),
               leading: Icon(
                 Icons.account_balance_wallet,
@@ -68,7 +68,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             ),
             Divider(),
             ListTile(
-              title: Text('备份', style: TextStyle(fontWeight: FontWeight.w500)),
+              title: Text('备份（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text('支持百度网盘和微软OneDrive备份数据'),
               leading: Icon(
                 Icons.backup,
@@ -81,7 +81,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             ),
             Divider(),
             ListTile(
-              title: Text('导出', style: TextStyle(fontWeight: FontWeight.w500)),
+              title: Text('导出（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text('本地导出软件数据'),
               leading: Icon(
                 Icons.outbond,
