@@ -1,35 +1,16 @@
-# Android平台记账软件开发项目
+# i_accountv2
 
-项目预期
-====
+A new Flutter application.
 
-项目目标
-----
+## Getting Started
 
-完成一个不需要注册、本地存储、数据可自动备份的记账APP，有效规避中心存储带来的隐私问题，同时为个人提供记账、消费可视化分析等功能，从而帮助用户合理规划消费。
+This project is a starting point for a Flutter application.
 
-项目占比
-----
-占课程总成绩50%
+A few resources to get you started if this is your first Flutter project:
 
-项目功能
-----
-系统账户登录功能（必选）<br>收支等记账功能（必选）<br> 统计功能（必选）<br>图表分析功能（必选）
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-组员
-----
-胡聪、王牧天、郝旻小昕、郭星远
-
-开发进度情况
-====
-
-2020.9.9 新建项目
-…
-
-重要时间节点
-====
-
-第一次实验课 开题报告<br>
-第二次实验课 项目设计<br>
-第三次实验课 项目构建和测试<br>
-第四次实验课 课上检查验收<br>
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
