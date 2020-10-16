@@ -1,11 +1,10 @@
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/res/styles.dart';
 import 'dart:ui';
 import 'package:gesture_recognition/gesture_view.dart';
-import 'package:i_account/pages/loginpages/patternlock-create.dart';
 import 'package:i_account/pages/tabs.dart';
+import 'package:i_account/db/db_helper.dart';
 
 class PatternlockPage extends StatefulWidget {
   @override

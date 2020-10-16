@@ -22,6 +22,9 @@ class Dbhelper {
 
   Database _db;
 
+  ///手势密码表
+  final _patternLock = 'PatternLock';
+
   /// 账单表
   final _billTableName = 'BillRecord';
 
@@ -53,6 +56,17 @@ class Dbhelper {
 
   /// When creating the db, create the table type 1支出 2收入
   void _onCreate(Database db, int version) async {
+
+    //密码表
+
+    String queryPassWord = """
+    CREATE TABLE $_patternLock(
+    loginpw TEXT
+    )
+    """;
+    await db.execute(queryPassWord);
+
+
     // 账单记录表
     //是否同步 是否删除 金额、备注、类型 1支出 2收入 、 类别名、图片路径、创建时间、更新时间
     String queryBill = """

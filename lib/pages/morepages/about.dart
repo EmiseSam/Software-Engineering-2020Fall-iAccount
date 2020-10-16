@@ -39,7 +39,7 @@ class _AboutPageState extends State<AboutPage> {
                 "软件版本",
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black,
+                  //color: Colors.black,
                   fontSize: 24.0,
                 ),
               ),
@@ -48,7 +48,7 @@ class _AboutPageState extends State<AboutPage> {
                 "V0.2.0",
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colours.app_main,
+                  //color: Colours.app_main,
                   fontSize: 30.0,
                 ),
               ),
@@ -57,7 +57,7 @@ class _AboutPageState extends State<AboutPage> {
                 "开发团队",
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black,
+                  //color: Colors.black,
                   fontSize: 24.0,
                 ),
               ),

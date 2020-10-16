@@ -2,6 +2,7 @@ import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/loginpages/patternlock-create.dart';
+import 'package:i_account/pages/loginpages/pw_change_final.dart';
 
 class PwchangePage extends StatefulWidget {
   @override
@@ -35,7 +36,8 @@ class _PwchangePageState extends State<PwchangePage> {
             children: ListTile.divideTiles(context: context, tiles: [
               ListTile(
                 title: Text("修改文字密码"),
-                onTap: () {
+                onTap: () {Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PwchangefinalPage()));
                 },
               ),
               ListTile(

@@ -5,8 +5,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
   final String title;
@@ -125,11 +123,13 @@ class _LoginPageState extends State<LoginPage> {
                           shape: StadiumBorder(side: BorderSide()),
                           child: Text(
                             "登录",
-                            style: Theme.of(context).primaryTextTheme.headline5, //字体白色
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headline5, //字体白色
                           ),
                           color: Colors.black,
-                          ),
                         ),
+                      ),
                     ],
                   ),
                 ),
@@ -137,7 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                 buildOtherLoginText(),
                 buildOtherMethod(context),
               ],
-            )));
+            )
+        )
+    );
   }
 
   ButtonBar buildOtherMethod(BuildContext context) {
@@ -147,8 +149,10 @@ class _LoginPageState extends State<LoginPage> {
           .map((item) => Builder(
                 builder: (context) {
                   return IconButton(
-                      icon: Icon(item['icon'],
-                          color: Theme.of(context).iconTheme.color,),
+                      icon: Icon(
+                        item['icon'],
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                       onPressed: () {
                         if (item['title'] == '指纹') {
                           _authenticate();
@@ -173,7 +177,6 @@ class _LoginPageState extends State<LoginPage> {
           style: TextStyle(color: Colors.grey, fontSize: 14.0),
         ));
   }
-
 
   Padding buildTitleLine() {
     return Padding(

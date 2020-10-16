@@ -374,7 +374,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
             // 保存
             saveCallback: () {
               _record();
-              //暂时不跳转NavigatorUtils.goBack(context);
+               NavigatorUtils.goBack(context);
             },
           ),
           MediaQuery.of(context).padding.bottom > 0

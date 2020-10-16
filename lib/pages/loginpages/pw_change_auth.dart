@@ -109,76 +109,75 @@ class _PwcauthPageState extends State<PwcauthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: MyAppBar(
-            titleWidget: _buildAppBarTitle(),),
-            body: Form(
-                key: _formKey,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 22.0),
-                  children: <Widget>[
-                    SizedBox(
-                      height: kToolbarHeight,
-                    ),
-                    buildTitle(),
-                    buildTitleLine(),
-                    SizedBox(height: 70.0),
-                    SizedBox(height: 30.0),
-                    Form(
-                      key: _globalKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            controller: _userPwd,
-                            decoration: InputDecoration(
-                              labelText: '密码',
-                              hintText: '请输入你的密码',
-                              icon: Icon(Icons.lock),
-                            ),
-                            validator: (v) {
-                              return v.trim().length > 5 ? null : "密码不能低于6位";
-                            },
-                            obscureText: true,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.0),
-                          ),
-                          SizedBox(
-                            height: 45.0,
-                            width: 270.0,
-                            child: RaisedButton(
-                              onPressed: () {
-                                if ((_globalKey.currentState as FormState)
-                                    .validate()) {
-                                  _login();
-                                  if (_userPwd.text == "123456") {
-                                    Navigator.pushAndRemoveUntil(context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                      return PwchangePage();
-                                    }), (route) => route == null);
-                                  }
-                                }
-                              },
-                              shape: StadiumBorder(side: BorderSide()),
-                              child: Text(
-                                "下一步",
-                                style: Theme.of(context)
-                                    .primaryTextTheme
-                                    .headline5, //字体白色
-                              ),
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
+          titleWidget: _buildAppBarTitle(),
+        ),
+        body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 22.0),
+              children: <Widget>[
+                SizedBox(
+                  height: kToolbarHeight,
+                ),
+                buildTitle(),
+                buildTitleLine(),
+                SizedBox(height: 70.0),
+                SizedBox(height: 30.0),
+                Form(
+                  key: _globalKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _userPwd,
+                        decoration: InputDecoration(
+                          labelText: '密码',
+                          hintText: '请输入你的密码',
+                          icon: Icon(Icons.lock),
+                        ),
+                        validator: (v) {
+                          return v.trim().length > 5 ? null : "密码不能低于6位";
+                        },
+                        obscureText: true,
                       ),
-                    ),
-                    SizedBox(height: 90.0),
-                    buildOtherLoginText(),
-                    buildOtherMethod(context),
-                  ],
-                )
-            )
-        );
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                      ),
+                      SizedBox(
+                        height: 45.0,
+                        width: 270.0,
+                        child: RaisedButton(
+                          onPressed: () {
+                            if ((_globalKey.currentState as FormState)
+                                .validate()) {
+                              _login();
+                              if (_userPwd.text == "123456") {
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                  return PwchangePage();
+                                }), (route) => route == null);
+                              }
+                            }
+                          },
+                          shape: StadiumBorder(side: BorderSide()),
+                          child: Text(
+                            "下一步",
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headline5, //字体白色
+                          ),
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 90.0),
+                buildOtherLoginText(),
+                buildOtherMethod(context),
+              ],
+            )));
   }
 
   ButtonBar buildOtherMethod(BuildContext context) {
