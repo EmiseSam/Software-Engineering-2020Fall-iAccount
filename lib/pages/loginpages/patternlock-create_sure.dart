@@ -2,17 +2,17 @@ import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:gesture_recognition/gesture_view.dart';
-import 'package:i_account/pages/loginpages/patternlock-create_sure.dart';
 import 'package:i_account/res/styles.dart';
+import 'package:i_account/pages/loginpages/pw_change.dart';
 
-class PatternlockcreatePage extends StatefulWidget {
+class PatternlockcreatesecPage extends StatefulWidget {
   @override
-  _PatternlockcreatePageState createState() => _PatternlockcreatePageState();
+  _PatternlockcreatesecPageState createState() => _PatternlockcreatesecPageState();
 }
 
-class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
+class _PatternlockcreatesecPageState extends State<PatternlockcreatesecPage> {
   List<int> result = [];
-  bool _visible = true;
+  bool _visible = false;//TODO 这里为了调试改成了默认false 要写一个两次密码相同才改为false的逻辑
 
   _buildAppBarTitle() {
     return Container(
@@ -30,21 +30,6 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
   }
 
 
-  String _TextBuilding(){
-    String _textString = '';
-    if(result.length == 0){
-      _textString =  '';
-      _visible = true;
-    } else if(result.length < 5){
-      _textString = '密码长度小于5，请重试';
-      _visible = true;
-    } else if(result.length >= 5){
-      _textString = '';
-      _visible = false;
-    }
-    return _textString;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +42,7 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
             Container(
               height: 120,
               child: Center(
-                child: Text( _TextBuilding(),
+                child: Text( '请重复输入密码',
                   style: TextStyle(
                       fontSize: 24,
                       color: Colors.blue,
@@ -85,11 +70,11 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => PatternlockcreatesecPage()));
+                        MaterialPageRoute(builder: (context) => PwchangePage()));
                   },
                   shape: StadiumBorder(side: BorderSide()),
                   child: Text(
-                    "重复确认密码",
+                    "确认密码",
                     style: Theme.of(context)
                         .primaryTextTheme
                         .headline5, //字体白色

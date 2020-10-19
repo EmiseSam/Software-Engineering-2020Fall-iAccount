@@ -22,6 +22,9 @@ class Dbhelper {
 
   Database _db;
 
+  ///密码是否启用表
+  final _lockSetting = 'LockSetting';
+
   ///手势密码表
   final _patternLock = 'PatternLock';
 
@@ -57,14 +60,13 @@ class Dbhelper {
   /// When creating the db, create the table type 1支出 2收入
   void _onCreate(Database db, int version) async {
 
-    //密码表
-
-    String queryPassWord = """
-    CREATE TABLE $_patternLock(
-    loginpw TEXT
+    //密码是否启用表
+    String queryLockonoff = """
+    CREATE TABLE $_lockSetting(
+    ifLockOn TEXT
     )
     """;
-    await db.execute(queryPassWord);
+    await db.execute(queryLockonoff);
 
 
     // 账单记录表

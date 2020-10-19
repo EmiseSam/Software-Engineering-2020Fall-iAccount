@@ -3,6 +3,7 @@ import 'package:i_account/widgets/appbar.dart';
 
 import 'package:i_account/pages/loginpages/pw_change_auth.dart';
 import 'package:i_account/pages/settingspages/darkmode.dart';
+import 'package:i_account/pages/settingspages/locksetting.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -32,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 528.0,
+      height: 440.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -66,24 +67,15 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
             ),
             Divider(),
             ListTile(
-              title: Text('软件介绍（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('查看软件功能的简单介绍'),
+              title: Text('验证设置', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('选择应用启动时是否需要密码'),
               leading: Icon(
-                Icons.menu_book,
+                Icons.lock,
                 color: Colors.blue[500],
               ),
-              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('语言（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('切换应用显示语言'),
-              leading: Icon(
-                Icons.language,
-                color: Colors.blue[500],
-              ),
-              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LocksettingPage()));
               },
             ),
             Divider(),

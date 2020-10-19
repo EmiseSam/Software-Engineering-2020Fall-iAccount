@@ -2,6 +2,7 @@ import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/loginpages/pw_change.dart';
+import 'package:i_account/routers/fluro_navigator.dart';
 
 class PwchangefinalPage extends StatefulWidget {
   @override
@@ -89,9 +90,45 @@ class _PwchangefinalPageState extends State<PwchangefinalPage> {
                     width: 270.0,
                     child: FlatButton(
                       onPressed: () {
-                        if (pw1 == pw2 && pw1.length > 5 && pw2.length > 5) {
+                        // TODO if(新密码  == 原密码)
+                        if (pw1 != pw2){
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('提示'),
+                                  content: Text('两次密码不一致，请重新输入'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      onPressed: () {
+                                        NavigatorUtils.goBack(context);
+                                      },
+                                      child: Text('确定'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else if (pw1.length < 6 || pw2.length < 6){
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('提示'),
+                                  content: Text('密码不能小于6位，请重新输入'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      onPressed: () {
+                                        NavigatorUtils.goBack(context);
+                                      },
+                                      child: Text('确定'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else if (pw1 == pw2 && pw1.length > 5 && pw2.length > 5) {
                           //TODO 保存密码 需要用到数据库
-                          //TODO 保存密码时还要判断是否与原密码相同，与原密码相同则不能更改密码
                           showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -117,7 +154,7 @@ class _PwchangefinalPageState extends State<PwchangefinalPage> {
                       },
                       shape: StadiumBorder(side: BorderSide()),
                       child: Text(
-                        "保存密码",
+                        "修改密码",
                         style:
                             Theme.of(context).primaryTextTheme.headline5, //字体白色
                       ),

@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class Routes {
   static String webViewPage = '/webView';
   static List<IRouterProvider> _listRouter = [];
-/*
-  static void configureRoutes(Router router) {
+
+  static void configureRoutes(FluroRouter router) {
     /// 指定路由跳转错误返回页
     router.notFoundHandler = Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -32,5 +32,4 @@ class Routes {
       routerProvider.initRouter(router);
     });
   }
- */
 }

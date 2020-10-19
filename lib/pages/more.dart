@@ -42,7 +42,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
         child: Column(
           children: [
             ListTile(
-              title: Text('账户（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              title: Text('资产（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text('账户信息管理'),
               leading: Icon(
                 Icons.account_balance_wallet,

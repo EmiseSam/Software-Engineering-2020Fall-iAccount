@@ -220,17 +220,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         expandedHeight: MediaQuery.of(context).padding.top +
             ScreenUtil.getInstance().setWidth(390),
         flexibleSpace: _flexibleSpaceBar(),
-        // actions: <Widget>[
-        //   CupertinoButton(
-        //     child: Icon(
-        //       Icons.more_horiz,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       debugPrint('更多');
-        //     },
-        //   )
-        // ],
       ),
       _monthModel.recordLsit.length > 0
           ? SliverList(
@@ -251,7 +240,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                 return const StateLayout(
-                  hintText: '没有账单~',
+                  hintText: '没有账单',
                 );
               }, childCount: 1),
         ),

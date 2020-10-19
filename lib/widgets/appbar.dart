@@ -26,6 +26,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onPressed,
       this.isBack: true,
       this.leading,
+      this.actions,
       this.barStyle: StatusBarStyle.dark})
       : super(key: key);
 
@@ -37,6 +38,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onPressed;
   final bool isBack;
   final Widget leading;
+  final Widget actions;
   final StatusBarStyle barStyle;
 
   @override

@@ -8,7 +8,7 @@ class BillRouter implements IRouterProvider {
   static String bookkeepPage = '/bill/bookkeep';
 
   @override
-  void initRouter(Router router) {
+  void initRouter(FluroRouter router) {
     router.define(billPage,
         handler: Handler(handlerFunc: (_, params) => Bill()));
     router.define(bookkeepPage,

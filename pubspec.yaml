@@ -44,9 +44,13 @@ dependencies:
 
   provider: ^4.0.5
   flustars: ^0.2.6+1
+  pull_to_refresh: ^1.6.1
+  intro_slider: ^1.2.0
+  package_info: ^0.4.3
+
 
   # 路由框架 https://github.com/theyakka/fluro
-  fluro: ^1.6.0
+  fluro: ^1.6.4
   keyboard_actions: ^2.1.2
   flutter_screenutil: ^0.5.3
 
@@ -121,5 +125,11 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+
+  fonts:
+    - family: IconFont
+      fonts:
+        - asset: assets/icons/iconfont.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

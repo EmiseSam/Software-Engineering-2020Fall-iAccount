@@ -3,7 +3,6 @@ import 'package:i_account/pages/more.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/pages/newbill.dart';
-import 'package:oktoast/oktoast.dart';
 
 class Tabs extends StatefulWidget {
   @override
