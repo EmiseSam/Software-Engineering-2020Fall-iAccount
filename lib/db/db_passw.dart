@@ -6,27 +6,28 @@ final String columnpassword = '_password';
 final String columnauthentication = '_authentication';
 
 class Password {
-  String password;
+  String integer_password;
+  List gesture;
   bool authentication;
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      columnpassword: password,
+      columnpassword: integer_password,
       columnauthentication: authentication
     };
-    if (password != null) {
-      map[columnpassword] = password;
+    if (integer_password != null) {
+      map[columnpassword] = integer_password;
     }
     return map;
   }
 
   Password([String password, bool authentication = false]) {
-    this.password = password;
+    this.integer_password = password;
     this.authentication = authentication;
   }
 
   Password.fromMap(Map<String, dynamic> map) {
-    password = map[columnpassword];
+    integer_password = map[columnpassword];
     authentication = map[columnauthentication];
   }
 }
@@ -52,12 +53,13 @@ class PWSqlite {
 
   // 插入新密码
   Future<Password> insert(Password pw) async {
-    pw.password = (await db.insert(tablePassword, pw.toMap())) as String;
+    pw.integer_password =
+        (await db.insert(tablePassword, pw.toMap())) as String;
     return pw;
   }
 
   // 读取密码
-  Future<Password> loadPassword() async {
+  Future<String> loadintPassword() async {
     List<Map> maps = await db
         .query(tablePassword, columns: [columnpassword, columnauthentication]);
 
@@ -65,13 +67,13 @@ class PWSqlite {
       return null;
     }
 
-    List<Password> pw = [];
-    pw.add(Password.fromMap(maps[0]));
-    return pw[0];
+    Password pw;
+    pw = Password.fromMap(maps[0]);
+    return pw.integer_password;
   }
 
 // 读取密码认证状态
-  Future<Password> loadAuthentication() async {
+  Future<bool> loadAuthentication() async {
     List<Map> maps = await db
         .query(tablePassword, columns: [columnpassword, columnauthentication]);
 
@@ -79,9 +81,9 @@ class PWSqlite {
       return null;
     }
 
-    List<Password> pw = [];
-    pw.add(Password.fromMap(maps[0]));
-    return pw[1];
+    Password pw;
+    pw = Password.fromMap(maps[0]);
+    return pw.authentication;
   }
 
   // 更新密码
