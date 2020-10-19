@@ -67,6 +67,20 @@ class PWSqlite {
 
     List<Password> pw = [];
     pw.add(Password.fromMap(maps[0]));
+    return pw[0];
+  }
+
+// 读取密码认证状态
+  Future<Password> loadAuthentication() async {
+    List<Map> maps = await db
+        .query(tablePassword, columns: [columnpassword, columnauthentication]);
+
+    if (maps == null || maps.length == 0) {
+      return null;
+    }
+
+    List<Password> pw = [];
+    pw.add(Password.fromMap(maps[0]));
     return pw[1];
   }
 
