@@ -79,7 +79,7 @@ class _AccountCFPageState extends State<AccountCFPage> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(right: 340),
+                padding: const EdgeInsets.all(0),
                 child: Text(
                   _numberString.isEmpty ? '0.0' : _numberString,
                   style: TextStyle(

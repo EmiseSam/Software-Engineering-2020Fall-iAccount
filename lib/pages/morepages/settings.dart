@@ -8,6 +8,7 @@ import 'package:i_account/pages/settingspages/locksetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 440.0,
+      height: 352.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -80,24 +81,37 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
             ),
             Divider(),
             ListTile(
-              title: Text('更新（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('检查是否有新版本'),
-              leading: Icon(
-                Icons.update,
-                color: Colors.blue[500],
-              ),
-              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('清除缓存（TODO）', style: TextStyle(fontWeight: FontWeight.w500)),
+              title: Text('清除缓存', style: TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text('清除应用缓存'),
               leading: Icon(
                 Icons.delete,
                 color: Colors.blue[500],
               ),
-              onTap: () {//todo 这个不急着做，时间不够就砍掉吧
+              onTap: () {
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[Text("已清空应用缓存")],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
               },
             ),
           ],
@@ -111,4 +125,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
       body: card,
     );
   }
+
+
+
 }
