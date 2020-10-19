@@ -2,32 +2,39 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String tablePassword = 'Password';
-final String columnpassword = '_password';
+final String columnintpassword = '_integerpassword';
+final String columngesture = 'gesture';
 final String columnauthentication = '_authentication';
 
 class Password {
-  String integer_password;
+  String integerpassword;
   List gesture;
   bool authentication;
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      columnpassword: integer_password,
+      columnintpassword: integerpassword,
+      columngesture: gesture,
       columnauthentication: authentication
     };
-    if (integer_password != null) {
-      map[columnpassword] = integer_password;
+    if (integerpassword != null) {
+      map[columnintpassword] = integerpassword;
+    }
+    if (gesture != null) {
+      map[columngesture] = gesture;
     }
     return map;
   }
 
-  Password([String password, bool authentication = false]) {
-    this.integer_password = password;
+  Password([String password, List gestrue, bool authentication = false]) {
+    this.integerpassword = password;
+    this.gesture = gestrue;
     this.authentication = authentication;
   }
 
   Password.fromMap(Map<String, dynamic> map) {
-    integer_password = map[columnpassword];
+    integerpassword = map[columnintpassword];
+    gesture = map[columngesture];
     authentication = map[columnauthentication];
   }
 }
@@ -45,51 +52,47 @@ class PWSqlite {
         onCreate: (Database db, int version) async {
       await db.execute('''
           CREATE TABLE $tablePassword (
-            $columnpassword STRING PRIMARY KEY, 
+            $columnintpassword STRING PRIMARY KEY, 
+            $columngesture LIST PRIMARY,
             $columnauthentication BOOL PRIMARY, )
           ''');
     });
   }
 
-  // 插入新密码
+  // 插入新数字密码
   Future<Password> insert(Password pw) async {
-    pw.integer_password =
-        (await db.insert(tablePassword, pw.toMap())) as String;
+    pw.integerpassword = (await db.insert(tablePassword, pw.toMap())) as String;
     return pw;
   }
 
-  // 读取密码
+  // 读取数字密码
   Future<String> loadintPassword() async {
-    List<Map> maps = await db
-        .query(tablePassword, columns: [columnpassword, columnauthentication]);
+    List<Map> maps = await db.query(tablePassword,
+        columns: [columnintpassword, columngesture, columnauthentication]);
 
     if (maps == null || maps.length == 0) {
       return null;
     }
-
-    Password pw;
-    pw = Password.fromMap(maps[0]);
-    return pw.integer_password;
+    var pw = Password.fromMap(maps.first);
+    return pw.integerpassword;
   }
 
 // 读取密码认证状态
   Future<bool> loadAuthentication() async {
-    List<Map> maps = await db
-        .query(tablePassword, columns: [columnpassword, columnauthentication]);
+    List<Map> maps = await db.query(tablePassword,
+        columns: [columnintpassword, columngesture, columnauthentication]);
 
     if (maps == null || maps.length == 0) {
       return null;
     }
-
-    Password pw;
-    pw = Password.fromMap(maps[0]);
+    var pw = Password.fromMap(maps.first);
     return pw.authentication;
   }
 
   // 更新密码
   Future<int> updatePW(Password pw, String key) async {
     return await db.update(tablePassword, pw.toMap(),
-        where: '$columnpassword = ?', whereArgs: [key]);
+        where: '$columnintpassword = ?', whereArgs: [key]);
   }
 
   //更新密码认证状态
