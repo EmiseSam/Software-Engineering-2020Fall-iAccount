@@ -4,7 +4,7 @@ import 'package:i_account/widgets/appbar.dart';
 import 'dart:ui';
 import 'package:gesture_recognition/gesture_view.dart';
 import 'package:i_account/pages/tabs.dart';
-import 'package:i_account/db/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PatternlockPage extends StatefulWidget {
   @override
@@ -13,8 +13,23 @@ class PatternlockPage extends StatefulWidget {
 
 class _PatternlockPageState extends State<PatternlockPage> {
 
+  String patternpw;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPatternlockPW();//获取本地存储的数据
+  }
+
+  void _getPatternlockPW()  async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    setState(() {
+      patternpw = sharedPreferences.get('patternpw2') ?? '';
+    });
+  }
+
   List<int> curResult = [];
-  List<int> correctResult = [0,1,2,5,8,7,6];
+  //List<int> correctResult = [0,1,2,5,8,7,6];
   int status = 0; // 0: NONE,1: SUCCESS,2: ERROR
   List<int> onlyShowItems;
   GlobalKey<GestureState> gestureStateKey = GlobalKey();
@@ -78,7 +93,7 @@ class _PatternlockPageState extends State<PatternlockPage> {
       ),
     );
   }
-
+/*
   analysisGesture(List<int> items) {
     bool isCorrect = true;
     if (items.length == correctResult.length) {
@@ -92,6 +107,17 @@ class _PatternlockPageState extends State<PatternlockPage> {
     } else {
       isCorrect = false;
       gestureStateKey.currentState.selectColor = Colors.red;
+    }
+*/
+  analysisGesture(List<int> items) {
+    bool isCorrect;
+    if(items.toString() != patternpw){
+      isCorrect = false;
+      gestureStateKey.currentState.selectColor = Colors.red;
+    }
+
+    if(items.toString() == patternpw){
+      isCorrect = true;
     }
 
     if(isCorrect){

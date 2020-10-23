@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:i_account/widgets/appbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PwcauthPage extends StatefulWidget {
   PwcauthPage({Key key, this.title}) : super(key: key);
@@ -19,10 +20,24 @@ class _PwcauthPageState extends State<PwcauthPage> {
   final _userPwd = TextEditingController(); //密码
   GlobalKey _globalKey = new GlobalKey<FormState>(); //用于检查输入框是否为空
 
-  final _formKey = GlobalKey<FormState>();
   String _password;
-  bool _isObscure = true;
-  Color _eyeColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPassword();//获取本地存储的数据
+  }
+
+  void _getPassword() async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    setState(() {
+      _password = sharedPreferences.get('password') ?? '';
+    });
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
+
   List _loginMethod = [
     {
       "title": "指纹",
@@ -75,19 +90,6 @@ class _PwcauthPageState extends State<PwcauthPage> {
         return PwchangePage();
       }), (route) => route == null);
     }
-  }
-
-  void _login() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          if (_userPwd.text != "123456") {
-            String err = "密码错误";
-            return AlertDialog(
-              content: Text(err),
-            );
-          }
-        });
   }
 
   _buildAppBarTitle() {
@@ -150,13 +152,37 @@ class _PwcauthPageState extends State<PwcauthPage> {
                           onPressed: () {
                             if ((_globalKey.currentState as FormState)
                                 .validate()) {
-                              _login();
-                              if (_userPwd.text == "123456") {
+                              if (_userPwd.text == _password) {
                                 Navigator.pushAndRemoveUntil(context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) {
                                   return PwchangePage();
                                 }), (route) => route == null);
+                              } else{
+                                showDialog<Null>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("提示"),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[Text("密码错误")],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("确定"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ).then((val) {
+                                  print(val);
+                                });
                               }
                             }
                           },

@@ -4,13 +4,14 @@ import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:i_account/pages/loginpages/patternlock-create.dart';
 
-class PwchangefinalPage extends StatefulWidget {
+class PwcreatePage extends StatefulWidget {
   @override
-  _PwchangefinalPageState createState() => _PwchangefinalPageState();
+  _PwcreatePageState createState() => _PwcreatePageState();
 }
 
-class _PwchangefinalPageState extends State<PwchangefinalPage> {
+class _PwcreatePageState extends State<PwcreatePage> {
   String pw1;
   String pw2;
   String _pw_origin;
@@ -181,7 +182,7 @@ class _PwchangefinalPageState extends State<PwchangefinalPage> {
                                         Navigator.pushAndRemoveUntil(context,
                                             MaterialPageRoute(
                                                 builder: (BuildContext context) {
-                                                  return Tabs();
+                                                  return PatternlockcreatePage();
                                                 }), (route) => route == null);
                                       },
                                       child: Text('确定'),

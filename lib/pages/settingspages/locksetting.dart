@@ -1,8 +1,8 @@
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/loginpages/pw_change.dart';
-import 'package:i_account/pages/loginpages/pw_change_auth_set.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:i_account/pages/loginpages/pw_create.dart';
 
 class LocksettingPage extends StatefulWidget {
   @override
@@ -10,7 +10,30 @@ class LocksettingPage extends StatefulWidget {
 }
 
 class _LocksettingPageState extends State<LocksettingPage> {
-  bool hasPW = true;
+  @override
+  void initState() {
+    super.initState();
+    _getPassword(); //获取本地存储的数据
+  }
+
+  String _password;
+
+  void _getPassword() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _password = sharedPreferences.get('password') ?? '';
+    });
+  }
+
+  void _lockOn() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setBool("lockset", true);
+  }
+
+  void _lockOff() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setBool("lockset", false);
+  }
 
   _buildAppBarTitle() {
     return Container(
@@ -39,8 +62,37 @@ class _LocksettingPageState extends State<LocksettingPage> {
             ListTile(
               title: Text("启用密码"),
               onTap: () {
-                if (hasPW) {
-                  //TODO 修改数据库让首页跳转到登录页面
+                _lockOn();
+                if (_password == '') {
+                  showDialog<Null>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("提示"),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[Text("已启用密码，请进行密码设置")],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                return PwcreatePage();
+                              }), (route) => route == null);
+                            },
+                            child: Text("确定"),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((val) {
+                    print(val);
+                  });
+                } else {
                   showDialog<Null>(
                     context: context,
                     barrierDismissible: false,
@@ -65,21 +117,13 @@ class _LocksettingPageState extends State<LocksettingPage> {
                   ).then((val) {
                     print(val);
                   });
-                } else {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PwchangePage()));
                 }
               },
             ),
             ListTile(
-              title: Text("关闭密码"),
-              onTap: () {
-                if (hasPW) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PwcauthsecPage()));
-                } else {
+                title: Text("关闭密码"),
+                onTap: () {
+                  _lockOff();
                   showDialog<Null>(
                     context: context,
                     barrierDismissible: false,
@@ -88,7 +132,7 @@ class _LocksettingPageState extends State<LocksettingPage> {
                         title: Text("提示"),
                         content: SingleChildScrollView(
                           child: ListBody(
-                            children: <Widget>[Text("您没有设置密码，无需关闭")],
+                            children: <Widget>[Text("已关闭密码")],
                           ),
                         ),
                         actions: <Widget>[
@@ -104,9 +148,7 @@ class _LocksettingPageState extends State<LocksettingPage> {
                   ).then((val) {
                     print(val);
                   });
-                }
-              },
-            ),
+                }),
           ]).toList(),
         )));
   }
