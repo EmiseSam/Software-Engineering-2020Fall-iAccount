@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'dart:ui';
 import 'package:gesture_recognition/gesture_view.dart';
-import 'package:i_account/pages/loginpages/patternlock-create.dart';
 import 'package:i_account/pages/loginpages/pw_change.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PwcauthpatternPage extends StatefulWidget {
   @override
@@ -12,6 +12,21 @@ class PwcauthpatternPage extends StatefulWidget {
 }
 
 class _PwcauthpatternPageState extends State<PwcauthpatternPage> {
+
+  String patternpw;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPatternlockPW();//获取本地存储的数据
+  }
+
+  void _getPatternlockPW()  async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    setState(() {
+      patternpw = sharedPreferences.get('patternpw2') ?? '';
+    });
+  }
 
   List<int> curResult = [];
   List<int> correctResult = [0,1,2,5,8,7,6];
@@ -80,19 +95,16 @@ class _PwcauthpatternPageState extends State<PwcauthpatternPage> {
   }
 
   analysisGesture(List<int> items) {
-    bool isCorrect = true;
-    if (items.length == correctResult.length) {
-      for (int i = 0 ; i < items.length ; i++) {
-        if (items[i] != correctResult[i]) {
-          isCorrect = false;
-          break;
-        }
-      }
-      gestureStateKey.currentState.selectColor = Colors.blue;
-    } else {
+    bool isCorrect;
+    if(items.toString() != patternpw){
       isCorrect = false;
       gestureStateKey.currentState.selectColor = Colors.red;
     }
+
+    if(items.toString() == patternpw){
+      isCorrect = true;
+    }
+
 
     if(isCorrect){
       Navigator.pushAndRemoveUntil(context,
