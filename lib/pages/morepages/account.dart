@@ -6,7 +6,6 @@ import 'package:i_account/pages/accountpages/account_type_choice.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/res/styles.dart';
-import 'package:i_account/pages/accountpages/model/accounttemplate.dart';
 
 class AccountPage extends StatefulWidget {
   @override

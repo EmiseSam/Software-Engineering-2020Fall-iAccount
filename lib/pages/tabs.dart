@@ -35,7 +35,9 @@ class _TabsState extends State<Tabs> {
           currentIndex: this._currentIndex,
           onTap: (int index) {
             setState(() {
-              this._currentIndex = index;
+              if(index == 0 || index == 2){
+                this._currentIndex = index;
+              }
             });
           }),
       floatingActionButton: Container(

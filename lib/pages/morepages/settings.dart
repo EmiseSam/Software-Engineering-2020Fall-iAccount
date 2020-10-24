@@ -4,11 +4,12 @@ import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/loginpages/pw_change_auth.dart';
 import 'package:i_account/pages/settingspages/darkmode.dart';
 import 'package:i_account/pages/settingspages/locksetting.dart';
+import 'package:i_account/pages/settingspages/categoryedit.dart';
+import 'package:i_account/pages/settingspages/personedit.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path_provider/path_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 352.0,
+      height: 528.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -77,6 +78,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LocksettingPage()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('成员管理', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('可设置账单成员信息'),
+              leading: Icon(
+                Icons.person_add,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PersonEdit()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('分类管理', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('可设置账单一二级分类信息'),
+              leading: Icon(
+                Icons.control_point_duplicate,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CategoryEdit()));
               },
             ),
             Divider(),

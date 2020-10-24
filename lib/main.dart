@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 import 'dart:io';
+
 import 'package:i_account/pages/settingspages/darkmode_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:i_account/pages/login.dart';
-import 'package:i_account/pages/tabs.dart';
 
+import 'package:i_account/page_jump.dart';
 
 void main() {
   //透明状态栏
@@ -19,9 +20,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
-  bool locksetting = true; //TODO 需要加到数据库中
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
                     primarySwatch: Colors.blue,
                   ),
                   darkTheme: ThemeData.dark(),
-                  home: locksetting == true ? LoginPage() : Tabs(),
+                  home: PageJump(),
                 )
               : MaterialApp(
                   title: 'iAccount',
@@ -46,7 +44,7 @@ class MyApp extends StatelessWidget {
                       : ThemeData(
                           primarySwatch: Colors.blue,
                         ),
-                  home: locksetting == true ? LoginPage() : Tabs(),
+                  home: PageJump(),
                 );
         },
       ),
