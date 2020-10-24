@@ -61,7 +61,7 @@ class _IncomePageState extends State<IncomePage> {
   var _personPickerData = ["自己", "孩子", "父亲", "母亲"];
   var _categoryPickerData = '''
   [
-  {"工资": ["三餐","零食","饮料","聚餐"]},
+  {"工资": ["工资","零食","饮料","聚餐"]},
   {"红包": ["网课","图书"]},
   {"奖金": ["地铁","公交","火车票","飞机票"]}
   ]

@@ -61,11 +61,12 @@ class _ExpendPageState extends State<ExpendPage> {
   var _personPickerData = ["自己", "孩子", "父亲", "母亲"];
   var _categoryPickerData = '''
   [
-  {"饮食": ["三餐","零食","饮料","聚餐"]},
+  {"测试": ["三餐","零食","饮料","聚餐"]},
   {"学习": ["网课","图书"]},
   {"交通": ["地铁","公交","火车票","飞机票"]}
   ]
   ''';
+
 
   showCategoryPicker(BuildContext context) {
     Picker(
@@ -110,7 +111,8 @@ class _ExpendPageState extends State<ExpendPage> {
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
                   child: Text('确认'),
-                  onPressed: () async {},
+                  onPressed: () async {
+                  },
                 ),
               ),
             ],

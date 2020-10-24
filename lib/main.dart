@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_picker/flutter_picker.dart';
 import 'dart:io';
 
 import 'package:i_account/pages/settingspages/darkmode_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'package:i_account/page_jump.dart';
 
 void main() {
@@ -20,6 +18,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
