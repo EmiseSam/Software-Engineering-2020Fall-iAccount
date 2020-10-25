@@ -29,6 +29,8 @@ class ChartPageState extends State<StatefulWidget> {
   /// 类型 1支出 2收入
   int _type = 1;
 
+  int _timeType = 3;
+
   /// 当月总支出金额
   double _monthExpenMoney = 0.0;
 
@@ -51,24 +53,21 @@ class ChartPageState extends State<StatefulWidget> {
 
   Future<void> _initDatas() async {
     // 时间戳
-    int startTime = DateTime(
-        int.parse(_year),
-        int.parse(_month),
-        1,
-        0,
-        0,
-        0,
-        0)
-        .millisecondsSinceEpoch;
-    int endTime = DateTime(
-        int.parse(_year),
-        int.parse(_month),
-        DateUtls.getDaysNum(int.parse(_year), int.parse(_month)),
-        23,
-        59,
-        59,
-        999)
-        .millisecondsSinceEpoch;
+    int startTime;
+    int endTime;
+    if(_timeType == 1){
+      startTime = DateTime(1971, 1, 1, 0, 0, 0, 0).millisecondsSinceEpoch;
+      endTime = DateTime(2055, 12, 31, 23, 59, 59, 999).millisecondsSinceEpoch;
+    }
+    else if(_timeType == 2){
+      startTime = DateTime(int.parse(_year), 1, 1, 0, 0, 0, 0).millisecondsSinceEpoch;
+      endTime = DateTime(int.parse(_year), 12, 31, 23, 59, 59, 999).millisecondsSinceEpoch;
+    }
+    else{
+      startTime = DateTime(int.parse(_year), int.parse(_month), 1, 0, 0, 0, 0).millisecondsSinceEpoch;
+      endTime = DateTime(int.parse(_year), int.parse(_month), DateUtls.getDaysNum(int.parse(_year), int.parse(_month)), 23, 59, 59, 999).millisecondsSinceEpoch;
+    }
+
     dbHelp.getBillList(startTime, endTime).then((list) {
       _monthExpenMoney = 0.0;
       _monthIncomeMoney = 0.0;
@@ -175,6 +174,59 @@ class ChartPageState extends State<StatefulWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Checkbox(
+                        value: _timeType == 1,
+                        onChanged: (value) {
+                          _seletedTimeType(1);
+                        },
+                      ),
+                      HighLightWell(
+                        onTap: () {
+                          _seletedTimeType(1);
+                        },
+                        child: Text(
+                          '总体',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Gaps.hGap(10),
+                      Checkbox(
+                        value: _timeType == 2,
+                        onChanged: (value) {
+                          _seletedTimeType(2);
+                        },
+                      ),
+                      HighLightWell(
+                        onTap: () {
+                          _seletedTimeType(2);
+                        },
+                        child: Text(
+                          '年',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Gaps.hGap(10),
+                      Checkbox(
+                        value: _timeType == 3,
+                        onChanged: (value) {
+                          _seletedTimeType(3);
+                        },
+                      ),
+                      HighLightWell(
+                        onTap: () {
+                          _seletedTimeType(3);
+                        },
+                        child: Text(
+                          '月',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gaps.hGap(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Checkbox(
                         value: _type == 1,
                         onChanged: (value) {
                           _seletedType(1);
@@ -271,6 +323,12 @@ class ChartPageState extends State<StatefulWidget> {
     _type = type;
     _initDatas();
   }
+
+  void _seletedTimeType(int type) {
+    _timeType = type;
+    _initDatas();
+  }
+
   /// 设置appbartitleView
   _buildAppBarTitle() {
     return Container(
@@ -307,7 +365,7 @@ class ChartPageState extends State<StatefulWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: FlatButton(
               child: Text(
-                '$_year-$_month',
+                '选择时间：$_year-$_month',
                 style: TextStyle(
                     fontSize: ScreenUtil.getInstance().setSp(34),
                     color: Colours.app_main),
