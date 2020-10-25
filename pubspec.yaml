@@ -61,11 +61,13 @@ dependencies:
   flutter_spinkit: ^3.1.0
 
   # 路径插件 https://pub.dev/packages/path_provider
-  path_provider: ^1.2.0
+  path_provider: ^1.6.22
 
   charts_flutter: ^0.9.0
 
   shared_preferences: ^0.5.12
+  flutter_picker: ^1.1.5
+
 
 dev_dependencies:
   flutter_test:
