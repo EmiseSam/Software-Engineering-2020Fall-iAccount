@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:i_account/pages/login.dart';
@@ -12,7 +10,7 @@ class PageJump extends StatefulWidget {
 
 class _PageJumpState extends State<PageJump> {
 
-  bool locksetting;
+  bool locksetting = false;
 
   @override
   void initState() {

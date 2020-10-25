@@ -4,7 +4,9 @@
         {
             "id": 1,
             "money": 123.12,
-            "remark": "备注",
+            "person":"我",
+            "account":"支付宝",
+            "remark":"备注",
             "type": 1,
             "categoryName": "吃喝",
             "image": "路径",

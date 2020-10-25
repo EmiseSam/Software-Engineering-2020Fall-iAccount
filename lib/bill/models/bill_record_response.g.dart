@@ -29,6 +29,8 @@ BillRecordModel _$BillRecordModelFromJson(Map<String, dynamic> json) {
   return BillRecordModel(
     json['id'] as int,
     (json['money'] as num)?.toDouble(),
+    json['person'] as String,
+    json['account'] as String,
     json['remark'] as String,
     json['type'] as int,
     json['categoryName'] as String,
@@ -46,6 +48,8 @@ Map<String, dynamic> _$BillRecordModelToJson(BillRecordModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'money': instance.money,
+      'person': instance.person,
+      'account': instance.account,
       'remark': instance.remark,
       'categoryName': instance.categoryName,
       'image': instance.image,

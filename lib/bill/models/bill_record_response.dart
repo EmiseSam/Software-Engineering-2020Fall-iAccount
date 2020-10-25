@@ -33,6 +33,12 @@ class BillRecordModel extends Object {
   @JsonKey(name: 'money')
   double money;
 
+  @JsonKey(name: 'person')
+  String person;
+
+  @JsonKey(name: 'account')
+  String account;
+
   @JsonKey(name: 'remark')
   String remark;
 
@@ -69,6 +75,8 @@ class BillRecordModel extends Object {
   BillRecordModel(
     this.id,
     this.money,
+    this.person,
+    this.account,
     this.remark,
     this.type,
     this.categoryName,

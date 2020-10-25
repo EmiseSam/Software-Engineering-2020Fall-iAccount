@@ -2,11 +2,11 @@ import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:i_account/pages/accountpages/account_type_choice.dart';
+import 'package:i_account/pages/accountpages/account_create.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/res/styles.dart';
-import 'package:i_account/pages/accountpages/model/accounttemplate.dart';
+
 
 class AccountPage extends StatefulWidget {
   @override
@@ -171,7 +171,7 @@ class Banner extends StatelessWidget {
               ),
               Gaps.hGap(107.0),
               Text('账户', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),),
-              Gaps.hGap(80.0),
+              Gaps.hGap(85.0),
               IconButton(
                 padding: EdgeInsets.all(0),
                 onPressed: () {
@@ -189,7 +189,7 @@ class Banner extends StatelessWidget {
                 padding: EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AccounttypechoicePage()));
+                      MaterialPageRoute(builder: (context) => AccountCreateAssetsPage()));
                 },
                 icon: Icon(
                   Icons.add,
@@ -297,7 +297,7 @@ class PanelWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  '我的账户',
+                  '资产账户',
                   style: _accountTitleStyle,
                 ),
                 Text(11111.toStringAsFixed(2), style: _accountTitleStyle),
@@ -307,12 +307,29 @@ class PanelWidget extends StatelessWidget {
           Column(
             children: <Widget>[
               rowItem(),
+            ],
+          ),
+          Container(
+            height: 30.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  '负债账户',
+                  style: _accountTitleStyle,
+                ),
+                Text(11111.toStringAsFixed(2), style: _accountTitleStyle),
+              ],
+            ),
+          ),
+          Column(
+            children: <Widget>[
               rowItem(),
-              rowItem(showBorder: false),
             ],
           )
         ],
       ),
+
     );
   }
 

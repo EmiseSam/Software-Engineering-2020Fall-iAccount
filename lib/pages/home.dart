@@ -255,11 +255,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-<<<<<<< Updated upstream
-                  Utils.getImagePath('icons/food05', format: 'jpeg'),
-=======
                   Utils.getImagePath('icons/1', format: 'jpg'),
->>>>>>> Stashed changes
                 ),
                 fit: BoxFit.fill)),
         child: Column(
@@ -621,25 +617,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   ),
                 ),
                 Gaps.line,
-                Padding(
+                model.account.isNotEmpty ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
-<<<<<<< Updated upstream
-=======
                     children: <Widget>[
                       Text('账户', style: titleStyle),
                       Gaps.hGap(20),
                       Expanded(
                         flex: 1,
-                        child: Text('默认测试值',
-                            textAlign: TextAlign.right,style: descStyle
-                            ),
+                        child: Text('${model.account}',
+                            textAlign: TextAlign.right, style: descStyle),
                       )
                     ],
                   ),
-                ),
+                ):Gaps.empty,
                 Gaps.line,
-                Padding(
+                model.person.isNotEmpty ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
                     children: <Widget>[
@@ -647,18 +640,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       Gaps.hGap(20),
                       Expanded(
                         flex: 1,
-                        child: Text('默认测试值',
-                            textAlign: TextAlign.right,style: descStyle
-                        ),
+                        child: Text('${model.person}',
+                            textAlign: TextAlign.right, style: descStyle),
                       )
                     ],
                   ),
-                ),
+                ): Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
->>>>>>> Stashed changes
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[

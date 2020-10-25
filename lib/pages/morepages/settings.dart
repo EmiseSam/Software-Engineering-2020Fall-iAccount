@@ -8,7 +8,6 @@ import 'package:i_account/pages/settingspages/locksetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path_provider/path_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

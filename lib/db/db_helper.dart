@@ -22,11 +22,8 @@ class Dbhelper {
 
   Database _db;
 
-  ///密码是否启用表
-  final _lockSetting = 'LockSetting';
-
-  ///手势密码表
-  final _patternLock = 'PatternLock';
+  ///账户表
+  final _initialAccount = 'initialAccount';
 
   /// 账单表
   final _billTableName = 'BillRecord';
@@ -60,21 +57,14 @@ class Dbhelper {
   /// When creating the db, create the table type 1支出 2收入
   void _onCreate(Database db, int version) async {
 
-    //密码是否启用表
-    String queryLockonoff = """
-    CREATE TABLE $_lockSetting(
-    ifLockOn TEXT
-    )
-    """;
-    await db.execute(queryLockonoff);
-
-
     // 账单记录表
     //是否同步 是否删除 金额、备注、类型 1支出 2收入 、 类别名、图片路径、创建时间、更新时间
     String queryBill = """
     CREATE TABLE $_billTableName(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       money REAL NOT NULL,
+      person TEXT,
+      account TEXT,
       remark TEXT,
       categoryName TEXT NOT NULL,
       image TEXT NOT NULL,
@@ -106,10 +96,22 @@ class Dbhelper {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       image TEXT,
+      type INTEGER,
       sort INTEGER
     )
     """;
     await db.execute(queryStringIncome);
+
+    // 账户表
+    String queryStringAccount = """
+    CREATE TABLE $_initialAccount(
+    name TEXT,
+    
+    money REAL NOT NULL,
+    sort INTEGER,
+    )
+    """;
+    await db.execute(queryStringAccount);
 
     // 初始化支出类别表数据
     rootBundle
@@ -173,6 +175,8 @@ class Dbhelper {
     //这里不要使用Map 声明map
     var map = {
       'money': model.money,
+      'person': model.person,
+      'account': model.account,
       'remark': model.remark,
       'type': model.type,
       'categoryName': model.categoryName,
