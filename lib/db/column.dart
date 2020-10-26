@@ -12,3 +12,4 @@ final String columnClassification2 = '_classification2';
 final String columnAccount = '_account';
 final String columnMember = '_member';
 final String columnTime = '_time';
+final String columnBalance = '_balance';

@@ -63,15 +63,15 @@ class DBHelper {
     // ''';
     // await db.execute(queryStringInc);
 
-    // //账户表
-    // String queryStringAccount = """
-    // CREATE TABLE $tableAccount(
-    //   $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   $columnAccount TEXT NOT NULL,
-    //   $columnMoney REAL DEFAULT(0.00),
-    // )
-    // """;
-    // await db.execute(queryStringAccount);
+    //账户表
+    String queryStringAccount = """
+    CREATE TABLE $tableAccount(
+      $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+      $columnAccount TEXT NOT NULL,
+      $columnMoney REAL,
+    )
+    """;
+    await db.execute(queryStringAccount);
 
     //成员表
     String queryStringMember = """
@@ -130,7 +130,7 @@ class DBHelper {
     return result;
   }
 
-  //获取记账支出一级分类
+  //获取记账支出一级分类（未完成）
   Future<List> getExpenCategory1() async {
     var dbClient = await db;
     List<Map> result = await dbClient.rawQuery(
@@ -145,7 +145,7 @@ class DBHelper {
     return result;
   }
 
-  //获取记账支出二级分类
+  //获取记账支出二级分类（未完成）
   Future<List> getExpenCategory2(String bc1) async {
     var dbClient = await db;
     List<Map> result = await dbClient.rawQuery(
@@ -176,7 +176,7 @@ class DBHelper {
         whereArgs: [bc1, bc2]);
   }
 
-  //新增/更新支出分类
+  //新增/更新支出分类（未完成）
   Future<int> updateBCI(BillClasssification bc) async {
     var dbClient = await db;
     var result;
@@ -193,7 +193,7 @@ class DBHelper {
     return result;
   }
 
-  //获取记账收入一级分类
+  //获取记账收入一级分类（未完成）
   Future<List> getIncCategory1() async {
     var dbClient = await db;
     List<Map> result = await dbClient.rawQuery(
@@ -208,7 +208,7 @@ class DBHelper {
     return result;
   }
 
-  //获取记账收入二级分类
+  //获取记账收入二级分类（未完成）
   Future<List> getIncCategory2(String bc1) async {
     var dbClient = await db;
     List<Map> result = await dbClient.rawQuery(
@@ -238,7 +238,7 @@ class DBHelper {
         whereArgs: [bc1, bc2]);
   }
 
-  //插入或者更新支出账单记录
+  //插入或者更新支出账单记录（未完成）
   Future<int> insertEBill(Bill bill) async {
     var dbClient = await db;
     var result;
@@ -255,7 +255,7 @@ class DBHelper {
     return result;
   }
 
-  //插入或者更新收入账单记录
+  //插入或者更新收入账单记录（未完成）
   Future<int> insertIBill(Bill bill) async {
     var dbClient = await db;
     var result;
@@ -272,21 +272,21 @@ class DBHelper {
     return result;
   }
 
-  //删除支出账单
+  //删除支出账单（未完成）
   Future<int> deleteEbill(int id) async {
     var dbClient = await db;
     return await dbClient
         .delete(tableEBill, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  //删除收入账单
+  //删除收入账单（未完成）
   Future<int> deleteIbill(int id) async {
     var dbClient = await db;
     return await dbClient
         .delete(tableIBill, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  //查询单个支出账单
+  //查询单个支出账单（未完成）
   Future<Bill> queryEBill(int id) async {
     if (id == null) {
       return null;
@@ -302,7 +302,7 @@ class DBHelper {
     }
   }
 
-  //查询单个收入账单
+  //查询单个收入账单（未完成）
   Future<Bill> queryIBill(int id) async {
     if (id == null) {
       return null;
@@ -318,7 +318,7 @@ class DBHelper {
     }
   }
 
-  //按各类查询支出账单记录（不限制时间）
+  //按各类查询支出账单记录（不限制时间）（未完成）
   Future<List<Bill>> getBillList(
       {String bc1, String bc2, String account, String member}) async {
     var dbClient = await db;
@@ -371,7 +371,7 @@ class DBHelper {
     return members;
   }
 
-  //插入或者更新账户类型
+  //插入或者更新账户类型（已完成）
   Future<int> insertAccount(AccountClassification ac) async {
     var dbClient = await db;
     var result;
@@ -388,20 +388,16 @@ class DBHelper {
     return result;
   }
 
-  //删除账户（未完成）
+  //删除账户（已完成）
   Future<int> deleteAccount(int id) async {
     var dbClient = await db;
     return await dbClient
         .delete(tableAccount, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  //获取账户类型列表（未完成）
+  //获取账户类型列表（已完成）
   Future<List> getAccountList() async {
     var dbClient = await db;
-    // var result = await dbClient.rawQuery(
-    //     'SELECT $columnAccount FROM $tableAccount', null);
-    // List list1 = result.toList();
-    // return list1;
     List<Map> maps =
         await dbClient.query(tableMember, columns: [columnId, columnMember]);
     List<AccountClassification> accounts = [];
@@ -411,13 +407,21 @@ class DBHelper {
     return accounts;
   }
 
-  //获取某个账户的余额（未完成）
-
-  //计算账户剩余总额(未完成)
-  Future<double> accountTotalize(String account) async {
+  //查询某个账户的总金额（已完成）
+  Future<double> accountSum(int id) async {
     var dbClient = await db;
-    double sum = (await dbClient.rawQuery(
-        "SELECT $columnMoney FROM $tableAccount where: '$columnAccount = ?'",
-        [account])) as double;
+    var maps = await dbClient.rawQuery(
+        "SELECT $columnBalance FROM $tableAccount where: $columnId = $id");
+    AccountClassification account = AccountClassification.fromMap(maps.first);
+    return account.balance;
+  }
+
+  //计算账户剩余总额(已完成)
+  Future<double> accountBalance(int id) async {
+    var dbClient = await db;
+    var maps = await dbClient.rawQuery(
+        "SELECT $columnMoney FROM $tableAccount where: $columnId = $id");
+    AccountClassification account = AccountClassification.fromMap(maps.first);
+    return account.sum;
   }
 }
