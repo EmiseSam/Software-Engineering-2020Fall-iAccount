@@ -1,7 +1,6 @@
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:i_account/pages/loginpages/patternlock-create.dart';
@@ -55,6 +54,7 @@ class _PwcreatePageState extends State<PwcreatePage> {
     return Scaffold(
         appBar: MyAppBar(
           titleWidget: _buildAppBarTitle(),
+          isBack: false,
         ),
         resizeToAvoidBottomInset: false,
         body: Form(

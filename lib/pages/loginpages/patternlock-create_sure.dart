@@ -60,6 +60,7 @@ class _PatternlockcreatesecPageState extends State<PatternlockcreatesecPage> {
     return Scaffold(
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
+        isBack: false,
       ),
       body: Container(
         child: Column(

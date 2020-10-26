@@ -174,35 +174,23 @@ class ChartPageState extends State<StatefulWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Checkbox(
-                        value: _type == 1,
-                        onChanged: (value) {
-                          _seletedType(1);
-                        },
-                      ),
                       HighLightWell(
                         onTap: () {
                           _seletedType(1);
                         },
                         child: Text(
-                          '支出¥${Utils.formatDouble(double.parse(
+                          '支出  ¥${Utils.formatDouble(double.parse(
                               _monthExpenMoney.toStringAsFixed(2)))}',
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
                       Gaps.hGap(10),
-                      Checkbox(
-                        value: _type == 2,
-                        onChanged: (value) {
-                          _seletedType(2);
-                        },
-                      ),
                       HighLightWell(
                         onTap: () {
                           _seletedType(2);
                         },
                         child: Text(
-                          '收入¥${Utils.formatDouble(double.parse(
+                          '收入  ¥${Utils.formatDouble(double.parse(
                               _monthIncomeMoney.toStringAsFixed(2)))}',
                           style: TextStyle(fontSize: 16),
                         ),

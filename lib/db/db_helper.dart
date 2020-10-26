@@ -22,9 +22,6 @@ class Dbhelper {
 
   Database _db;
 
-  ///账户表
-  final _initialAccount = 'initialAccount';
-
   /// 账单表
   final _billTableName = 'BillRecord';
 
@@ -101,17 +98,6 @@ class Dbhelper {
     )
     """;
     await db.execute(queryStringIncome);
-
-    // 账户表
-    String queryStringAccount = """
-    CREATE TABLE $_initialAccount(
-    name TEXT,
-    
-    money REAL NOT NULL,
-    sort INTEGER,
-    )
-    """;
-    await db.execute(queryStringAccount);
 
     // 初始化支出类别表数据
     rootBundle

@@ -1,4 +1,4 @@
-import 'package:i_account/res/colours.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -48,21 +48,6 @@ class _AccountPageState extends State<AccountPage> {
     await Future.delayed(Duration(milliseconds: 500));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
-  }
-
-  _buildAppBarTitle() {
-    return Container(
-      child: ButtonTheme(
-        padding: const EdgeInsets.symmetric(horizontal: 0),
-        child: Text(
-          '资产',
-          style: TextStyle(
-              fontSize: 18,
-              color: Colours.app_main,
-              fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
   }
 
   @override

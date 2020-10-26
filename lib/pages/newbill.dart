@@ -38,7 +38,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   String _accountCategorysec = '二级分类';
   var _accountPickerData = ["现金", "支付宝", "微信", "借记卡"];
   var _personPickerData = ["自己", "孩子", "父亲", "母亲"];
-  var _categorysecPickerData = ["111", "222", "333", "444"];
 
   /// 支出类别数组
   List<CategoryItem> _expenObjects = List();
@@ -285,7 +284,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   onTap: () {
                     MyPickerTool.showStringPicker(context,
                         data: _accountPickerData,
-                        normalIndex: 2,
+                        normalIndex: 0,
                         title: "请选择", clickCallBack: (int index, var str) {
                           setState(() {
                             _accountAccount = str;
@@ -315,7 +314,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   onTap: () {
                     MyPickerTool.showStringPicker(context,
                         data: _personPickerData,
-                        normalIndex: 2,
+                        normalIndex: 0,
                         title: "请选择", clickCallBack: (int index, var str) {
                           setState(() {
                             _accountPerson = str;
@@ -331,31 +330,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(color: Colours.gray, width: 0.6)),
                     child: Text(_accountPerson.isEmpty ? '成员' : _accountPerson),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: HighLightWell(
-                  onTap: () {
-                    MyPickerTool.showStringPicker(context,
-                        data: _categorysecPickerData,
-                        normalIndex: 2,
-                        title: "请选择", clickCallBack: (int index, var str) {
-                          setState(() {
-                            _accountCategorysec = str;
-                          });
-                        });
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colours.gray, width: 0.6)),
-                    child: Text(_accountCategorysec),
                   ),
                 ),
               ),

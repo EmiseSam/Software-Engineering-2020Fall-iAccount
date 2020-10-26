@@ -49,26 +49,8 @@ class _PwcauthPageState extends State<PwcauthPage> {
     },
   ];
 
-  ///用于控制指纹按钮的隐藏和显示
-  bool _fingerprintSet = true;
-
   /// 本地认证框架
   final LocalAuthentication auth = LocalAuthentication();
-
-  /// 检查是否有可用的生物识别技术
-  Future<Null> _checkBiometrics() async {
-    bool canCheckBiometrics;
-    try {
-      canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      print(e);
-    }
-    if (!mounted) return;
-
-    if (!canCheckBiometrics) {
-      _fingerprintSet = false;
-    }
-  }
 
   /// 生物识别
   Future<Null> _authenticate() async {

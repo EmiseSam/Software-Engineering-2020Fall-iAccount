@@ -22,7 +22,7 @@ enum DateType {
 }
 
 class MyPickerTool {
-  /** 单列*/
+  /*单列*/
   static void showStringPicker<T>(
     BuildContext context, {
     @required List<T> data,
@@ -39,7 +39,7 @@ class MyPickerTool {
     }, selecteds: [normalIndex ?? 0], title: title);
   }
 
-  /** 多列 */
+  /*多列*/
   static void showArrayPicker<T>(
     BuildContext context, {
     @required List<T> data,

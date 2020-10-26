@@ -381,7 +381,7 @@ class BillSearchListState extends State<BillSearchList> {
                               child: Text(
                                 '删除',
                                 style:
-                                    TextStyle(fontSize: 16, color: Colors.red),
+                                TextStyle(fontSize: 16, color: Colors.red),
                               ),
                             ),
                           ),
@@ -441,6 +441,36 @@ class BillSearchListState extends State<BillSearchList> {
                   ),
                 ),
                 Gaps.line,
+                model.account.isNotEmpty ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('账户', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.account}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                ):Gaps.empty,
+                Gaps.line,
+                model.person.isNotEmpty ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('成员', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.person}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                ): Gaps.empty,
+                Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
@@ -492,24 +522,24 @@ class BillSearchListState extends State<BillSearchList> {
                 Gaps.line,
                 model.remark.isNotEmpty
                     ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: <Widget>[
-                            Text('备注', style: titleStyle),
-                            Gaps.hGap(20),
-                            Expanded(
-                              flex: 1,
-                              child: Text('${model.remark}',
-                                  textAlign: TextAlign.right, style: descStyle),
-                            )
-                          ],
-                        ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('备注', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.remark}',
+                            textAlign: TextAlign.right, style: descStyle),
                       )
+                    ],
+                  ),
+                )
                     : Gaps.empty,
                 MediaQuery.of(context).padding.bottom > 0
                     ? SizedBox(
-                        height: MediaQuery.of(context).padding.bottom,
-                      )
+                  height: MediaQuery.of(context).padding.bottom,
+                )
                     : Gaps.empty,
               ],
             ),

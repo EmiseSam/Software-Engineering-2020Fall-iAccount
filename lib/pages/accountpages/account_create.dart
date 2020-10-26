@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/mypickertool.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:flutter/services.dart';
-import 'package:i_account/db/db_helper.dart';
 
 class AccountCreateAssetsPage extends StatefulWidget {
   @override
@@ -125,7 +124,7 @@ class _AccountCreateAssetsPageState extends State<AccountCreateAssetsPage> {
                 textDirection: TextDirection.ltr,
                 textCapitalization: TextCapitalization.sentences,
                 inputFormatters:[
-                  WhitelistingTextInputFormatter(RegExp("[0-9.]")),
+                  FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                   _MyNumberTextInputFormatter(digit:2),
                 ],
             ),

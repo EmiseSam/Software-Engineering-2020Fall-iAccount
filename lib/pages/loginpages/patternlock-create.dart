@@ -61,6 +61,7 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
     return Scaffold(
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
+        isBack: false,
       ),
       body: Container(
         child: Column(
