@@ -35,13 +35,8 @@
         "sort": 6
     },
     {
-        "name": "股票",
-        "image": "income/股票_icon",
-        "sort": 7
-    },
-    {
         "name": "其他",
         "image": "other/其他_icon",
-        "sort": 8
+        "sort": 7
     }
 ]

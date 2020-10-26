@@ -505,7 +505,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         _time.millisecondsSinceEpoch);
 
     dbHelp.insertBillRecord(model).then((value) {
-      print("test666 $_accountPerson");
+      print("数据库测试 $_accountPerson");
       bus.trigger(bus.bookkeepingEventName);
     });
   }

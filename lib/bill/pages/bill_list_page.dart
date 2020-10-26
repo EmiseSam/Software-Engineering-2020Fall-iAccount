@@ -475,10 +475,7 @@ class _BillState extends State<Bill>
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset(
-                        Utils.getImagePath('icons/icon_calendar'),
-                        width: ScreenUtil.getInstance().setWidth(32),
-                      ),
+                      Icon(Icons.calendar_today),
                       Gaps.hGap(10),
                       Text(
                         group.date,

@@ -282,10 +282,7 @@ class BillSearchListState extends State<BillSearchList> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset(
-                        Utils.getImagePath('icons/icon_calendar'),
-                        width: ScreenUtil.getInstance().setWidth(28),
-                      ),
+                      Icon(Icons.calendar_today),
                       Gaps.hGap(8),
                       Text(
                         group.date,

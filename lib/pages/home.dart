@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           fontSize: ScreenUtil.getInstance().setSp(56),
                           color: Colors.white)),
                   Text(
-                    '本月${_monthModel.isBudget == 1 ? '预算' : ''}结余',
+                    '本月结余',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: ScreenUtil.getInstance().setSp(26),
@@ -462,10 +462,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset(
-                        Utils.getImagePath('icons/icon_calendar'),
-                        width: ScreenUtil.getInstance().setWidth(32),
-                      ),
+                      Icon(Icons.calendar_today),
                       Gaps.hGap(10),
                       Text(
                         group.date,

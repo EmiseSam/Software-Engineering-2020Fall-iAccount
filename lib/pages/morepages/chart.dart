@@ -178,21 +178,31 @@ class ChartPageState extends State<StatefulWidget> {
                         onTap: () {
                           _seletedType(1);
                         },
-                        child: Text(
-                          '支出  ¥${Utils.formatDouble(double.parse(
-                              _monthExpenMoney.toStringAsFixed(2)))}',
-                          style: TextStyle(fontSize: 16),
+                        child: Row(
+                          children: [
+                            Icon(Icons.indeterminate_check_box_outlined),
+                            Text(
+                              '支出  ¥${Utils.formatDouble(double.parse(
+                                  _monthExpenMoney.toStringAsFixed(2)))}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
                       ),
-                      Gaps.hGap(10),
+                      Gaps.hGap(20),
                       HighLightWell(
                         onTap: () {
                           _seletedType(2);
                         },
-                        child: Text(
-                          '收入  ¥${Utils.formatDouble(double.parse(
-                              _monthIncomeMoney.toStringAsFixed(2)))}',
-                          style: TextStyle(fontSize: 16),
+                        child: Row(
+                          children: [
+                            Icon(Icons.add_box),
+                            Text(
+                              '收入  ¥${Utils.formatDouble(double.parse(
+                                  _monthIncomeMoney.toStringAsFixed(2)))}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -245,7 +255,7 @@ class ChartPageState extends State<StatefulWidget> {
               delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                     return const StateLayout(
-                      hintText: '没有账单~',
+                      hintText: '没有账单',
                     );
                   }, childCount: 1),
             ),
