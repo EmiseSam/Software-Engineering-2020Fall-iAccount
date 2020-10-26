@@ -8,7 +8,7 @@ import 'package:i_account/db/column.dart';
 import 'package:i_account/db/bill_classification.dart';
 import 'package:i_account/db/account_classification.dart';
 import 'package:i_account/db/bill.dart';
-import 'package:i_account/db/member.dart';
+import 'package:i_account/db/member_classification.dart';
 import 'package:flutter/services.dart';
 
 var dbHelp = new DBHelper();
@@ -24,11 +24,11 @@ class DBHelper {
   //获取数据库
   Future<Database> get db async {
     if (_db != null) {
-      print("成功创建数据库");
+      print("成功获取数据库");
       return _db;
     }
     _db = await _initDb();
-    print("成功获取数据库");
+    print("成功创建数据库");
     return _db;
   }
 
@@ -44,24 +44,24 @@ class DBHelper {
   //创建数据库的同时创造分类表单
   void _onCreate(Database db, int version) async {
     // 支出类别表
-    String queryStringExpen = '''
-    CREATE TABLE $tableBCE(
-      $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-      $columnClassification1 TEXT NOT NULL,
-      $columnClassification2 TEXT,
-    )
-    ''';
-    await db.execute(queryStringExpen);
+    // String queryStringExpen = '''
+    // CREATE TABLE $tableBCE(
+    //   $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+    //   $columnClassification1 TEXT NOT NULL,
+    //   $columnClassification2 TEXT,
+    // )
+    // ''';
+    // await db.execute(queryStringExpen);
 
     // 收入类别表
-    String queryStringInc = '''
-    CREATE TABLE $tableBCI(
-      $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-      $columnClassification1 TEXT NOT NULL,
-      $columnClassification2 TEXT,
-    )
-    ''';
-    await db.execute(queryStringInc);
+    // String queryStringInc = '''
+    // CREATE TABLE $tableBCI(
+    //   $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+    //   $columnClassification1 TEXT NOT NULL,
+    //   $columnClassification2 TEXT,
+    // )
+    // ''';
+    // await db.execute(queryStringInc);
 
     // //账户表
     // String queryStringAccount = """
@@ -81,7 +81,6 @@ class DBHelper {
     )
     """;
     await db.execute(queryStringMember);
-    print('test member');
 
     //支出账单表
     String queryEBill = """
@@ -134,42 +133,42 @@ class DBHelper {
   //获取记账支出一级分类
   Future<List> getExpenCategory1() async {
     var dbClient = await db;
-    var result = await dbClient.rawQuery(
+    List<Map> result = await dbClient.rawQuery(
         'SELECT $columnClassification1 FROM $tableBCE', null);
-    List list1 = result.toList();
-    List list2 = new List();
-    for (int i = 0; i < list1.length; i++) {
-      if (!list2.contains(list1[i])) {
-        list2.add(list1[i]);
-      }
-    }
-    return list2;
+    // List list1 = result.toList();
+    // List list2 = new List();
+    // for (int i = 0; i < list1.length; i++) {
+    //   if (!list2.contains(list1[i])) {
+    //     list2.add(list1[i]);
+    //   }
+    // }
+    return result;
   }
 
   //获取记账支出二级分类
   Future<List> getExpenCategory2(String bc1) async {
     var dbClient = await db;
-    var result = await dbClient.rawQuery(
-        "SELECT $columnClassification2 FROM $tableBCE where: '$columnClassification1 = ?'",
+    List<Map> result = await dbClient.rawQuery(
+        "SELECT $columnClassification2 FROM $tableBCE where: $columnClassification1 = $bc1",
         [bc1]);
-    List list1 = result.toList();
-    List list2 = new List();
-    for (int i = 0; i < list1.length; i++) {
-      if (!list2.contains(list1[i])) {
-        list2.add(list1[i]);
-      }
-    }
-    return list2;
+    // List list1 = result.toList();
+    // List list2 = new List();
+    // for (int i = 0; i < list1.length; i++) {
+    //   if (!list2.contains(list1[i])) {
+    //     list2.add(list1[i]);
+    //   }
+    // }
+    return result;
   }
 
-  //删除支出一级分类
+  //删除支出一级分类（未完成）
   Future<int> deleteBCE1(String bc1) async {
     var dbClient = await db;
     return await dbClient.delete(tableBCE,
         where: '$columnClassification1 = ?', whereArgs: [bc1]);
   }
 
-  //删除支出二级分类
+  //删除支出二级分类（未完成）
   Future<int> deleteBCE2(String bc1, String bc2) async {
     var dbClient = await db;
     return await dbClient.delete(tableBCE,
@@ -197,42 +196,41 @@ class DBHelper {
   //获取记账收入一级分类
   Future<List> getIncCategory1() async {
     var dbClient = await db;
-    var result = await dbClient.rawQuery(
+    List<Map> result = await dbClient.rawQuery(
         'SELECT $columnClassification1 FROM $tableBCI', null);
-    List list1 = result.toList();
-    List list2 = new List();
-    for (int i = 0; i < list1.length; i++) {
-      if (!list2.contains(list1[i])) {
-        list2.add(list1[i]);
-      }
-    }
-    return list2;
+    // List list1 = result.toList();
+    // List list2 = new List();
+    // for (int i = 0; i < list1.length; i++) {
+    //   if (!list2.contains(list1[i])) {
+    //     list2.add(list1[i]);
+    //   }
+    // }
+    return result;
   }
 
   //获取记账收入二级分类
   Future<List> getIncCategory2(String bc1) async {
     var dbClient = await db;
-    var result = await dbClient.rawQuery(
-        "SELECT $columnClassification2 FROM $tableBCI where: '$columnClassification1 = ?'",
-        [bc1]);
-    List list1 = result.toList();
-    List list2 = new List();
-    for (int i = 0; i < list1.length; i++) {
-      if (!list2.contains(list1[i])) {
-        list2.add(list1[i]);
-      }
-    }
-    return list2;
+    List<Map> result = await dbClient.rawQuery(
+        "SELECT $columnClassification2 FROM $tableBCI where: $columnClassification1 = $bc1");
+    // List list1 = result.toList();
+    // List list2 = new List();
+    // for (int i = 0; i < list1.length; i++) {
+    //   if (!list2.contains(list1[i])) {
+    //     list2.add(list1[i]);
+    //   }
+    // }
+    return result;
   }
 
-  //删除收入一级分类
+  //删除收入一级分类（未完成）
   Future<int> deleteBCI1(String bc1) async {
     var dbClient = await db;
     return await dbClient.delete(tableBCI,
         where: '$columnClassification1 = ?', whereArgs: [bc1]);
   }
 
-  //删除收入二级分类
+  //删除收入二级分类（未完成）
   Future<int> deleteBCI2(String bc1, String bc2) async {
     var dbClient = await db;
     return await dbClient.delete(tableBCI,
@@ -334,11 +332,10 @@ class DBHelper {
     return models;
   }
 
-  //插入或者更新成员
+  //插入或者更新成员（未完成查重）
   Future<int> insertMember(Member m) async {
     var dbClient = await db;
     var result;
-    print('test2222');
     try {
       if (m.id == null) {
         result = await dbClient.insert(tableMember, m.toMap());
@@ -353,27 +350,68 @@ class DBHelper {
   }
 
   //删除成员
-  Future<int> deleteMember(String m) async {
+  Future<int> deleteMember(int id) async {
     var dbClient = await db;
     return await dbClient
-        .delete(tableMember, where: '$columnMember = ?', whereArgs: [m]);
+        .delete(tableMember, where: '$columnId = ?', whereArgs: [id]);
   }
 
   //获取成员列表
   Future<List> getMember() async {
     var dbClient = await db;
-    var result =
-        await dbClient.rawQuery('SELECT $columnMember FROM $tableMember', null);
-    List list1 = result.toList();
-    List list2 = new List();
-    print('test 3333');
-    for (int i = 0; i < list1.length; i++) {
-      if (!list2.contains(list1[i])) {
-        list2.add(list1[i]);
-      }
+    List<Map> maps =
+        await dbClient.query(tableMember, columns: [columnId, columnMember]);
+    if (maps == null || maps.length == 0) {
+      return null;
     }
-    return list2;
+    List<Member> members = [];
+    for (int i = 0; i < maps.length; i++) {
+      members.add(Member.fromMap(maps[i]));
+    }
+    return members;
   }
+
+  //插入或者更新账户类型
+  Future<int> insertAccount(AccountClassification ac) async {
+    var dbClient = await db;
+    var result;
+    try {
+      if (ac.id == null) {
+        result = await dbClient.insert(tableAccount, ac.toMap());
+      } else {
+        result = await dbClient.update(tableAccount, ac.toMap(),
+            where: '$columnId = ?', whereArgs: [ac.id]);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return result;
+  }
+
+  //删除账户（未完成）
+  Future<int> deleteAccount(int id) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete(tableAccount, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  //获取账户类型列表（未完成）
+  Future<List> getAccountList() async {
+    var dbClient = await db;
+    // var result = await dbClient.rawQuery(
+    //     'SELECT $columnAccount FROM $tableAccount', null);
+    // List list1 = result.toList();
+    // return list1;
+    List<Map> maps =
+        await dbClient.query(tableMember, columns: [columnId, columnMember]);
+    List<AccountClassification> accounts = [];
+    for (int i = 0; i < maps.length; i++) {
+      accounts.add(AccountClassification.fromMap(maps[i]));
+    }
+    return accounts;
+  }
+
+  //获取某个账户的余额（未完成）
 
   //计算账户剩余总额(未完成)
   Future<double> accountTotalize(String account) async {

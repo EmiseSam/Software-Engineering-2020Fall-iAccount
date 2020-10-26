@@ -16,7 +16,8 @@ class BillClasssification extends Object {
     return map;
   }
 
-  BillClasssification(String bc1, [String bc2]) {
+  BillClasssification(String bc1, String bc2, {int id}) {
+    this.id = id;
     this.classification1 = bc1;
     this.classification2 = bc2;
   }
