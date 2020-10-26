@@ -44,7 +44,6 @@ dependencies:
 
   provider: ^4.0.5
   flustars: ^0.2.6+1
-  pull_to_refresh: ^1.6.1
   intro_slider: ^1.2.0
   package_info: ^0.4.3
 

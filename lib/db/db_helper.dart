@@ -372,6 +372,7 @@ class Dbhelper {
     var dbClient = await db;
     //UPDATE BillRecord SET money = 123 WHERE id = 42
     return await dbClient
-        .rawUpdate('UPDATE $_billTableName SET isDelete = 1 WHERE id = $id');
+        //.rawUpdate('UPDATE $_billTableName SET isDelete = 1 WHERE id = $id');
+        .delete(_billTableName, where: 'id = ?', whereArgs: [id]);
   }
 }

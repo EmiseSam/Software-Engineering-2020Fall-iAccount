@@ -528,7 +528,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       child: GridView.builder(
         key: PageStorageKey<String>("0"), //保存状态
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+            crossAxisCount: 4,
             childAspectRatio: 1,
             mainAxisSpacing: 0,
             crossAxisSpacing: 8),
@@ -551,7 +551,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       child: GridView.builder(
         key: PageStorageKey<String>("1"), //保存状态
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+            crossAxisCount: 4,
             childAspectRatio: 1,
             mainAxisSpacing: 0,
             crossAxisSpacing: 8),

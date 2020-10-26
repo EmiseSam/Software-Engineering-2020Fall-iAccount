@@ -15,28 +15,13 @@
         "sort": 2
     },
     {
-        "name": "兼职",
-        "image": "income/兼职_icon",
-        "sort": 3
-    },
-    {
-        "name": "租金",
-        "image": "income/租金_icon",
-        "sort": 4
-    },
-    {
-        "name": "房子",
-        "image": "income/房子_icon",
-        "sort": 5
-    },
-    {
         "name": "理财",
         "image": "income/理财_icon",
-        "sort": 6
+        "sort": 3
     },
     {
         "name": "其他",
         "image": "other/其他_icon",
-        "sort": 7
+        "sort": 4
     }
 ]
