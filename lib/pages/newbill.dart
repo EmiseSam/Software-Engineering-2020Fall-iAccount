@@ -1,3 +1,4 @@
+import 'package:i_account/db/db_helper_demo.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/widgets/appbar.dart';
@@ -5,6 +6,7 @@ import 'package:i_account/bill/models/bill_record_response.dart';
 import 'package:i_account/bill/models/category_model.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
+import 'package:i_account/db/db_helper_demo.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/highlight_well.dart';
@@ -35,9 +37,8 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   bool _isAdd = false;
   String _accountAccount = '';
   String _accountPerson = '';
-  String _accountCategorysec = '二级分类';
-  var _accountPickerData = ["现金", "支付宝", "微信", "借记卡"];
-  var _personPickerData = ["自己", "孩子", "父亲", "母亲"];
+  var _accountPickerData ;
+  var _personPickerData = ["自己", "孩子", "父亲", "母亲","朋友","同学","室友"];
 
   /// 支出类别数组
   List<CategoryItem> _expenObjects = List();
@@ -56,6 +57,16 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       text: '收入',
     )
   ];
+
+  Future<void> _loadAccountNames() async{
+    List list = await dbAccount.getAccountList();
+    List listTemp =new List();
+    list.forEach((element) {
+      listTemp.add(element.account);
+    });
+    _accountPickerData = listTemp;
+    }
+
 
   /// 获取支出类别数据
   Future<void> _loadExpenDatas() async {
@@ -174,6 +185,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     _updateInitData();
     _loadExpenDatas();
     _loadIncomeDatas();
+    _loadAccountNames();
   }
 
   @override
@@ -435,17 +447,73 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
               });
             },
             //继续
-            nextCallback: () {
+            nextCallback: () async {
+              if(_accountAccount.isEmpty){
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[Text("没有选择账户")],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
+              }
               if (_isAdd == true) {
                 _addNumber();
               }
-              _record();
+              var res = await dbAccount.getAccount(_accountAccount);
+              int typeAccount = res.typeofA;
+              _record(typeAccount);
               _clearZero();
               setState(() {});
             },
             // 保存
-            saveCallback: () {
-              _record();
+            saveCallback: () async {
+              if(_accountAccount.isEmpty){
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[Text("没有选择账户")],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
+              }
+              var res = await dbAccount.getAccount(_accountAccount);
+              int typeAccount = res.typeofA;
+              _record(typeAccount);
                NavigatorUtils.goBack(context);
             },
           ),
@@ -475,7 +543,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   }
 
   /// 记账保存
-  void _record() {
+  void _record(int value) {
     if (_numberString.isEmpty || _numberString == '0.') {
       return;
     }
@@ -503,6 +571,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
             .toString(),
         _time.millisecondsSinceEpoch);
+
+    if(_tabController.index == 1){
+      dbAccount.accountBalanceCal(_accountAccount, 0-double.parse(_numberString), value);
+    }else{
+      dbAccount.accountBalanceCal(_accountAccount, double.parse(_numberString), value);
+    }
+
+    print("$_accountAccount");
 
     dbHelp.insertBillRecord(model).then((value) {
       print("数据库测试 $_accountPerson");

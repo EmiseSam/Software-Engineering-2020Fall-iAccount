@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 352.0,
+      height: 440.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -76,6 +76,41 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LocksettingPage()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('数据导出', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('备份应用数据'),
+              leading: Icon(
+                Icons.ios_share,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[Text("已导出应用数据")],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
               },
             ),
             Divider(),

@@ -1,25 +1,27 @@
+import 'package:i_account/db/account_classification.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/morepages/account.dart';
+import 'package:i_account/pages/tabs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/mypickertool.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:flutter/services.dart';
+import 'package:i_account/db/db_helper_demo.dart';
 
-class AccountCreateAssetsPage extends StatefulWidget {
+class AccountCreatePage extends StatefulWidget {
   @override
-  _AccountCreateAssetsPageState createState() =>
-      _AccountCreateAssetsPageState();
+  _AccountCreatePageState createState() =>
+      _AccountCreatePageState();
 }
 
-class _AccountCreateAssetsPageState extends State<AccountCreateAssetsPage> {
+class _AccountCreatePageState extends State<AccountCreatePage> {
 
   TextEditingController _accountName = new TextEditingController();
   TextEditingController _accountAmount = new TextEditingController();
   var _typePickerData = ["资产账户", "负债账户"];
   String _accountType = '';
-  int _accountTypeDB = 1;
+  int _accountTypeDB = 0;
 
   _buildAppBarTitle() {
     return Container(
@@ -45,10 +47,39 @@ class _AccountCreateAssetsPageState extends State<AccountCreateAssetsPage> {
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
-        onPressed: () {
-          //TODO 这里要做一个判断数据类型是否正确 以及把新增的账户读到数据库里去
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AccountPage()));
+        onPressed: () async{
+          print(_accountTypeDB);
+          AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
+          await dbAccount.insertAccount(dba);
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (BuildContext context) {
+                return Tabs();
+              }), (route) => route == null);
+          showDialog<Null>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("提示"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[Text("账户创建成功！")],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("确定"),
+                  ),
+                ],
+              );
+            },
+          ).then((val) {
+            print(val);
+          });
+
         },
       ),
       body: Container(
@@ -89,7 +120,8 @@ class _AccountCreateAssetsPageState extends State<AccountCreateAssetsPage> {
                       title: "请选择", clickCallBack: (int index, var str) {
                         setState(() {
                           _accountType = str;
-                          _accountTypeDB = index + 1;
+                          _accountTypeDB = index;
+                          print(_accountTypeDB);
                         });
                       });
                 },

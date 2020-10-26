@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:i_account/pages/accountpages/account_create.dart';
+import 'package:i_account/pages/tabs.dart';
+import 'package:i_account/pages/accountpages/bill_search_new.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/res/styles.dart';
+import 'package:i_account/db/db_helper_demo.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -11,48 +14,99 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  List<String> accountnameItemsAssets = <String>[
-    'keyboard',
-    'print',
-    'keyboard',
-    'keyboard',
-    'keyboard',
-    'keyboard',
-  ];
-  List<String> accountamountItemsAssets = <String>[
-    'keyboard',
-    'print',
-    'keyboard',
-    'keyboard',
-    'keyboard',
-    'keyboard',
-  ];
-  List<String> accountnameItemsDebits = <String>[
-    'keyboard',
-    'print',
-  ];
-  List<String> accountamountItemsDebits = <String>[
-    'keyboard',
-    'print',
-  ];
+  List accountnameItemsAssets = new List();
+  List accountamountItemsAssets = new List();
 
-  String name;
-  String amount;
+  List accountnameItemsDebits = new List();
+  List accountamountItemsDebits = new List();
 
-  TextStyle _bannerText = TextStyle(fontSize: 14.0, color: Colors.white);
+  TextStyle _bannerText = TextStyle(
+    fontSize: 14.0,
+    color: Colors.white,
+  );
   TextStyle _accountTitleStyle = TextStyle(
     fontSize: 15.0,
     color: Colors.black45,
   );
 
   // 总资产
-  num totalAssets = 0.00;
+  double totalAssets = 0.00;
 
   // 总负债
-  num totalLiabilities = 0.00;
+  double totalLiabilities = 0.00;
+
+  Future<List> _loadAccountNamesAssets() async {
+    List list = await dbAccount.getAccounts(0);
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.account);
+    });
+    print(accountnameItemsAssets.length);
+    return listTemp;
+  }
+
+  Future<List> _loadAccountNamesDebits() async {
+    List list = await dbAccount.getAccounts(1);
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.account);
+    });
+    print(accountnameItemsDebits.length);
+    return listTemp;
+  }
+
+  Future<List> _loadAccountAmountAssets() async {
+    List list = await dbAccount.getAccounts(0);
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.balance.toString());
+    });
+    print(accountamountItemsAssets.length);
+    return listTemp;
+  }
+
+  Future<List> _loadAccountAmountDebits() async {
+    List list = await dbAccount.getAccounts(1);
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.balance.toString());
+    });
+    print(accountamountItemsDebits.length);
+    return listTemp;
+  }
+
+  //计算总资产
+  Future<double> _loadAssets() async {
+    double temp = await dbAccount.accountsTotalize(0);
+    return temp;
+  }
+
+  //计算总资产
+  Future<double> _loadDebits() async {
+    double temp = await dbAccount.accountsTotalize(1);
+    return temp;
+  }
 
   @override
   void initState() {
+    _loadAccountNamesAssets().then((value) => setState(() {
+          accountnameItemsAssets = value;
+        }));
+    _loadAccountNamesDebits().then((value) => setState(() {
+          accountnameItemsDebits = value;
+        }));
+    _loadAccountAmountAssets().then((value) => setState(() {
+          accountamountItemsAssets = value;
+        }));
+    _loadAccountAmountDebits().then((value) => setState(() {
+          accountamountItemsDebits = value;
+        }));
+    _loadAssets().then((value) => setState(() {
+          totalAssets = value;
+        }));
+    _loadDebits().then((value) => setState(() {
+          totalLiabilities = value;
+        }));
     super.initState();
   }
 
@@ -75,10 +129,8 @@ class _AccountPageState extends State<AccountPage> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AccountCreateAssetsPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AccountCreatePage()));
             },
           ),
         ],
@@ -180,17 +232,20 @@ class _AccountPageState extends State<AccountPage> {
             ),
             Gaps.vGap(10),
             Container(
-              height: 84*accountnameItemsAssets.length.toDouble(),
+              height: 84 * accountnameItemsAssets.length.toDouble(),
               child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, item) {
-                    return buildListData(context, accountnameItemsAssets[item],
-                        accountamountItemsAssets[item]);
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  itemCount: accountnameItemsAssets.length),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, item) {
+                  return buildListData(context, accountnameItemsAssets[item],
+                      accountamountItemsAssets[item]);
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(),
+                itemCount: (accountnameItemsAssets.length == null)
+                    ? 0
+                    : accountnameItemsAssets.length,
+              ),
             ),
             Gaps.vGap(10),
             Row(
@@ -206,17 +261,20 @@ class _AccountPageState extends State<AccountPage> {
             ),
             Gaps.vGap(10),
             Container(
-              height: 84*accountnameItemsDebits.length.toDouble(),
+              height: 84 * accountnameItemsDebits.length.toDouble(),
               child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, item) {
-                    return buildListData(context, accountnameItemsDebits[item],
-                        accountamountItemsDebits[item]);
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  itemCount: accountnameItemsDebits.length),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, item) {
+                  return buildListData(context, accountnameItemsDebits[item],
+                      accountamountItemsDebits[item]);
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(),
+                itemCount: (accountnameItemsDebits.length == null)
+                    ? 0
+                    : accountnameItemsDebits.length,
+              ),
             ),
           ],
         ),
@@ -227,6 +285,72 @@ class _AccountPageState extends State<AccountPage> {
   Widget buildListData(
       BuildContext context, String titleItem, String subTitleItem) {
     return new ListTile(
+      onTap: () {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+          return BillSearchListtAccount(titleItem,"2020","10");
+        }));
+      },
+      onLongPress: () async {
+        showDialog<Null>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("提示"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[Text("是否删除该账户？")],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("取消"),
+                ),
+                FlatButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await dbAccount.deleteAccount(titleItem);
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return Tabs();
+                    }), (route) => route == null);
+                    showDialog<Null>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("提示"),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[Text("已经删除该账户！")],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("确定"),
+                            ),
+                          ],
+                        );
+                      },
+                    ).then((val) {
+                      print(val);
+                    });
+                  },
+                  child: Text("确定"),
+                ),
+              ],
+            );
+          },
+        ).then((val) {
+          print(val);
+        });
+      },
       leading: Icon(Icons.account_balance_wallet),
       title: new Text(
         titleItem,
@@ -236,7 +360,6 @@ class _AccountPageState extends State<AccountPage> {
         subTitleItem,
       ),
       trailing: new Icon(Icons.keyboard_arrow_right),
-      onTap: () {},
     );
   }
 }

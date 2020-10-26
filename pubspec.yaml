@@ -46,6 +46,7 @@ dependencies:
   flustars: ^0.2.6+1
   intro_slider: ^1.2.0
   package_info: ^0.4.3
+  date_format: ^1.0.9
 
 
   # 路由框架 https://github.com/theyakka/fluro

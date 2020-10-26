@@ -13,3 +13,4 @@ final String columnAccount = '_account';
 final String columnMember = '_member';
 final String columnTime = '_time';
 final String columnBalance = '_balance';
+final String columntypeofA = '_typeofA';
