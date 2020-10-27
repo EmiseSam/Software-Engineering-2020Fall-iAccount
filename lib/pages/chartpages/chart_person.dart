@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/widgets/mypickertool.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/chart/bill_search_list.dart';
+import 'package:i_account/pages/personpages/bill_search_person.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/res/styles.dart';
@@ -14,7 +13,6 @@ import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/state_layout.dart';
-import 'package:i_account/widgets/highlight_well.dart';
 
 class ChartPersonPage extends StatefulWidget {
   @override
@@ -85,7 +83,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
         }
 
         if (item.type == _type) {
-          map[item.categoryName] = null;
+          map[item.person] = null;
         }
       });
 
@@ -93,19 +91,18 @@ class ChartPersonPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.categoryName == key);
+        var items = list.where((item) => item.person == key);
 
         double money = 0.0;
         items.forEach((item) {
           money += item.money;
         });
 
-        String image = items.first.image ?? '';
 
         double ratio =
             money / (_type == 1 ? _monthExpenMoney : _monthIncomeMoney);
         ChartItemModel itemModel =
-            ChartItemModel(index, key, image, money, ratio, items.length);
+            ChartItemModel(index, key, money, ratio, items.length);
         chartItems.add(itemModel);
         index += 1;
       });
@@ -123,7 +120,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       } else {
@@ -135,7 +132,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       }
@@ -343,8 +340,8 @@ class ChartPersonPageState extends State<StatefulWidget> {
     return HighLightWell(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchList(
-              model.categoryName, myYear1, myMonth1, myYear2, myMonth2);
+          return BillSearchListPerson(
+              model.person);
         }));
       },
       child: Container(
@@ -357,16 +354,13 @@ class ChartPersonPageState extends State<StatefulWidget> {
                 bottom: BorderSide(width: 0.6, color: Colours.line))),
         child: Row(
           children: <Widget>[
-            Image.asset(
-              Utils.getImagePath('category/${model.image}'),
-              width: ScreenUtil.getInstance().setWidth(55),
-            ),
+            Icon(Icons.person),
             Gaps.hGap(ScreenUtil.getInstance().setWidth(32)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  model.categoryName,
+                  model.person == '' ? "未指定成员" : model.person,
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(32),
                       color: Colours.dark),
@@ -401,12 +395,11 @@ class ChartPersonPageState extends State<StatefulWidget> {
 
 class ChartItemModel {
   final int id;
-  final String categoryName;
-  final String image;
+  final String person;
   final double money;
   final double ratio;
   final int number;
 
-  ChartItemModel(this.id, this.categoryName, this.image, this.money, this.ratio,
+  ChartItemModel(this.id, this.person, this.money, this.ratio,
       this.number);
 }

@@ -20,10 +20,8 @@ import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/db/db_helper_demo.dart';
 
 class BillSearchListtAccount extends StatefulWidget {
-  BillSearchListtAccount(this.accountName, this.year, this.month) : super();
+  BillSearchListtAccount(this.accountName) : super();
   final accountName;
-  final String year;
-  final String month;
 
   @override
   State<StatefulWidget> createState() {

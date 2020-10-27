@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/pages/accountpages/account_create.dart';
 import 'package:i_account/pages/tabs.dart';
-import 'package:i_account/pages/accountpages/bill_search_new.dart';
+import 'package:i_account/pages/accountpages/bill_search_account.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/db/db_helper_demo.dart';
@@ -288,7 +288,7 @@ class _AccountPageState extends State<AccountPage> {
     return new ListTile(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListtAccount(titleItem,"2020","10");
+          return BillSearchListtAccount(titleItem);
         }));
       },
       onLongPress: () async {

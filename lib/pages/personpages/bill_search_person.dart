@@ -19,19 +19,17 @@ import 'package:oktoast/oktoast.dart';
 import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/db/db_helper_demo.dart';
 
-class BillSearchListtAccount extends StatefulWidget {
-  BillSearchListtAccount(this.accountName, this.year, this.month) : super();
+class BillSearchListPerson extends StatefulWidget {
+  BillSearchListPerson(this.accountName) : super();
   final accountName;
-  final String year;
-  final String month;
 
   @override
   State<StatefulWidget> createState() {
-    return BillSearchListtAccountState();
+    return BillSearchListPersonState();
   }
 }
 
-class BillSearchListtAccountState extends State<BillSearchListtAccount> {
+class BillSearchListPersonState extends State<BillSearchListPerson> {
   List _datas = List();
   String myYear1 = "1971";
   String myMonth1 = "01";
@@ -202,7 +200,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                 },
               ),
             ),
-            Text('${widget.accountName}',style: TextStyle(fontSize: 22),),
+            Text(widget.accountName == ''? "未指定":'${widget.accountName}',style: TextStyle(fontSize: 22),),
             ButtonTheme(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: FlatButton(

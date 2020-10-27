@@ -360,26 +360,6 @@ class Dbhelper {
     return models;
   }
 
-  /// 查询账单记录成员版 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListPerson(int startTime, int endTime,
-      {String categoryName}) async {
-    //DESC ASC
-    var dbClient = await db;
-    var result;
-    if (categoryName != null) {
-      result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime and person = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
-    } else {
-      result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime");
-    }
-    List list = result.toList();
-    List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
-
-    return models;
-  }
-
   /// 查询预算是否存在
   Future<BudgetModel> querybudget(String yearMonth) async {
     var dbClient = await db;

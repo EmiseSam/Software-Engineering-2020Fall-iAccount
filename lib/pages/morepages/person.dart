@@ -81,7 +81,7 @@ class _PersonPageState extends State<PersonPage> {
     return new ListTile(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListtAccount(titleItem,"2020","10");
+          return BillSearchListPerson(titleItem);
         }));
       },
       onLongPress: () async {
@@ -93,7 +93,7 @@ class _PersonPageState extends State<PersonPage> {
               title: Text("提示"),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: <Widget>[Text("是否删除该账户？")],
+                  children: <Widget>[Text("是否删除该成员？")],
                 ),
               ),
               actions: <Widget>[
