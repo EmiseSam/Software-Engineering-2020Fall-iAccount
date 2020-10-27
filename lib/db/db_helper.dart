@@ -53,7 +53,6 @@ class Dbhelper {
 
   /// When creating the db, create the table type 1支出 2收入
   void _onCreate(Database db, int version) async {
-
     // 账单记录表
     //是否同步 是否删除 金额、备注、类型 1支出 2收入 、 类别名、图片路径、创建时间、更新时间
     String queryBill = """
@@ -67,7 +66,6 @@ class Dbhelper {
       image TEXT NOT NULL,
       type INTEGER DEFAULT(1),
       isSync INTEGER DEFAULT(0),
-      isDelete INTEGER DEFAULT(0),
       createTime TEXT,
       createTimestamp INTEGER,
       updateTime TEXT,
@@ -197,7 +195,7 @@ class Dbhelper {
     //DESC ASC
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime ORDER BY updateTimestamp ASC, id ASC");
+        "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime ORDER BY updateTimestamp ASC, id ASC");
     List list = result.toList();
     List<BillRecordModel> models =
         list.map((i) => BillRecordModel.fromJson(i)).toList();
@@ -310,10 +308,10 @@ class Dbhelper {
     var result;
     if (categoryName != null) {
       result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime and categoryName = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime and categoryName = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
     } else {
       result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime");
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime");
     }
     List list = result.toList();
     List<BillRecordModel> models =
@@ -330,10 +328,30 @@ class Dbhelper {
     var result;
     if (categoryName != null) {
       result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime and account = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime and account = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
     } else {
       result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE isDelete == 0 AND updateTimestamp >= $startTime and updateTimestamp <= $endTime");
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime");
+    }
+    List list = result.toList();
+    List<BillRecordModel> models =
+    list.map((i) => BillRecordModel.fromJson(i)).toList();
+
+    return models;
+  }
+
+  /// 查询账单记录成员版 13位时间戳 type类型 1支出 2收入
+  Future<List<BillRecordModel>> getBillListPerson(int startTime, int endTime,
+      {String categoryName}) async {
+    //DESC ASC
+    var dbClient = await db;
+    var result;
+    if (categoryName != null) {
+      result = await dbClient.rawQuery(
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime and person = '$categoryName'  ORDER BY updateTimestamp ASC, id ASC");
+    } else {
+      result = await dbClient.rawQuery(
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime");
     }
     List list = result.toList();
     List<BillRecordModel> models =
@@ -392,7 +410,13 @@ class Dbhelper {
     var dbClient = await db;
     //UPDATE BillRecord SET money = 123 WHERE id = 42
     return await dbClient
-        //.rawUpdate('UPDATE $_billTableName SET isDelete = 1 WHERE id = $id');
         .delete(_billTableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  ///删除账户的同时删除所有相关账单
+  Future<int> deleteAccountBills(String account) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete(_billTableName, where: 'account = ?', whereArgs: [account]);
   }
 }

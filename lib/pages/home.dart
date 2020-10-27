@@ -3,6 +3,7 @@ import 'package:i_account/bill/models/bill_record_group.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
+import 'package:i_account/db/db_helper_demo.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
@@ -18,16 +19,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
-
 import 'package:i_account/pages/newbill.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   @override
   //保存状态
   bool get wantKeepAlive => true;
@@ -39,23 +39,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   BillRecordMonth _monthModel = BillRecordMonth(0, 0, []);
 
-  String _year = "${DateTime.now().year}";
-  String _month = "${DateTime.now().month.toString().padLeft(2, '0')}";
+  String myYear1 = "1971";
+  String myMonth1 = "01";
+  String myYear2 = "2055";
+  String myMonth2 = "12";
 
   /// 获取当前月份的数据
   Future<void> getCurrentMonthDatas() async {
     // 时间戳
-    int startTime = DateTime(int.parse(_year), int.parse(_month), 1, 0, 0, 0, 0)
-        .millisecondsSinceEpoch;
+    int startTime =
+        DateTime(int.parse(myYear1), int.parse(myMonth1), 1, 0, 0, 0, 0)
+            .millisecondsSinceEpoch;
     int endTime = DateTime(
-        int.parse(_year),
-        int.parse(_month),
-        DateUtls.getDaysNum(int.parse(_year), int.parse(_month)),
-        23,
-        59,
-        59,
-        999)
+            int.parse(myYear2),
+            int.parse(myMonth2),
+            DateUtls.getDaysNum(int.parse(myYear2), int.parse(myMonth2)),
+            23,
+            59,
+            59,
+            999)
         .millisecondsSinceEpoch;
+    if (startTime > endTime) {
+      var temp;
+      temp = startTime;
+      startTime = endTime;
+      endTime = temp;
+      temp = myYear1;
+      myYear1 = myYear2;
+      myYear2 = temp;
+      temp = myMonth1;
+      myMonth1 = myMonth2;
+      myMonth2 = temp;
+    }
 
     dbHelp.getBillRecordMonth(startTime, endTime).then((monthModel) {
       setState(() {
@@ -92,6 +107,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   double maxOffset = 150;
   double opacityValue = 0;
+
   void _onScrol(offset) {
     double alpha = offset / maxOffset;
     if (alpha < 0) {
@@ -161,53 +177,97 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
       floatingActionButton: _isShowToTopBtn
           ? HighLightWell(
-        onTap: () {
-          _controller.animateTo(0,
-              duration: Duration(milliseconds: 200), curve: Curves.ease);
-        },
-        borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          width: 35,
-          height: 35,
-          child: Image.asset(
-            Utils.getImagePath('icons/arrow_upward'),
-          ),
-        ),
-      )
+              onTap: () {
+                _controller.animateTo(0,
+                    duration: Duration(milliseconds: 200), curve: Curves.ease);
+              },
+              borderRadius: BorderRadius.circular(20),
+              child: SizedBox(
+                width: 35,
+                height: 35,
+                child: Image.asset(
+                  Utils.getImagePath('icons/arrow_upward'),
+                ),
+              ),
+            )
           : null,
     );
   }
 
   // 标题
   _buildTitle() {
-    return FlatButton(
-      child: Text(
-        '$_year-$_month',
-        style: TextStyle(
-            fontSize: ScreenUtil.getInstance().setSp(34),
-            color: opacityValue < 0.3
-                ? Colors.white.withOpacity(1.0 * (1 - opacityValue))
-                : Colours.app_main.withOpacity(1.0 * opacityValue)),
-      ),
-      onPressed: () {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return CalendarMonthDialog(
-              checkTap: (year, month) {
-                if (_year != year || _month != month) {
-                  setState(() {
-                    _year = year;
-                    _month = month;
-                    getCurrentMonthDatas();
-                  });
-                }
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ButtonTheme(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: FlatButton(
+              child: (myYear1 == "1971")
+                  ? Icon(Icons.chevron_left,color: Colors.white,)
+                  : Text(
+                      '$myYear1-$myMonth1',
+                      style: TextStyle(
+                          fontSize: ScreenUtil.getInstance().setSp(34),
+                          color: Colors.white),
+                    ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return CalendarMonthDialog(
+                      checkTap: (year, month) {
+                        if (myYear1 != year || myMonth1 != month) {
+                          myYear1 = year;
+                          myMonth1 = month;
+                          getCurrentMonthDatas();
+                        }
+                      },
+                    );
+                  },
+                );
               },
-            );
-          },
-        );
-      },
+            ),
+          ),
+          Text(
+            "首页",
+            style: TextStyle(
+                fontSize: ScreenUtil.getInstance().setSp(34),
+                color: Colors.white),
+          ),
+          ButtonTheme(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: FlatButton(
+              child: (myYear2 == "2055")
+                  ? Icon(Icons.chevron_right,color: Colors.white,)
+                  : Text(
+                      '$myYear2-$myMonth2',
+                      style: TextStyle(
+                          fontSize: ScreenUtil.getInstance().setSp(34),
+                          color: Colors.white),
+                    ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return CalendarMonthDialog(
+                      checkTap: (year, month) {
+                        if (myYear2 != year || myMonth2 != month) {
+                          myYear2 = year;
+                          myMonth2 = month;
+                          getCurrentMonthDatas();
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -223,28 +283,28 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
       _monthModel.recordLsit.length > 0
           ? SliverList(
-        delegate:
-        SliverChildBuilderDelegate((BuildContext context, int index) {
-          var model = _monthModel.recordLsit[index];
-          if (model.runtimeType == BillRecordModel) {
-            return _buildItem(model);
-          } else {
-            return _buildTimeTag(model);
-          }
-        }, childCount: _monthModel.recordLsit.length),
-      )
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+                var model = _monthModel.recordLsit[index];
+                if (model.runtimeType == BillRecordModel) {
+                  return _buildItem(model);
+                } else {
+                  return _buildTimeTag(model);
+                }
+              }, childCount: _monthModel.recordLsit.length),
+            )
           : SliverPadding(
-        padding:
-        EdgeInsets.only(top: ScreenUtil.getInstance().setHeight(120)),
-        sliver: SliverList(
-          delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return const StateLayout(
-                  hintText: '没有账单',
-                );
-              }, childCount: 1),
-        ),
-      ),
+              padding:
+                  EdgeInsets.only(top: ScreenUtil.getInstance().setHeight(120)),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return const StateLayout(
+                    hintText: '没有账单',
+                  );
+                }, childCount: 1),
+              ),
+            ),
     ];
   }
 
@@ -273,10 +333,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           fontSize: ScreenUtil.getInstance().setSp(56),
                           color: Colors.white)),
                   Text(
-                    '本月结余',
+                    '结余',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: ScreenUtil.getInstance().setSp(26),
+                        fontSize: ScreenUtil.getInstance().setSp(35),
                         color: Colors.white),
                   ),
                   Gaps.vGap(ScreenUtil.getInstance().setHeight(15)),
@@ -316,7 +376,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             fontSize: ScreenUtil.getInstance().setSp(36),
                             color: Colors.white),
                       ),
-                      Text('${Utils.formatDouble(double.parse(_month))}月支出',
+                      Text('支出',
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: ScreenUtil.getInstance().setSp(26),
@@ -347,7 +407,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             fontSize: ScreenUtil.getInstance().setSp(36),
                             color: Colors.white),
                       ),
-                      Text('${Utils.formatDouble(double.parse(_month))}月收入',
+                      Text('收入',
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: ScreenUtil.getInstance().setSp(26),
@@ -374,7 +434,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             children: <Widget>[
               Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -409,18 +469,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     ),
                     model.remark.isNotEmpty
                         ? Padding(
-                      padding: EdgeInsets.only(
-                          left:
-                          ScreenUtil.getInstance().setWidth(55) + 12,
-                          top: 2),
-                      child: Text(
-                        model.remark,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: ScreenUtil.getInstance().setSp(30),
-                            color: Colours.black),
-                      ),
-                    )
+                            padding: EdgeInsets.only(
+                                left:
+                                    ScreenUtil.getInstance().setWidth(55) + 12,
+                                top: 2),
+                            child: Text(
+                              model.remark,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: ScreenUtil.getInstance().setSp(30),
+                                  color: Colours.black),
+                            ),
+                          )
                         : Gaps.empty,
                   ],
                 ),
@@ -535,8 +595,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       Positioned(
                         left: 0,
                         child: HighLightWell(
-                          onTap: () {
+                          onTap: () async {
                             // 删除记录
+                            var account = await dbAccount.getAccount(model.account);
+                            var typeofA = account.typeofA;
+                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);
@@ -554,7 +617,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               child: Text(
                                 '删除',
                                 style:
-                                TextStyle(fontSize: 16, color: Colors.red),
+                                    TextStyle(fontSize: 16, color: Colors.red),
                               ),
                             ),
                           ),
@@ -614,35 +677,39 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   ),
                 ),
                 Gaps.line,
-                model.account.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('账户', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.account}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.account.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('账户', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.account}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ):Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
-                model.person.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('成员', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.person}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.person.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('成员', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.person}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ): Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -695,24 +762,24 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 Gaps.line,
                 model.remark.isNotEmpty
                     ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('备注', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.remark}',
-                            textAlign: TextAlign.right, style: descStyle),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('备注', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.remark}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                )
                     : Gaps.empty,
                 MediaQuery.of(context).padding.bottom > 0
                     ? SizedBox(
-                  height: MediaQuery.of(context).padding.bottom,
-                )
+                        height: MediaQuery.of(context).padding.bottom,
+                      )
                     : Gaps.empty,
               ],
             ),

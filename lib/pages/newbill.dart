@@ -38,7 +38,8 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   String _accountAccount = '';
   String _accountPerson = '';
   var _accountPickerData ;
-  var _personPickerData = ["自己", "孩子", "父亲", "母亲","朋友","同学","室友"];
+  var _personPickerData;
+  int mymoneytemp = 0;
 
   /// 支出类别数组
   List<CategoryItem> _expenObjects = List();
@@ -67,6 +68,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     _accountPickerData = listTemp;
     }
 
+  Future<void> _loadPersonNames() async {
+    List list = await dbAccount.getMember();
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.member);
+    });
+    _personPickerData = listTemp;
+  }
 
   /// 获取支出类别数据
   Future<void> _loadExpenDatas() async {
@@ -136,8 +145,10 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       }
 
       if (widget.recordModel.money != null) {
+        mymoneytemp = 1;
         _numberString = Utils.formatDouble(double.parse(
             _numberString = widget.recordModel.money.toStringAsFixed(2)));
+
       }
 
       if (widget.recordModel.type == 2) {
@@ -186,6 +197,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     _loadExpenDatas();
     _loadIncomeDatas();
     _loadAccountNames();
+    _loadPersonNames();
   }
 
   @override
@@ -511,6 +523,29 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   print(val);
                 });
               }
+              if(mymoneytemp == 1){
+                String ac = widget.recordModel.account;
+                double preMoney = widget.recordModel.money;
+                var account = await dbAccount.getAccount(widget.recordModel.account);
+                int typeofA = account.typeofA;
+                if(_tabController.index == 0) {
+                  await dbAccount.accountBalanceAdd(ac, preMoney, typeofA);
+                  await dbAccount.accountBalanceCal(
+                      ac, double.parse(_numberString), typeofA);
+                }else{
+                  await dbAccount.accountBalanceAdd(ac, 0-preMoney, typeofA);
+                  await dbAccount.accountBalanceCal(
+                      ac, 0-double.parse(_numberString), typeofA);
+                }
+              }else{
+                var account = await dbAccount.getAccount(_accountAccount);
+                int typeofA = account.typeofA;
+                if(_tabController.index == 0) {
+                  await dbAccount.accountBalanceCal(_accountAccount, double.parse(_numberString), typeofA);
+                }else{
+                  await dbAccount.accountBalanceCal(_accountAccount, 0-double.parse(_numberString), typeofA);
+                }
+              }
               var res = await dbAccount.getAccount(_accountAccount);
               int typeAccount = res.typeofA;
               _record(typeAccount);
@@ -566,19 +601,13 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         item.name,
         item.image,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
-            .toString(),
-        _time.millisecondsSinceEpoch,
+              .toString(),
+          _time.millisecondsSinceEpoch,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
             .toString(),
         _time.millisecondsSinceEpoch);
 
-    if(_tabController.index == 1){
-      dbAccount.accountBalanceCal(_accountAccount, 0-double.parse(_numberString), value);
-    }else{
-      dbAccount.accountBalanceCal(_accountAccount, double.parse(_numberString), value);
-    }
 
-    print("$_accountAccount");
 
     dbHelp.insertBillRecord(model).then((value) {
       print("数据库测试 $_accountPerson");

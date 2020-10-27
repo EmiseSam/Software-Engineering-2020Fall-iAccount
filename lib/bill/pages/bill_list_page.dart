@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
-
+import 'package:i_account/db/db_helper_demo.dart';
 import 'package:i_account/pages/newbill.dart';
 
 class Bill extends StatefulWidget {
@@ -548,8 +548,11 @@ class _BillState extends State<Bill>
                       Positioned(
                         left: 0,
                         child: HighLightWell(
-                          onTap: () {
+                          onTap: () async {
                             // 删除记录
+                            var account = await dbAccount.getAccount(model.account);
+                            var typeofA = account.typeofA;
+                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);

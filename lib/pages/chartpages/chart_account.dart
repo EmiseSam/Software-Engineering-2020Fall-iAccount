@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oktoast/oktoast.dart';
-
+import 'package:i_account/widgets/mypickertool.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/chart/bill_search_list.dart';
@@ -15,13 +14,14 @@ import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/state_layout.dart';
+import 'package:i_account/widgets/highlight_well.dart';
 
-class ChartPage extends StatefulWidget {
+class ChartAccountPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ChartPageState();
+  State<StatefulWidget> createState() => ChartAccountPageState();
 }
 
-class ChartPageState extends State<StatefulWidget> {
+class ChartAccountPageState extends State<StatefulWidget> {
   @override
   //保存状态
   bool get wantKeepAlive => true;
@@ -40,35 +40,37 @@ class ChartPageState extends State<StatefulWidget> {
 
   List<ChartItemModel> _datas = List();
 
-  String _year = "${DateTime
-      .now()
-      .year}";
-  String _month = "${DateTime
-      .now()
-      .month
-      .toString()
-      .padLeft(2, '0')}";
+  String myYear1 = "1971";
+  String myMonth1 = "01";
+  String myYear2 = "2055";
+  String myMonth2 = "12";
 
   Future<void> _initDatas() async {
     // 时间戳
-    int startTime = DateTime(
-        int.parse(_year),
-        int.parse(_month),
-        1,
-        0,
-        0,
-        0,
-        0)
-        .millisecondsSinceEpoch;
+    int startTime =
+        DateTime(int.parse(myYear1), int.parse(myMonth1), 1, 0, 0, 0, 0)
+            .millisecondsSinceEpoch;
     int endTime = DateTime(
-        int.parse(_year),
-        int.parse(_month),
-        DateUtls.getDaysNum(int.parse(_year), int.parse(_month)),
-        23,
-        59,
-        59,
-        999)
+            int.parse(myYear2),
+            int.parse(myMonth2),
+            DateUtls.getDaysNum(int.parse(myYear2), int.parse(myMonth2)),
+            23,
+            59,
+            59,
+            999)
         .millisecondsSinceEpoch;
+    if (startTime > endTime) {
+      var temp;
+      temp = startTime;
+      startTime = endTime;
+      endTime = temp;
+      temp = myYear1;
+      myYear1 = myYear2;
+      myYear2 = temp;
+      temp = myMonth1;
+      myMonth1 = myMonth2;
+      myMonth2 = temp;
+    }
     dbHelp.getBillList(startTime, endTime).then((list) {
       _monthExpenMoney = 0.0;
       _monthIncomeMoney = 0.0;
@@ -103,7 +105,7 @@ class ChartPageState extends State<StatefulWidget> {
         double ratio =
             money / (_type == 1 ? _monthExpenMoney : _monthIncomeMoney);
         ChartItemModel itemModel =
-        ChartItemModel(index, key, image, money, ratio, items.length);
+            ChartItemModel(index, key, image, money, ratio, items.length);
         chartItems.add(itemModel);
         index += 1;
       });
@@ -121,8 +123,7 @@ class ChartPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-            '${item.categoryName} ${Utils.formatDouble(
-                double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       } else {
@@ -134,8 +135,7 @@ class ChartPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-            '${item.categoryName} ${Utils.formatDouble(
-                double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       }
@@ -158,7 +158,9 @@ class ChartPageState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334, allowFontScaling: true)..init(context);
+    ScreenUtil.instance =
+        ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
+          ..init(context);
     return Scaffold(
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
@@ -169,7 +171,7 @@ class ChartPageState extends State<StatefulWidget> {
             padding: const EdgeInsets.only(top: 15),
             sliver: SliverList(
               delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
                 return Column(children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -182,8 +184,7 @@ class ChartPageState extends State<StatefulWidget> {
                           children: [
                             Icon(Icons.indeterminate_check_box_outlined),
                             Text(
-                              '支出  ¥${Utils.formatDouble(double.parse(
-                                  _monthExpenMoney.toStringAsFixed(2)))}',
+                              '支出  ¥${Utils.formatDouble(double.parse(_monthExpenMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -198,8 +199,7 @@ class ChartPageState extends State<StatefulWidget> {
                           children: [
                             Icon(Icons.add_box),
                             Text(
-                              '收入  ¥${Utils.formatDouble(double.parse(
-                                  _monthIncomeMoney.toStringAsFixed(2)))}',
+                              '收入  ¥${Utils.formatDouble(double.parse(_monthIncomeMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -209,19 +209,10 @@ class ChartPageState extends State<StatefulWidget> {
                   ),
                   Container(
                     // color: Colors.red,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.4,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width * 0.4,
                     child: OverflowBox(
-                        minWidth: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        minWidth: MediaQuery.of(context).size.width,
                         child: charts.PieChart(
                             _type == 1 ? _expendChartDatas : _incomeChartDatas,
                             animate: true,
@@ -238,28 +229,28 @@ class ChartPageState extends State<StatefulWidget> {
           ),
           _datas.length > 0
               ? SliverPadding(
-            padding: const EdgeInsets.only(top: 16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return HighLightWell(
-                      child: _buildItem(index),
-                    );
-                  }, childCount: _datas.length),
-            ),
-          )
+                  padding: const EdgeInsets.only(top: 16),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return HighLightWell(
+                        child: _buildItem(index),
+                      );
+                    }, childCount: _datas.length),
+                  ),
+                )
               : SliverPadding(
-            padding: EdgeInsets.only(
-                top: ScreenUtil.getInstance().setHeight(120)),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return const StateLayout(
-                      hintText: '没有账单',
-                    );
-                  }, childCount: 1),
-            ),
-          ),
+                  padding: EdgeInsets.only(
+                      top: ScreenUtil.getInstance().setHeight(120)),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return const StateLayout(
+                        hintText: '没有账单',
+                      );
+                    }, childCount: 1),
+                  ),
+                ),
         ],
       ),
     );
@@ -269,47 +260,24 @@ class ChartPageState extends State<StatefulWidget> {
     _type = type;
     _initDatas();
   }
+
   /// 设置appbartitleView
   _buildAppBarTitle() {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          HighLightWell(
-            child: SizedBox(
-              width: 35,
-              height: 35,
-              child: Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-              ),
-            ),
-            onTap: () {
-              int month = int.parse(_month);
-              if (month <= 1) {
-                int year = int.parse(_year);
-                if (year <= 1971) {
-                  showToast('1971年是最小年份');
-                } else {
-                  _month = '12';
-                  _year = (year - 1).toString();
-                  _initDatas();
-                }
-              } else {
-                _month = (month - 1).toString().padLeft(2, '0');
-                _initDatas();
-              }
-            },
-          ),
           ButtonTheme(
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: FlatButton(
-              child: Text(
-                '$_year-$_month',
-                style: TextStyle(
-                    fontSize: ScreenUtil.getInstance().setSp(34),
-                    color: Colours.app_main),
-              ),
+              child: (myYear1 == "1971")
+                  ? Icon(Icons.chevron_left)
+                  : Text(
+                      '$myYear1-$myMonth1',
+                      style: TextStyle(
+                          fontSize: ScreenUtil.getInstance().setSp(34),
+                          color: Colours.app_main),
+                    ),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -317,9 +285,9 @@ class ChartPageState extends State<StatefulWidget> {
                   builder: (BuildContext context) {
                     return CalendarMonthDialog(
                       checkTap: (year, month) {
-                        if (_year != year || _month != month) {
-                          _year = year;
-                          _month = month;
+                        if (myYear1 != year || myMonth1 != month) {
+                          myYear1 = year;
+                          myMonth1 = month;
                           _initDatas();
                         }
                       },
@@ -329,31 +297,41 @@ class ChartPageState extends State<StatefulWidget> {
               },
             ),
           ),
-          HighLightWell(
-            child: SizedBox(
-              width: 35,
-              height: 35,
-              child: Icon(
-                Icons.chevron_right,
-                color: Colors.white,
-              ),
+          Text(
+            "按账户查看",
+            style: TextStyle(
+                fontSize: ScreenUtil.getInstance().setSp(34),
+                color: Colours.app_main),
+          ),
+          ButtonTheme(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: FlatButton(
+              child: (myYear2 == "2055")
+                  ? Icon(Icons.chevron_right)
+                  : Text(
+                      '$myYear2-$myMonth2',
+                      style: TextStyle(
+                          fontSize: ScreenUtil.getInstance().setSp(34),
+                          color: Colours.app_main),
+                    ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return CalendarMonthDialog(
+                      checkTap: (year, month) {
+                        if (myYear2 != year || myMonth2 != month) {
+                          myYear2 = year;
+                          myMonth2 = month;
+                          _initDatas();
+                        }
+                      },
+                    );
+                  },
+                );
+              },
             ),
-            onTap: () {
-              int month = int.parse(_month);
-              if (month >= 12) {
-                int year = int.parse(_year);
-                if (year >= 2055) {
-                  showToast('2055年是最大年份');
-                } else {
-                  _month = '01';
-                  _year = (year + 1).toString();
-                  _initDatas();
-                }
-              } else {
-                _month = (month + 1).toString().padLeft(2, '0');
-                _initDatas();
-              }
-            },
           ),
         ],
       ),
@@ -365,7 +343,8 @@ class ChartPageState extends State<StatefulWidget> {
     return HighLightWell(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchList(model.categoryName, _year, _month);
+          return BillSearchList(
+              model.categoryName, myYear1, myMonth1, myYear2, myMonth2);
         }));
       },
       child: Container(
@@ -427,6 +406,7 @@ class ChartItemModel {
   final double money;
   final double ratio;
   final int number;
+
   ChartItemModel(this.id, this.categoryName, this.image, this.money, this.ratio,
       this.number);
 }

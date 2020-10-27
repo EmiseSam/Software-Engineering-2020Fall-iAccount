@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:i_account/widgets/calendar_page.dart';
-import 'package:date_format/date_format.dart';
+import 'package:i_account/db/db_helper_demo.dart';
 
 class BillSearchListtAccount extends StatefulWidget {
   BillSearchListtAccount(this.accountName, this.year, this.month) : super();
@@ -428,8 +428,11 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                       Positioned(
                         left: 0,
                         child: HighLightWell(
-                          onTap: () {
+                          onTap: () async {
                             // 删除记录
+                            var account = await dbAccount.getAccount(model.account);
+                            var typeofA = account.typeofA;
+                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);

@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:i_account/db/column.dart';
 import 'package:i_account/db/account_classification.dart';
+import 'package:i_account/db/member.dart';
 import 'column.dart';
 
 var dbAccount = new DBHelper();
@@ -50,6 +51,15 @@ class DBHelper {
     )
     """;
     await db.execute(queryStringAccount);
+
+    //成员表
+    String queryStringMember = """
+    CREATE TABLE $tableMember(
+      $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+      $columnMember TEXT NOT NULL
+    )
+    """;
+    await db.execute(queryStringMember);
   }
 
   //插入或者更新账户（已完成）
@@ -170,7 +180,7 @@ class DBHelper {
     return account.sum;
   }
 
-  //计算单个账户余额
+  //查询增添账单后单个账户余额
   Future<double> accountBalanceCal(String ac, double money, int typeofA) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(tableAccount,
@@ -192,10 +202,37 @@ class DBHelper {
     }
     await dbClient.update(tableAccount, account.toMap(),
         where: '$columnId = ?', whereArgs: [account.id]);
+    print('增加$money');
     print('正在计算$ac 的余额');
     return account.balance;
   }
 
+  //查询删除账单后单个账户余额
+  Future<double> accountBalanceAdd(String ac, double money, int typeofA) async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(tableAccount,
+        columns: [
+          columnId,
+          columnAccount,
+          columnMoney,
+          columnBalance,
+          columntypeofA
+        ],
+        where: '$columnAccount = ?',
+        whereArgs: [ac]);
+    AccountClassification account = AccountClassification.fromMap(maps.first);
+    print(account.balance);
+    if (typeofA == 0) {
+      account.balance += money;
+    } else {
+      account.balance -= money;
+    }
+    await dbClient.update(tableAccount, account.toMap(),
+        where: '$columnId = ?', whereArgs: [account.id]);
+    print('删除$money');
+    print('正在计算$ac 的余额');
+    return account.balance;
+  }
 
   //计算单类资产
   Future<double> accountsTotalize(int typeofA) async {
@@ -213,5 +250,59 @@ class DBHelper {
     });
     print('正在计算$typeofA 类账户总额');
     return money;
+  }
+
+  //插入或者更新成员
+  Future<int> insertMember(Member m) async {
+    print('正在更新成员');
+    var dbClient = await db;
+    var result;
+    List<Map> maps =
+    await dbClient.query(tableMember, columns: [columnId, columnMember]);
+    List<Member> members = new List();
+    for (int i = 0; i < maps.length; i++) {
+      members.add(Member.fromMap(maps[i]));
+    }
+    List templist = new List();
+    members.forEach((element) {
+      templist.add(element.member);
+    });
+    try {
+      if (m.id != null) {
+        result = await dbClient.update(tableMember, m.toMap(),
+            where: '$columnId = ?', whereArgs: [m.id]);
+        print('已更新成员');
+      } else if (templist.contains(m.member)) {
+        result = await dbClient.update(tableMember, m.toMap(),
+            where: '$columnId = ?', whereArgs: [m.id]);
+        print('已有同名成员');
+      } else {
+        result = await dbClient.insert(tableMember, m.toMap());
+        print('成功添加成员');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return result;
+  }
+
+  //删除成员
+  Future<int> deleteMember(String m) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete(tableMember, where: '$columnMember = ?', whereArgs: [m]);
+  }
+
+  //获取成员列表
+  Future<List> getMember() async {
+    var dbClient = await db;
+    List<Map> maps =
+    await dbClient.query(tableMember, columns: [columnId, columnMember]);
+    List<Member> members = new List();
+    for (int i = 0; i < maps.length; i++) {
+      members.add(Member.fromMap(maps[i]));
+    }
+    print('正在获取所有账户列表');
+    return members;
   }
 }

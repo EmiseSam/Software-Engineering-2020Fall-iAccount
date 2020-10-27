@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/pages/accountpages/account_create.dart';
 import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/pages/accountpages/bill_search_new.dart';
@@ -313,6 +314,7 @@ class _AccountPageState extends State<AccountPage> {
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await dbAccount.deleteAccount(titleItem);
+                    await dbHelp.deleteAccountBills(titleItem);
                     Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (BuildContext context) {
                       return Tabs();

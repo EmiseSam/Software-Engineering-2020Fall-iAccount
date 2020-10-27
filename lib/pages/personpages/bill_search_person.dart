@@ -16,54 +16,59 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/db/db_helper_demo.dart';
 
-class BillSearchList extends StatefulWidget {
-  BillSearchList(this.searchCategoryName, this.myYear1, this.myMonth1,this.myYear2,this.myMonth2) : super();
-  final searchCategoryName;
-  String myYear1;
-  String myMonth1;
-  String myYear2;
-  String myMonth2;
+class BillSearchListtAccount extends StatefulWidget {
+  BillSearchListtAccount(this.accountName, this.year, this.month) : super();
+  final accountName;
+  final String year;
+  final String month;
+
   @override
   State<StatefulWidget> createState() {
-    return BillSearchListState();
+    return BillSearchListtAccountState();
   }
 }
 
-class BillSearchListState extends State<BillSearchList> {
+class BillSearchListtAccountState extends State<BillSearchListtAccount> {
   List _datas = List();
+  String myYear1 = "1971";
+  String myMonth1 = "01";
+  String myYear2 = "2055";
+  String myMonth2 = "12";
 
   // 初始化数据
   Future _initDatas() async {
     // 时间戳
     int startTime =
-        DateTime(int.parse(widget.myYear1), int.parse(widget.myMonth1), 1, 0, 0, 0, 0)
+        DateTime(int.parse(myYear1), int.parse(myMonth1), 1, 0, 0, 0, 0)
             .millisecondsSinceEpoch;
     int endTime = DateTime(
-        int.parse(widget.myYear2),
-        int.parse(widget.myMonth2),
-        DateUtls.getDaysNum(int.parse(widget.myYear2), int.parse(widget.myMonth2)),
-        23,
-        59,
-        59,
-        999)
+            int.parse(myYear2),
+            int.parse(myMonth2),
+            DateUtls.getDaysNum(
+                int.parse(myYear2), int.parse(myMonth2)),
+            23,
+            59,
+            59,
+            999)
         .millisecondsSinceEpoch;
-    if (startTime > endTime) {
+    if(startTime > endTime){
       var temp;
       temp = startTime;
       startTime = endTime;
       endTime = temp;
-      temp = widget.myYear1;
-      widget.myYear1 = widget.myYear2;
-      widget.myYear2 = temp;
-      temp = widget.myMonth1;
-      widget.myMonth1 = widget.myMonth2;
-      widget.myMonth2 = temp;
+      temp = myYear1;
+      myYear1 = myYear2;
+      myYear2 = temp;
+      temp = myMonth1;
+      myMonth1 = myMonth2;
+      myMonth2 = temp;
     }
     dbHelp
-        .getBillList(startTime, endTime,
-            categoryName: widget.searchCategoryName)
+        .getBillListPerson(startTime, endTime,
+            categoryName: widget.accountName)
         .then((models) {
       DateTime _preTime;
 
@@ -165,11 +170,67 @@ class BillSearchListState extends State<BillSearchList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        titleWidget: Column(
+        titleWidget: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('${widget.searchCategoryName}'),
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear1 == "1971") ? Icon(Icons.add) :Text(
+                  '$myYear1-$myMonth1',
+                  style: TextStyle(
+                      fontSize: ScreenUtil.getInstance().setSp(34),
+                      color: Colours.app_main),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear1 != year || myMonth1 != month) {
+                            myYear1 = year;
+                            myMonth1 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Text('${widget.accountName}',style: TextStyle(fontSize: 22),),
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear2 == "2055") ? Icon(Icons.add): Text(
+                  '$myYear2-$myMonth2',
+                  style: TextStyle(
+                      fontSize: ScreenUtil.getInstance().setSp(34),
+                      color: Colours.app_main),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear2 != year || myMonth2 != month) {
+                            myYear2 = year;
+                            myMonth2 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
