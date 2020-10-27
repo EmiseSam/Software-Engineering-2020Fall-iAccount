@@ -320,6 +320,20 @@ class Dbhelper {
     return models;
   }
 
+  /// 查询账单记录 13位时间戳 type类型 1支出 2收入
+  Future<List<BillRecordModel>> getBillListType(int startTime, int endTime, int myType,) async {
+    //DESC ASC
+    var dbClient = await db;
+    var result;
+      result = await dbClient.rawQuery(
+          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and type = '$myType' and updateTimestamp <= $endTime");
+    List list = result.toList();
+    List<BillRecordModel> models =
+    list.map((i) => BillRecordModel.fromJson(i)).toList();
+
+    return models;
+  }
+
   /// 查询账单记录账户版 13位时间戳 type类型 1支出 2收入
   Future<List<BillRecordModel>> getBillListAccount(int startTime, int endTime,
       {String categoryName}) async {

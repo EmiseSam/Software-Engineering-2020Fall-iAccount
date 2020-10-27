@@ -69,7 +69,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
       myMonth1 = myMonth2;
       myMonth2 = temp;
     }
-    dbHelp.getBillList(startTime, endTime).then((list) {
+    dbHelp.getBillListType(startTime, endTime, _type).then((list) {
       _monthExpenMoney = 0.0;
       _monthIncomeMoney = 0.0;
       Map map = Map();
@@ -91,7 +91,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.person == key && item.type == 1);
+        var items = list.where((item) => item.person == key);
 
         double money = 0.0;
         items.forEach((item) {
@@ -180,7 +180,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
                         child: Row(
                           children: [
                             Icon(Icons.indeterminate_check_box_outlined),
-                            Text(
+                            Text(_monthExpenMoney == 0 ?"支出":
                               '支出  ¥${Utils.formatDouble(double.parse(_monthExpenMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
@@ -195,7 +195,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
                         child: Row(
                           children: [
                             Icon(Icons.add_box),
-                            Text(
+                            Text(_monthIncomeMoney == 0 ? '收入' :
                               '收入  ¥${Utils.formatDouble(double.parse(_monthIncomeMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
