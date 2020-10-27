@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/widgets/mypickertool.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/chart/bill_search_list.dart';
@@ -14,7 +13,6 @@ import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/state_layout.dart';
-import 'package:i_account/widgets/highlight_well.dart';
 
 class ChartCategoryPage extends StatefulWidget {
   @override

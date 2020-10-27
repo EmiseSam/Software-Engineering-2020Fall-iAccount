@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/personpages/bill_search_person.dart';
+import 'package:i_account/pages/personpages/bill_search_person_withtype.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/res/styles.dart';
@@ -91,7 +91,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.person == key);
+        var items = list.where((item) => item.person == key && item.type == 1);
 
         double money = 0.0;
         items.forEach((item) {
@@ -340,8 +340,8 @@ class ChartPersonPageState extends State<StatefulWidget> {
     return HighLightWell(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListPerson(
-              model.person);
+          return BillSearchListPersonWithtype(
+              model.person,_type);
         }));
       },
       child: Container(

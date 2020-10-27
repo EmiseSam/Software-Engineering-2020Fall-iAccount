@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/pages/accountpages/bill_search_account.dart';
+import 'package:i_account/pages/accountpages/bill_search_account_withtype.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/common/eventBus.dart';
@@ -92,7 +92,7 @@ class ChartAccountPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.account == key);
+        var items = list.where((item) => item.account == key && item.type == 1);
 
         double money = 0.0;
         items.forEach((item) {
@@ -340,7 +340,7 @@ class ChartAccountPageState extends State<StatefulWidget> {
     return HighLightWell(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListtAccount(model.account);
+          return BillSearchListtAccountWithType(model.account,_type);
         }));
       },
       child: Container(
