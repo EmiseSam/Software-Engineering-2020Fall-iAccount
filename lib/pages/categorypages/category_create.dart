@@ -11,12 +11,10 @@ import 'package:i_account/db/db_helper.dart';
 
 class CategoryCreatePage extends StatefulWidget {
   @override
-  _CategoryCreatePageState createState() =>
-      _CategoryCreatePageState();
+  _CategoryCreatePageState createState() => _CategoryCreatePageState();
 }
 
 class _CategoryCreatePageState extends State<CategoryCreatePage> {
-
   TextEditingController _categoryName = new TextEditingController();
   var _typePickerData = ["支出分类", "收入分类"];
   String _categoryType = '';
@@ -40,42 +38,69 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance =
-    ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
-      ..init(context);
+        ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
+          ..init(context);
     return Scaffold(
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
-        onPressed: () async{
-          print(_categoryTypeDB);
-          CategoryItem category = new CategoryItem(_categoryName.text, null);
-          dbHelp.insertSort(category, _categoryTypeDB);
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => CategoryPage()), ModalRoute.withName('/'));
-          showDialog<Null>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("提示"),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[Text("分类创建成功！")],
+        onPressed: () async {
+          if (_categoryName.text.isNotEmpty) {
+            CategoryItem category = new CategoryItem(_categoryName.text, null);
+            dbHelp.insertSort(category, _categoryTypeDB);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => CategoryPage()),
+                ModalRoute.withName('/'));
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("分类创建成功！")],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("确定"),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          } else {
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("分类名不能为空！")],
+                    ),
                   ),
-                ],
-              );
-            },
-          ).then((val) {
-            print(val);
-          });
-
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          }
         },
       ),
       body: Container(
@@ -85,7 +110,10 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
               height: 48,
               padding: EdgeInsets.only(left: 16, right: 16),
               alignment: Alignment.centerLeft,
-              child: Text("分类名称", style: TextStyle(fontSize: 18),),
+              child: Text(
+                "分类名称",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             TextField(
               decoration: new InputDecoration(
@@ -104,7 +132,10 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
               height: 48,
               padding: EdgeInsets.only(left: 16, right: 16),
               alignment: Alignment.centerLeft,
-              child: Text("分类类型", style: TextStyle(fontSize: 18),),
+              child: Text(
+                "分类类型",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 1),
@@ -114,12 +145,12 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                       data: _typePickerData,
                       normalIndex: 0,
                       title: "请选择", clickCallBack: (int index, var str) {
-                        setState(() {
-                          _categoryType = str;
-                          _categoryTypeDB = index + 1;
-                          print(_categoryTypeDB);
-                        });
-                      });
+                    setState(() {
+                      _categoryType = str;
+                      _categoryTypeDB = index + 1;
+                      print(_categoryTypeDB);
+                    });
+                  });
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
@@ -139,5 +170,3 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
     );
   }
 }
-
-

@@ -48,35 +48,60 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
         onPressed: () async{
-          print(_accountTypeDB);
-          AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
-          await dbAccount.insertAccount(dba);
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Tabs()), ModalRoute.withName('/tabs'));
-          showDialog<Null>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("提示"),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[Text("账户创建成功！")],
+          if(_accountName.text.isNotEmpty){
+            AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
+            await dbAccount.insertAccount(dba);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Tabs()), ModalRoute.withName('/tabs'));
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("账户创建成功！")],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("确定"),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          }else{
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("账户名不能为空！")],
+                    ),
                   ),
-                ],
-              );
-            },
-          ).then((val) {
-            print(val);
-          });
-
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          }
         },
       ),
       body: Container(

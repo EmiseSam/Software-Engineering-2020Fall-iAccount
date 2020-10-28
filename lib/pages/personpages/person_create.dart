@@ -9,13 +9,11 @@ import 'package:i_account/db/member.dart';
 
 class AccountCreatePage extends StatefulWidget {
   @override
-  _AccountCreatePageState createState() =>
-      _AccountCreatePageState();
+  _AccountCreatePageState createState() => _AccountCreatePageState();
 }
 
 class _AccountCreatePageState extends State<AccountCreatePage> {
-
-  TextEditingController _accountName = new TextEditingController();
+  TextEditingController _personName = new TextEditingController();
 
   _buildAppBarTitle() {
     return Container(
@@ -35,41 +33,68 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance =
-    ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
-      ..init(context);
+        ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
+          ..init(context);
     return Scaffold(
       appBar: MyAppBar(
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
-        onPressed: () async{
-          Member m = new Member(_accountName.text);
-          await dbAccount.insertMember(m);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => PersonPage()));
-          showDialog<Null>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("提示"),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[Text("成员创建成功！")],
+        onPressed: () async {
+          if (_personName.text.isNotEmpty) {
+            Member m = new Member(_personName.text);
+            await dbAccount.insertMember(m);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => PersonPage()));
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("成员创建成功！")],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("确定"),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          } else {
+            showDialog<Null>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("提示"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[Text("成员名不能为空！")],
+                    ),
                   ),
-                ],
-              );
-            },
-          ).then((val) {
-            print(val);
-          });
-
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("确定"),
+                    ),
+                  ],
+                );
+              },
+            ).then((val) {
+              print(val);
+            });
+          }
         },
       ),
       body: Container(
@@ -79,7 +104,10 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
               height: 48,
               padding: EdgeInsets.only(left: 16, right: 16),
               alignment: Alignment.centerLeft,
-              child: Text("成员名称", style: TextStyle(fontSize: 18),),
+              child: Text(
+                "成员名称",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             TextField(
               decoration: new InputDecoration(
@@ -89,7 +117,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                 ),
                 prefixIcon: Icon(Icons.person),
               ),
-              controller: _accountName,
+              controller: _personName,
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,
@@ -100,5 +128,3 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
     );
   }
 }
-
-
