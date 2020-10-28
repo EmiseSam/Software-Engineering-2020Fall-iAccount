@@ -280,13 +280,13 @@ class _BillState extends State<Bill>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                      '${_monthModel.isBudget == 1 ? Utils.formatDouble(double.parse((_monthModel.budget - _monthModel.expenMoney).toStringAsFixed(2))) : Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
+                      '${Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: ScreenUtil.getInstance().setSp(56),
                           color: Colors.white)),
                   Text(
-                    '本月${_monthModel.isBudget == 1 ? '预算' : ''}结余',
+                    '结余',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: ScreenUtil.getInstance().setSp(26),

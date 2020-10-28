@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:i_account/bill/models/bill_record_group.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
-import 'package:i_account/bill/models/budget_model.dart';
 import 'package:i_account/bill/models/category_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -30,9 +29,6 @@ class Dbhelper {
 
   /// 收入类别表
   final _initialIncomeCategory = 'initialIncomeCategory';
-
-  /// 每月预算表
-  final _budgetTableName = 'Budget';
 
   /// 获取数据库
   Future<Database> get db async {
@@ -121,16 +117,6 @@ class Dbhelper {
       });
     });
 
-    /// 创建预算表
-    String queryStringBudget = """
-    CREATE TABLE $_budgetTableName(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      yearMonth TEXT UNIQUE NOT NULL,
-      budget REAL DEFAULT(0),
-      isOpen INTEGER DEFAULT(0)
-    )
-    """;
-    await db.execute(queryStringBudget);
   }
 
   /// 获取记账支出类别列表
@@ -199,11 +185,6 @@ class Dbhelper {
     List list = result.toList();
     List<BillRecordModel> models =
         list.map((i) => BillRecordModel.fromJson(i)).toList();
-
-    DateTime bugdgetTime = DateTime.fromMillisecondsSinceEpoch(startTime);
-    var budgetModel = await querybudget(
-        '${bugdgetTime.year}-${bugdgetTime.month.toString().padLeft(2, '0')}');
-
     DateTime _preTime;
 
     /// 当天总支出金额
@@ -291,11 +272,6 @@ class Dbhelper {
         _preTime = time;
       }
     });
-
-    if (budgetModel != null) {
-      return BillRecordMonth(monthExpenMoney, monthIncomeMoney, recordLsit,
-          isBudget: budgetModel.isOpen, budget: budgetModel.budget);
-    }
 
     return BillRecordMonth(monthExpenMoney, monthIncomeMoney, recordLsit);
   }
@@ -418,32 +394,6 @@ class Dbhelper {
         list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
-  }
-
-  /// 查询预算是否存在
-  Future<BudgetModel> querybudget(String yearMonth) async {
-    var dbClient = await db;
-    var result = await dbClient.rawQuery(
-        "SELECT yearMonth,budget,isOpen FROM $_budgetTableName WHERE yearMonth = '$yearMonth' LIMIT 1");
-    List list = result.toList();
-    if (list.length > 0) {
-      var map = Map.from(list.first);
-      return BudgetModel(map['yearMonth'], map['budget'], map['isOpen']);
-    }
-    return null;
-  }
-
-  /// 插入预算
-  Future<int> insertBudget(String yearMonth, int isOpen) async {
-    var dbClient = await db;
-    var map = {'yearMonth': yearMonth, 'isOpen': isOpen};
-    var result;
-    try {
-      result = await dbClient.insert(_budgetTableName, map);
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-    return result;
   }
 
   /// 查询账单

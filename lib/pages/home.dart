@@ -315,7 +315,7 @@ class _HomePageState extends State<HomePage>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                      '${_monthModel.isBudget == 1 ? Utils.formatDouble(double.parse((_monthModel.budget - _monthModel.expenMoney).toStringAsFixed(2))) : Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
+                      '${Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: ScreenUtil.getInstance().setSp(56),

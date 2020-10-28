@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// 组头
 class BillRecordGroup {
   BillRecordGroup(this.date, this.expenMoney, this.incomeMoney) : super();
@@ -16,8 +14,7 @@ class BillRecordGroup {
 
 /// 月份记录
 class BillRecordMonth {
-  BillRecordMonth(this.expenMoney, this.incomeMoney, this.recordLsit,
-      {Key key, this.isBudget: 0, this.budget: 0.0})
+  BillRecordMonth(this.expenMoney, this.incomeMoney, this.recordLsit)
       : super();
 
   /// 当月总支出金额
@@ -25,12 +22,6 @@ class BillRecordMonth {
 
   /// 当月总收入
   double incomeMoney;
-
-  /// 是否有预算
-  int isBudget;
-
-  /// 预算金额
-  double budget;
 
   /// 账单记录
   List recordLsit;
