@@ -1,4 +1,4 @@
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/widgets/appbar.dart';
@@ -6,7 +6,6 @@ import 'package:i_account/bill/models/bill_record_response.dart';
 import 'package:i_account/bill/models/category_model.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
-import 'package:i_account/db/db_helper_demo.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/highlight_well.dart';
@@ -16,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/widgets/mypickertool.dart';
+import 'package:i_account/widgets/my_pickertool.dart';
 
 class NewPage extends StatefulWidget {
   const NewPage({Key key, this.recordModel}) : super(key: key);
@@ -37,7 +36,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   bool _isAdd = false;
   String _accountAccount = '';
   String _accountPerson = '';
-  var _accountPickerData ;
+  var _accountPickerData;
   var _personPickerData;
   int mymoneytemp = 0;
 
@@ -66,7 +65,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       listTemp.add(element.account);
     });
     _accountPickerData = listTemp;
-    }
+  }
 
   Future<void> _loadPersonNames() async {
     List list = await dbAccount.getMember();
@@ -81,7 +80,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Future<void> _loadExpenDatas() async {
     dbHelp.getInitialExpenCategory().then((list) {
       List<CategoryItem> models =
-          list.map((i) => CategoryItem.fromJson(i)).toList();
+      list.map((i) => CategoryItem.fromJson(i)).toList();
       if (_expenObjects.length > 0) {
         _expenObjects.removeRange(0, _expenObjects.length);
       }
@@ -99,7 +98,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Future<void> _loadIncomeDatas() async {
     dbHelp.getInitialIncomeCategory().then((list) {
       List<CategoryItem> models =
-          list.map((i) => CategoryItem.fromJson(i)).toList();
+      list.map((i) => CategoryItem.fromJson(i)).toList();
       if (_inComeObjects.length > 0) {
         _inComeObjects.removeRange(0, _inComeObjects.length);
       }
@@ -123,13 +122,13 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
           _time.month == now.month &&
           _time.day == now.day) {
         _dateString =
-            '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+        '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       } else if (_time.year != now.year) {
         _dateString =
-            '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+        '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       } else {
         _dateString =
-            '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+        '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       }
 
       if (widget.recordModel.person.isNotEmpty) {
@@ -157,7 +156,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     } else {
       _time = DateTime.now();
       _dateString =
-          '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+      '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
     }
   }
 
@@ -168,30 +167,30 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     _tabController = TabController(length: tabs.length, vsync: this);
 
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1))
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              //动画执行结束时反向执行动画
-              _animationController.reverse();
-            } else if (status == AnimationStatus.dismissed) {
-              //动画恢复到初始状态时执行动画（正向）
-              _animationController.forward();
-            }
-          });
+    AnimationController(vsync: this, duration: Duration(seconds: 1))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          //动画执行结束时反向执行动画
+          _animationController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          //动画恢复到初始状态时执行动画（正向）
+          _animationController.forward();
+        }
+      });
     // 启动动画
     _animationController.forward();
 
     _tapItemController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300))
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              //动画执行结束 反向动画
-              _tapItemController.reverse();
-            } else if (status == AnimationStatus.dismissed) {
-              //动画恢复到初始状态 停止掉
-              _tapItemController.stop();
-            }
-          });
+    AnimationController(vsync: this, duration: Duration(milliseconds: 300))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          //动画执行结束 反向动画
+          _tapItemController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          //动画恢复到初始状态 停止掉
+          _tapItemController.stop();
+        }
+      });
 
     _updateInitData();
     _loadExpenDatas();
@@ -306,14 +305,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(left: 12),
                 child: HighLightWell(
                   onTap: () {
-                    MyPickerTool.showStringPicker(context,
-                        data: _accountPickerData,
-                        normalIndex: 0,
-                        title: "请选择", clickCallBack: (int index, var str) {
-                          setState(() {
-                            _accountAccount = str;
+                      MyPickerTool.showStringPicker(context,
+                          data: _accountPickerData,
+                          normalIndex: 0,
+                          title: "请选择", clickCallBack: (int index, var str) {
+                            setState(() {
+                              _accountAccount = str;
+                            });
                           });
-                        });
                   },
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
@@ -327,11 +326,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            ],
-          ),
-          Gaps.vGap(10),
-          Row(
-            children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 12),
                 child: HighLightWell(
@@ -359,6 +353,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
               ),
             ],
           ),
+          Gaps.vGap(10),
           HighLightWell(
             onTap: () {
               showDialog(
@@ -549,7 +544,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
               var res = await dbAccount.getAccount(_accountAccount);
               int typeAccount = res.typeofA;
               _record(typeAccount);
-               NavigatorUtils.goBack(context);
+              NavigatorUtils.goBack(context);
             },
           ),
           MediaQuery.of(context).padding.bottom > 0
@@ -601,8 +596,8 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         item.name,
         item.image,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
-              .toString(),
-          _time.millisecondsSinceEpoch,
+            .toString(),
+        _time.millisecondsSinceEpoch,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
             .toString(),
         _time.millisecondsSinceEpoch);
@@ -704,7 +699,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     Utils.getImagePath('category/${item.image}'),
                     width: selectedIndex == index
                         ? ScreenUtil.getInstance()
-                            .setWidth(60 + _tapItemController.value * 6)
+                        .setWidth(60 + _tapItemController.value * 6)
                         : ScreenUtil.getInstance().setWidth(50),
                     color: selectedIndex == index ? Colors.white : Colors.black,
                   ),
@@ -717,7 +712,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                             : Colours.black,
                         fontSize: selectedIndex == index
                             ? ScreenUtil.getInstance()
-                                .setSp(25 + 3 * _tapItemController.value)
+                            .setSp(25 + 3 * _tapItemController.value)
                             : ScreenUtil.getInstance().setSp(25)),
                   )
                 ],

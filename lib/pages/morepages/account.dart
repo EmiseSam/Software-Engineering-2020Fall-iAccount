@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/pages/accountpages/account_create.dart';
 import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/pages/accountpages/bill_search_account.dart';
-import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/res/styles.dart';
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -27,7 +25,7 @@ class _AccountPageState extends State<AccountPage> {
   );
   TextStyle _accountTitleStyle = TextStyle(
     fontSize: 15.0,
-    color: Colors.black45,
+    color: Colors.black,
   );
 
   // 总资产

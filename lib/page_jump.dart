@@ -14,8 +14,9 @@ class _PageJumpState extends State<PageJump> {
 
   @override
   void initState() {
+    _getLockState();
     super.initState();
-    _getLockState();//获取本地存储的数据
+    //获取本地存储的数据
   }
 
   _getLockState() async{

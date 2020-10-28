@@ -353,6 +353,7 @@ class ChartAccountPageState extends State<StatefulWidget> {
                 bottom: BorderSide(width: 0.6, color: Colours.line))),
         child: Row(
           children: <Widget>[
+            Icon(Icons.account_balance_wallet),
             Gaps.hGap(ScreenUtil.getInstance().setWidth(32)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

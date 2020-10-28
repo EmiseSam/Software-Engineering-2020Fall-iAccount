@@ -3,7 +3,7 @@ import 'package:i_account/bill/models/bill_record_group.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
@@ -131,17 +131,6 @@ class _HomePageState extends State<HomePage>
     // 适配
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     return Scaffold(
-      // key: _globalKey,
-      // drawer: MyDrawer(), // 左边抽屉
-      // appBar: AppBar(),
-      // body: SafeArea(
-      //   top: false,
-      //   child: CustomScrollView(
-      //     // semanticChildCount: _models.length,
-      //     controller: _controller,
-      //     slivers: _sliverBuilder(),
-      //   ),
-      // ),
       body: Stack(
         children: <Widget>[
           MediaQuery.removePadding(
@@ -149,7 +138,6 @@ class _HomePageState extends State<HomePage>
             context: context,
             child: NotificationListener(
               onNotification: (notification) {
-                //如果是滚动更新通知的值并且深度限制为0[就是监听ListView]
                 if (notification is ScrollUpdateNotification &&
                     notification.depth == 0) {
                   //如果是
@@ -501,11 +489,11 @@ class _HomePageState extends State<HomePage>
     String moneyString = '';
     if (group.incomeMoney > 0) {
       moneyString = moneyString +
-          '收入${Utils.formatDouble(double.parse(group.incomeMoney.toStringAsFixed(2)))}';
+          '收入${Utils.formatDouble(double.parse(group.incomeMoney.toStringAsFixed(2)))}元';
     }
     if (group.expenMoney > 0) {
       moneyString = moneyString +
-          '${group.incomeMoney > 0 == true ? '  ' : ''}支出${Utils.formatDouble(double.parse(group.expenMoney.toStringAsFixed(2)))}';
+          '${group.incomeMoney > 0 == true ? '  ' : ''}支出${Utils.formatDouble(double.parse(group.expenMoney.toStringAsFixed(2)))}元';
     }
 
     return Container(
@@ -528,7 +516,7 @@ class _HomePageState extends State<HomePage>
                         group.date,
                         style: TextStyle(
                             fontSize: ScreenUtil.getInstance().setSp(30),
-                            color: Colours.dark),
+                            color: Colors.black45),
                       ),
                     ],
                   ),
@@ -540,7 +528,7 @@ class _HomePageState extends State<HomePage>
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: ScreenUtil.getInstance().setSp(28),
-                          color: Colours.dark),
+                          color: Colors.black45),
                     ),
                   )
                 ],

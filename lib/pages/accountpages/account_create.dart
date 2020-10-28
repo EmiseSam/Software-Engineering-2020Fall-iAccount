@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/tabs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/widgets/mypickertool.dart';
+import 'package:i_account/widgets/my_pickertool.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:flutter/services.dart';
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
 
 class AccountCreatePage extends StatefulWidget {
   @override

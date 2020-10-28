@@ -131,7 +131,7 @@ class _MyKeyBoardState extends State<MyKeyBoard> {
                 callBack(index);
               },
               child: Container(
-                color: index == 15 ? Colours.app_main : Colors.white,
+                color: index == 15 ? Colors.redAccent : Colors.white,
                 alignment: Alignment.center,
                 width: itemWidth,
                 height: itemHeight,

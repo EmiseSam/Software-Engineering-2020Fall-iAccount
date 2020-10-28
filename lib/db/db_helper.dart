@@ -321,15 +321,19 @@ class Dbhelper {
   }
 
   /// 查询账单记录 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListType(int startTime, int endTime, int myType,) async {
+  Future<List<BillRecordModel>> getBillListType(
+    int startTime,
+    int endTime,
+    int myType,
+  ) async {
     //DESC ASC
     var dbClient = await db;
     var result;
-      result = await dbClient.rawQuery(
-          "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and type = '$myType' and updateTimestamp <= $endTime");
+    result = await dbClient.rawQuery(
+        "SELECT * FROM $_billTableName WHERE updateTimestamp >= $startTime and type = '$myType' and updateTimestamp <= $endTime");
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -349,13 +353,14 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
 
   /// 查询账单记录账户版带类型 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListAccountWithType(int startTime, int endTime, int myType,
+  Future<List<BillRecordModel>> getBillListAccountWithType(
+      int startTime, int endTime, int myType,
       {String categoryName}) async {
     //DESC ASC
     var dbClient = await db;
@@ -369,7 +374,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -389,13 +394,14 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
 
   /// 查询账单记录成员版 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListPersonWithType(int startTime, int endTime, int myType,
+  Future<List<BillRecordModel>> getBillListPersonWithType(
+      int startTime, int endTime, int myType,
       {String categoryName}) async {
     //DESC ASC
     var dbClient = await db;
@@ -409,7 +415,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -472,5 +478,22 @@ class Dbhelper {
     var dbClient = await db;
     return await dbClient
         .delete(_billTableName, where: 'account = ?', whereArgs: [account]);
+  }
+
+  ///删除成员的同时修改所有相关账单
+  Future<int> deleteMemberBills(String person) async {
+    var dbClient = await db;
+    var maps = await dbClient
+        .rawQuery('SELECT * FROM $_billTableName WHERE person == $person');
+    List<BillRecordModel> bills = new List();
+    for (var i = 0; i < bills.length; i++) {
+      bills.add(BillRecordModel.fromMap(maps[i]));
+    }
+    bills.forEach((element) async {
+      element.person = '';
+      await dbClient.update(_billTableName, element.toMap(),
+          where: 'id = ?', whereArgs: [element.id]);
+    });
+    return bills.length;
   }
 }

@@ -67,8 +67,8 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             ),
             Divider(),
             ListTile(
-              title: Text('图表', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('使用图表分析消费情况'),
+              title: Text('统计', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('查看收入/支出的图表信息'),
               leading: Icon(
                 Icons.pie_chart,
                 color: Colors.blue[500],

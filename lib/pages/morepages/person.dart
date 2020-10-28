@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:i_account/pages/personpages/person_create.dart';
 import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/pages/personpages/bill_search_person.dart';
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
+import 'package:i_account/db/db_helper.dart';
 
 class PersonPage extends StatefulWidget {
   @override
@@ -106,7 +107,8 @@ class _PersonPageState extends State<PersonPage> {
                 FlatButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    await dbAccount.deleteAccount(titleItem);
+                    await dbAccount.deleteMember(titleItem);
+                    await dbHelp.deleteMemberBills(titleItem);
                     Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (BuildContext context) {
                       return Tabs();

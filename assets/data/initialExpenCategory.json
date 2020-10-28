@@ -1,57 +1,17 @@
 [
     {
-        "name": "饮食",
+        "name": "三餐",
         "image": "catering/吃喝_icon",
         "sort": 0
     },
     {
-        "name": "交通出行",
-        "image": "traffic/交通_icon",
+        "name": "交通",
+        "image": "catering/吃喝_icon",
         "sort": 1
     },
     {
-        "name": "娱乐",
-        "image": "recreation/娱乐_icon",
+        "name": "住房",
+        "image": "catering/吃喝_icon",
         "sort": 2
-    },
-    {
-        "name": "日用品",
-        "image": "shopping/日用品_icon",
-        "sort": 3
-    },
-    {
-        "name": "缴费",
-        "image": "daily/话费网费_icon",
-        "sort": 4
-    },
-    {
-        "name": "衣服",
-        "image": "shopping/衣服_icon",
-        "sort": 5
-    },
-    {
-        "name": "护肤美妆",
-        "image": "shopping/护肤美妆_icon",
-        "sort": 6
-    },
-    {
-        "name": "房租房贷",
-        "image": "housing/房租_icon",
-        "sort": 7
-    },
-    {
-        "name": "人情红包",
-        "image": "humanfeelings/红包_icon",
-        "sort": 8
-    },
-    {
-        "name": "医疗",
-        "image": "other/医疗_icon",
-        "sort": 9
-    },
-    {
-        "name": "其他",
-        "image": "other/其他_icon",
-        "sort": 10
     }
 ]

@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
-import 'package:i_account/db/db_helper_demo.dart';
+import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/pages/newbill.dart';
 
 class Bill extends StatefulWidget {

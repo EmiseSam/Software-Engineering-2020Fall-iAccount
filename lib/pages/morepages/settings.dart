@@ -1,10 +1,8 @@
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
-
 import 'package:i_account/pages/loginpages/pw_change_auth.dart';
 import 'package:i_account/pages/settingspages/darkmode.dart';
 import 'package:i_account/pages/settingspages/locksetting.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
           children: [
             ListTile(
               title: Text('密码', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('修改密码'),
+              subtitle: Text('修改文字密码和图形密码'),
               leading: Icon(
                 Icons.track_changes,
                 color: Colors.blue[500],
@@ -55,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
             Divider(),
             ListTile(
               title: Text('深色模式', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('可自由选择深色模式是否跟随系统设置'),
+              subtitle: Text('选择深色模式/浅色模式或跟随系统设置'),
               leading: Icon(
                 Icons.nights_stay,
                 color: Colors.blue[500],

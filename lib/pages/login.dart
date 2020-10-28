@@ -202,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
         alignment: Alignment.center,
         child: Text(
           '其他登录方式',
-          style: TextStyle(color: Colors.grey, fontSize: 14.0),
+          style: TextStyle(color: Colors.grey, fontSize: 18.0),
         ));
   }
 

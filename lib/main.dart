@@ -2,12 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
-
 import 'package:i_account/pages/settingspages/darkmode_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'package:i_account/page_jump.dart';
-
+import 'package:i_account/splash_screen.dart';
 
 void main() {
   //透明状态栏
@@ -33,19 +30,19 @@ class MyApp extends StatelessWidget {
               ? MaterialApp(
                   title: 'iAccount',
                   theme: ThemeData(
-                    primarySwatch: Colors.blue,
+                    primarySwatch: Colors.red,
                   ),
                   darkTheme: ThemeData.dark(),
-                  home: PageJump(),
+                  home: SplashScreen(),
                 )
               : MaterialApp(
                   title: 'iAccount',
                   theme: darkModeProvider.darkMode == 1
                       ? ThemeData.dark()
                       : ThemeData(
-                          primarySwatch: Colors.blue,
+                          primarySwatch: Colors.red,
                         ),
-                  home: PageJump(),
+                  home: SplashScreen(),
                 );
         },
       ),
