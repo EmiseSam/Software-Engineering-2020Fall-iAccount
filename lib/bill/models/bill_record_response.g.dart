@@ -6,25 +6,6 @@ part of 'bill_record_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BillRecordResponse _$BillRecordResponseFromJson(Map<String, dynamic> json) {
-  return BillRecordResponse(
-    json['code'] as int,
-    (json['data'] as List)
-        ?.map((e) => e == null
-            ? null
-            : BillRecordModel.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    json['msg'] as String,
-  );
-}
-
-Map<String, dynamic> _$BillRecordResponseToJson(BillRecordResponse instance) =>
-    <String, dynamic>{
-      'code': instance.code,
-      'data': instance.data,
-      'msg': instance.msg,
-    };
-
 BillRecordModel _$BillRecordModelFromJson(Map<String, dynamic> json) {
   return BillRecordModel(
     json['id'] as int,
@@ -34,7 +15,6 @@ BillRecordModel _$BillRecordModelFromJson(Map<String, dynamic> json) {
     json['remark'] as String,
     json['type'] as int,
     json['categoryName'] as String,
-    json['image'] as String,
     json['createTime'] as String,
     json['createTimestamp'] as int,
     json['updateTime'] as String,
@@ -52,7 +32,6 @@ Map<String, dynamic> _$BillRecordModelToJson(BillRecordModel instance) =>
       'account': instance.account,
       'remark': instance.remark,
       'categoryName': instance.categoryName,
-      'image': instance.image,
       'type': instance.type,
       'isSync': instance.isSync,
       'isDelete': instance.isDelete,

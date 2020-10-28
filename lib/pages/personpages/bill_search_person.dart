@@ -45,14 +45,13 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
     int endTime = DateTime(
             int.parse(myYear2),
             int.parse(myMonth2),
-            DateUtls.getDaysNum(
-                int.parse(myYear2), int.parse(myMonth2)),
+            DateUtls.getDaysNum(int.parse(myYear2), int.parse(myMonth2)),
             23,
             59,
             59,
             999)
         .millisecondsSinceEpoch;
-    if(startTime > endTime){
+    if (startTime > endTime) {
       var temp;
       temp = startTime;
       startTime = endTime;
@@ -65,8 +64,7 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
       myMonth2 = temp;
     }
     dbHelp
-        .getBillListPerson(startTime, endTime,
-            categoryName: widget.accountName)
+        .getBillListPerson(startTime, endTime, categoryName: widget.accountName)
         .then((models) {
       DateTime _preTime;
 
@@ -175,12 +173,14 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
             ButtonTheme(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: FlatButton(
-                child: (myYear1 == "1971") ? Icon(Icons.add) :Text(
-                  '$myYear1-$myMonth1',
-                  style: TextStyle(
-                      fontSize: ScreenUtil.getInstance().setSp(34),
-                      color: Colours.app_main),
-                ),
+                child: (myYear1 == "1971")
+                    ? Icon(Icons.chevron_left)
+                    : Text(
+                        '$myYear1-$myMonth1',
+                        style: TextStyle(
+                            fontSize: ScreenUtil.getInstance().setSp(34),
+                            color: Colours.app_main),
+                      ),
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -200,16 +200,20 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                 },
               ),
             ),
-            Text(widget.accountName == ''? "未指定":'${widget.accountName}',style: TextStyle(fontSize: 22),),
+            Text(
+              widget.accountName == '' ? "未指定" : '${widget.accountName}',
+            ),
             ButtonTheme(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: FlatButton(
-                child: (myYear2 == "2055") ? Icon(Icons.add): Text(
-                  '$myYear2-$myMonth2',
-                  style: TextStyle(
-                      fontSize: ScreenUtil.getInstance().setSp(34),
-                      color: Colours.app_main),
-                ),
+                child: (myYear2 == "2055")
+                    ? Icon(Icons.chevron_right)
+                    : Text(
+                        '$myYear2-$myMonth2',
+                        style: TextStyle(
+                            fontSize: ScreenUtil.getInstance().setSp(34),
+                            color: Colours.app_main),
+                      ),
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -263,10 +267,7 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Image.asset(
-                          Utils.getImagePath('category/${model.image}'),
-                          width: ScreenUtil.getInstance().setWidth(55),
-                        ),
+                        Icon(Icons.money),
                         Gaps.hGap(12),
                         Text(
                           model.categoryName,
@@ -428,9 +429,11 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                         child: HighLightWell(
                           onTap: () async {
                             // 删除记录
-                            var account = await dbAccount.getAccount(model.account);
+                            var account =
+                                await dbAccount.getAccount(model.account);
                             var typeofA = account.typeofA;
-                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
+                            dbAccount.accountBalanceAdd(
+                                model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);
@@ -448,7 +451,7 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                               child: Text(
                                 '删除',
                                 style:
-                                TextStyle(fontSize: 16, color: Colors.red),
+                                    TextStyle(fontSize: 16, color: Colors.red),
                               ),
                             ),
                           ),
@@ -508,35 +511,39 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                   ),
                 ),
                 Gaps.line,
-                model.account.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('账户', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.account}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.account.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('账户', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.account}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ):Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
-                model.person.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('成员', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.person}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.person.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('成员', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.person}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ): Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -555,12 +562,6 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                Utils.getImagePath(
-                                  'category/${model.image}',
-                                ),
-                                width: 18,
-                              ),
                               Gaps.hGap(5),
                               Text('${model.categoryName}',
                                   textAlign: TextAlign.right, style: descStyle)
@@ -589,24 +590,24 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
                 Gaps.line,
                 model.remark.isNotEmpty
                     ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('备注', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.remark}',
-                            textAlign: TextAlign.right, style: descStyle),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('备注', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.remark}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                )
                     : Gaps.empty,
                 MediaQuery.of(context).padding.bottom > 0
                     ? SizedBox(
-                  height: MediaQuery.of(context).padding.bottom,
-                )
+                        height: MediaQuery.of(context).padding.bottom,
+                      )
                     : Gaps.empty,
               ],
             ),

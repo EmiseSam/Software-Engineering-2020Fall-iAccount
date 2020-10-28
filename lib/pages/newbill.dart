@@ -26,7 +26,6 @@ class NewPage extends StatefulWidget {
 }
 
 class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
-
   AnimationController _animationController;
   AnimationController _tapItemController;
   String _remark = '';
@@ -58,9 +57,9 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     )
   ];
 
-  Future<void> _loadAccountNames() async{
+  Future<void> _loadAccountNames() async {
     List list = await dbAccount.getAccountList();
-    List listTemp =new List();
+    List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.account);
     });
@@ -80,7 +79,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Future<void> _loadExpenDatas() async {
     dbHelp.getInitialExpenCategory().then((list) {
       List<CategoryItem> models =
-      list.map((i) => CategoryItem.fromJson(i)).toList();
+          list.map((i) => CategoryItem.fromJson(i)).toList();
       if (_expenObjects.length > 0) {
         _expenObjects.removeRange(0, _expenObjects.length);
       }
@@ -98,7 +97,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Future<void> _loadIncomeDatas() async {
     dbHelp.getInitialIncomeCategory().then((list) {
       List<CategoryItem> models =
-      list.map((i) => CategoryItem.fromJson(i)).toList();
+          list.map((i) => CategoryItem.fromJson(i)).toList();
       if (_inComeObjects.length > 0) {
         _inComeObjects.removeRange(0, _inComeObjects.length);
       }
@@ -122,13 +121,13 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
           _time.month == now.month &&
           _time.day == now.day) {
         _dateString =
-        '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+            '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       } else if (_time.year != now.year) {
         _dateString =
-        '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+            '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       } else {
         _dateString =
-        '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+            '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       }
 
       if (widget.recordModel.person.isNotEmpty) {
@@ -147,7 +146,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         mymoneytemp = 1;
         _numberString = Utils.formatDouble(double.parse(
             _numberString = widget.recordModel.money.toStringAsFixed(2)));
-
       }
 
       if (widget.recordModel.type == 2) {
@@ -156,7 +154,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     } else {
       _time = DateTime.now();
       _dateString =
-      '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+          '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
     }
   }
 
@@ -167,30 +165,30 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
     _tabController = TabController(length: tabs.length, vsync: this);
 
     _animationController =
-    AnimationController(vsync: this, duration: Duration(seconds: 1))
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          //动画执行结束时反向执行动画
-          _animationController.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          //动画恢复到初始状态时执行动画（正向）
-          _animationController.forward();
-        }
-      });
+        AnimationController(vsync: this, duration: Duration(seconds: 1))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              //动画执行结束时反向执行动画
+              _animationController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              //动画恢复到初始状态时执行动画（正向）
+              _animationController.forward();
+            }
+          });
     // 启动动画
     _animationController.forward();
 
     _tapItemController =
-    AnimationController(vsync: this, duration: Duration(milliseconds: 300))
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          //动画执行结束 反向动画
-          _tapItemController.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          //动画恢复到初始状态 停止掉
-          _tapItemController.stop();
-        }
-      });
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              //动画执行结束 反向动画
+              _tapItemController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              //动画恢复到初始状态 停止掉
+              _tapItemController.stop();
+            }
+          });
 
     _updateInitData();
     _loadExpenDatas();
@@ -210,7 +208,9 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334, allowFontScaling: true)..init(context);
+    ScreenUtil.instance =
+        ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
+          ..init(context);
     return Scaffold(
       appBar: MyAppBar(
         // centerTitle: true,
@@ -270,24 +270,24 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                             doneStyle: TextStyle(
                                 fontSize: 16, color: Colours.app_main),
                             cancelStyle:
-                            TextStyle(fontSize: 16, color: Colours.gray)),
+                                TextStyle(fontSize: 16, color: Colours.gray)),
                         locale: LocaleType.zh, onConfirm: (date) {
-                          _time = date;
-                          DateTime now = DateTime.now();
-                          if (_time.year == now.year &&
-                              _time.month == now.month &&
-                              _time.day == now.day) {
-                            _dateString =
+                      _time = date;
+                      DateTime now = DateTime.now();
+                      if (_time.year == now.year &&
+                          _time.month == now.month &&
+                          _time.day == now.day) {
+                        _dateString =
                             '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                          } else if (_time.year != now.year) {
-                            _dateString =
+                      } else if (_time.year != now.year) {
+                        _dateString =
                             '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                          } else {
-                            _dateString =
+                      } else {
+                        _dateString =
                             '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                          }
-                          setState(() {});
-                        });
+                      }
+                      setState(() {});
+                    });
                   },
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
@@ -305,14 +305,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(left: 12),
                 child: HighLightWell(
                   onTap: () {
-                      MyPickerTool.showStringPicker(context,
-                          data: _accountPickerData,
-                          normalIndex: 0,
-                          title: "请选择", clickCallBack: (int index, var str) {
-                            setState(() {
-                              _accountAccount = str;
-                            });
-                          });
+                    MyPickerTool.showStringPicker(context,
+                        data: _accountPickerData,
+                        normalIndex: 0,
+                        title: "请选择", clickCallBack: (int index, var str) {
+                      setState(() {
+                        _accountAccount = str;
+                      });
+                    });
                   },
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
@@ -322,7 +322,8 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(color: Colours.gray, width: 0.6)),
-                    child: Text(_accountAccount.isEmpty ? '账户' : _accountAccount),
+                    child:
+                        Text(_accountAccount.isEmpty ? '账户' : _accountAccount),
                   ),
                 ),
               ),
@@ -334,10 +335,10 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                         data: _personPickerData,
                         normalIndex: 0,
                         title: "请选择", clickCallBack: (int index, var str) {
-                          setState(() {
-                            _accountPerson = str;
-                          });
-                        });
+                      setState(() {
+                        _accountPerson = str;
+                      });
+                    });
                   },
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
@@ -397,7 +398,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
           Gaps.vGap(3),
           Row(
             children: <Widget>[
-
               Expanded(
                 flex: 1,
                 child: Padding(
@@ -455,7 +455,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
             },
             //继续
             nextCallback: () async {
-              if(_accountAccount.isEmpty){
+              if (_accountAccount.isEmpty) {
                 showDialog<Null>(
                   context: context,
                   barrierDismissible: false,
@@ -492,7 +492,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
             },
             // 保存
             saveCallback: () async {
-              if(_accountAccount.isEmpty){
+              if (_accountAccount.isEmpty) {
                 showDialog<Null>(
                   context: context,
                   barrierDismissible: false,
@@ -518,27 +518,30 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   print(val);
                 });
               }
-              if(mymoneytemp == 1){
+              if (mymoneytemp == 1) {
                 String ac = widget.recordModel.account;
                 double preMoney = widget.recordModel.money;
-                var account = await dbAccount.getAccount(widget.recordModel.account);
+                var account =
+                    await dbAccount.getAccount(widget.recordModel.account);
                 int typeofA = account.typeofA;
-                if(_tabController.index == 0) {
+                if (_tabController.index == 0) {
                   await dbAccount.accountBalanceAdd(ac, preMoney, typeofA);
                   await dbAccount.accountBalanceCal(
                       ac, double.parse(_numberString), typeofA);
-                }else{
-                  await dbAccount.accountBalanceAdd(ac, 0-preMoney, typeofA);
+                } else {
+                  await dbAccount.accountBalanceAdd(ac, preMoney, typeofA);
                   await dbAccount.accountBalanceCal(
-                      ac, 0-double.parse(_numberString), typeofA);
+                      ac, 0 - double.parse(_numberString), typeofA);
                 }
-              }else{
+              } else {
                 var account = await dbAccount.getAccount(_accountAccount);
                 int typeofA = account.typeofA;
-                if(_tabController.index == 0) {
-                  await dbAccount.accountBalanceCal(_accountAccount, double.parse(_numberString), typeofA);
-                }else{
-                  await dbAccount.accountBalanceCal(_accountAccount, 0-double.parse(_numberString), typeofA);
+                if (_tabController.index == 0) {
+                  await dbAccount.accountBalanceCal(
+                      _accountAccount, double.parse(_numberString), typeofA);
+                } else {
+                  await dbAccount.accountBalanceCal(_accountAccount,
+                      0 - double.parse(_numberString), typeofA);
                 }
               }
               var res = await dbAccount.getAccount(_accountAccount);
@@ -594,15 +597,12 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         _remark,
         _tabController.index + 1,
         item.name,
-        item.image,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
             .toString(),
         _time.millisecondsSinceEpoch,
         DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
             .toString(),
         _time.millisecondsSinceEpoch);
-
-
 
     dbHelp.insertBillRecord(model).then((value) {
       bus.trigger(bus.bookkeepingEventName);
@@ -713,7 +713,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                             : Colours.black,
                         fontSize: selectedIndex == index
                             ? ScreenUtil.getInstance()
-                            .setSp(35 + 3 * _tapItemController.value)
+                                .setSp(35 + 3 * _tapItemController.value)
                             : ScreenUtil.getInstance().setSp(35)),
                   )
                 ],

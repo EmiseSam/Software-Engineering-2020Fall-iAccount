@@ -89,16 +89,7 @@ flutter:
     - assets/data/
     - assets/images/profile/
     - assets/images/icons/
-    - assets/images/category/car/
-    - assets/images/category/catering/
-    - assets/images/category/housing/
-    - assets/images/category/humanfeelings/
-    - assets/images/category/income/
-    - assets/images/category/other/
-    - assets/images/category/shopping/
-    - assets/images/category/traffic/
-    - assets/images/category/daily/
-    - assets/images/category/recreation/
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

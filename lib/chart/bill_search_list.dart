@@ -17,14 +17,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:i_account/db/db_helper_account.dart';
+import 'package:i_account/widgets/calendar_page.dart';
 
 class BillSearchList extends StatefulWidget {
-  BillSearchList(this.searchCategoryName, this.myYear1, this.myMonth1,this.myYear2,this.myMonth2) : super();
+  BillSearchList(this.searchCategoryName) : super();
   final searchCategoryName;
-  String myYear1;
-  String myMonth1;
-  String myYear2;
-  String myMonth2;
+
   @override
   State<StatefulWidget> createState() {
     return BillSearchListState();
@@ -33,17 +31,21 @@ class BillSearchList extends StatefulWidget {
 
 class BillSearchListState extends State<BillSearchList> {
   List _datas = List();
+  String myYear1 = "1971";
+  String myMonth1 = "01";
+  String myYear2 = "2055";
+  String myMonth2 = "12";
 
   // 初始化数据
   Future _initDatas() async {
     // 时间戳
     int startTime =
-        DateTime(int.parse(widget.myYear1), int.parse(widget.myMonth1), 1, 0, 0, 0, 0)
+        DateTime(int.parse(myYear1), int.parse(myMonth1), 1, 0, 0, 0, 0)
             .millisecondsSinceEpoch;
     int endTime = DateTime(
-        int.parse(widget.myYear2),
-        int.parse(widget.myMonth2),
-        DateUtls.getDaysNum(int.parse(widget.myYear2), int.parse(widget.myMonth2)),
+        int.parse(myYear2),
+        int.parse(myMonth2),
+        DateUtls.getDaysNum(int.parse(myYear2), int.parse(myMonth2)),
         23,
         59,
         59,
@@ -54,12 +56,12 @@ class BillSearchListState extends State<BillSearchList> {
       temp = startTime;
       startTime = endTime;
       endTime = temp;
-      temp = widget.myYear1;
-      widget.myYear1 = widget.myYear2;
-      widget.myYear2 = temp;
-      temp = widget.myMonth1;
-      widget.myMonth1 = widget.myMonth2;
-      widget.myMonth2 = temp;
+      temp = myYear1;
+      myYear1 = myYear2;
+      myYear2 = temp;
+      temp = myMonth1;
+      myMonth1 = myMonth2;
+      myMonth2 = temp;
     }
     dbHelp
         .getBillList(startTime, endTime,
@@ -165,11 +167,72 @@ class BillSearchListState extends State<BillSearchList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        titleWidget: Column(
+        titleWidget: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear1 == "1971")
+                    ? Icon(Icons.chevron_left)
+                    : Text(
+                  '$myYear1-$myMonth1',
+                  style: TextStyle(
+                      fontSize: ScreenUtil.getInstance().setSp(34),
+                      color: Colours.app_main),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear1 != year || myMonth1 != month) {
+                            myYear1 = year;
+                            myMonth1 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
             Text('${widget.searchCategoryName}'),
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear2 == "2055")
+                    ? Icon(Icons.chevron_right)
+                    : Text(
+                  '$myYear2-$myMonth2',
+                  style: TextStyle(
+                      fontSize: ScreenUtil.getInstance().setSp(34),
+                      color: Colours.app_main),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear2 != year || myMonth2 != month) {
+                            myYear2 = year;
+                            myMonth2 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -204,10 +267,7 @@ class BillSearchListState extends State<BillSearchList> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Image.asset(
-                          Utils.getImagePath('category/${model.image}'),
-                          width: ScreenUtil.getInstance().setWidth(55),
-                        ),
+                        Icon(Icons.money),
                         Gaps.hGap(12),
                         Text(
                           model.categoryName,
@@ -496,12 +556,7 @@ class BillSearchListState extends State<BillSearchList> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                Utils.getImagePath(
-                                  'category/${model.image}',
-                                ),
-                                width: 18,
-                              ),
+                              
                               Gaps.hGap(5),
                               Text('${model.categoryName}',
                                   textAlign: TextAlign.right, style: descStyle)

@@ -4,9 +4,11 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:i_account/db/column.dart';
-import 'package:i_account/db/account_classification.dart';
-import 'package:i_account/db/member.dart';
+import 'package:i_account/bill/models/account_model.dart';
+import 'package:i_account/bill/models/member_model.dart';
 import 'column.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 var dbAccount = new DBHelper();
 
@@ -60,6 +62,25 @@ class DBHelper {
     )
     """;
     await db.execute(queryStringMember);
+
+    // 初始化收入账户表数据
+    rootBundle.loadString('assets/data/initialAccount.json').then((value) {
+      List list = jsonDecode(value);
+      List<AccountClassification> models =
+          list.map((i) => AccountClassification.fromJson(i)).toList();
+      models.forEach((item) async {
+        await db.insert(tableAccount, item.toJson());
+      });
+    });
+
+    // 初始化收入账户表数据
+    rootBundle.loadString('assets/data/initialMember.json').then((value) {
+      List list = jsonDecode(value);
+      List<Member> models = list.map((i) => Member.fromJson(i)).toList();
+      models.forEach((item) async {
+        await db.insert(tableMember, item.toJson());
+      });
+    });
   }
 
   //插入或者更新账户（已完成）
@@ -258,7 +279,7 @@ class DBHelper {
     var dbClient = await db;
     var result;
     List<Map> maps =
-    await dbClient.query(tableMember, columns: [columnId, columnMember]);
+        await dbClient.query(tableMember, columns: [columnId, columnMember]);
     List<Member> members = new List();
     for (int i = 0; i < maps.length; i++) {
       members.add(Member.fromMap(maps[i]));
@@ -297,7 +318,7 @@ class DBHelper {
   Future<List> getMember() async {
     var dbClient = await db;
     List<Map> maps =
-    await dbClient.query(tableMember, columns: [columnId, columnMember]);
+        await dbClient.query(tableMember, columns: [columnId, columnMember]);
     List<Member> members = new List();
     for (int i = 0; i < maps.length; i++) {
       members.add(Member.fromMap(maps[i]));

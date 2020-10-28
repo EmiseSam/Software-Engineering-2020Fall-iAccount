@@ -1,4 +1,4 @@
-import 'package:i_account/db/account_classification.dart';
+import 'package:i_account/bill/models/account_model.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
@@ -76,7 +76,6 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
             ).then((val) {
               print(val);
             });
-          }else{
             showDialog<Null>(
               context: context,
               barrierDismissible: false,

@@ -393,10 +393,6 @@ class _BillState extends State<Bill>
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Image.asset(
-                          Utils.getImagePath('category/${model.image}'),
-                          width: ScreenUtil.getInstance().setWidth(55),
-                        ),
                         Gaps.hGap(12),
                         Text(
                           model.categoryName,
@@ -550,9 +546,11 @@ class _BillState extends State<Bill>
                         child: HighLightWell(
                           onTap: () async {
                             // 删除记录
-                            var account = await dbAccount.getAccount(model.account);
+                            var account =
+                                await dbAccount.getAccount(model.account);
                             var typeofA = account.typeofA;
-                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
+                            dbAccount.accountBalanceAdd(
+                                model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);
@@ -570,7 +568,7 @@ class _BillState extends State<Bill>
                               child: Text(
                                 '删除',
                                 style:
-                                TextStyle(fontSize: 16, color: Colors.red),
+                                    TextStyle(fontSize: 16, color: Colors.red),
                               ),
                             ),
                           ),
@@ -630,35 +628,39 @@ class _BillState extends State<Bill>
                   ),
                 ),
                 Gaps.line,
-                model.account.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('账户', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.account}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.account.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('账户', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.account}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ):Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
-                model.person.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('成员', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.person}',
-                            textAlign: TextAlign.right, style: descStyle),
+                model.person.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('成员', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.person}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                ): Gaps.empty,
+                    : Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -677,12 +679,6 @@ class _BillState extends State<Bill>
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                Utils.getImagePath(
-                                  'category/${model.image}',
-                                ),
-                                width: 18,
-                              ),
                               Gaps.hGap(5),
                               Text('${model.categoryName}',
                                   textAlign: TextAlign.right, style: descStyle)
@@ -711,24 +707,24 @@ class _BillState extends State<Bill>
                 Gaps.line,
                 model.remark.isNotEmpty
                     ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text('备注', style: titleStyle),
-                      Gaps.hGap(20),
-                      Expanded(
-                        flex: 1,
-                        child: Text('${model.remark}',
-                            textAlign: TextAlign.right, style: descStyle),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Text('备注', style: titleStyle),
+                            Gaps.hGap(20),
+                            Expanded(
+                              flex: 1,
+                              child: Text('${model.remark}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                )
                     : Gaps.empty,
                 MediaQuery.of(context).padding.bottom > 0
                     ? SizedBox(
-                  height: MediaQuery.of(context).padding.bottom,
-                )
+                        height: MediaQuery.of(context).padding.bottom,
+                      )
                     : Gaps.empty,
               ],
             ),

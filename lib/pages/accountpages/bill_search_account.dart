@@ -175,7 +175,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
             ButtonTheme(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: FlatButton(
-                child: (myYear1 == "1971") ? Icon(Icons.add) :Text(
+                child: (myYear1 == "1971") ? Icon(Icons.chevron_left) :Text(
                   '$myYear1-$myMonth1',
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(34),
@@ -200,11 +200,11 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                 },
               ),
             ),
-            Text('${widget.accountName}',style: TextStyle(fontSize: 22),),
+            Text('${widget.accountName}'),
             ButtonTheme(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: FlatButton(
-                child: (myYear2 == "2055") ? Icon(Icons.add): Text(
+                child: (myYear2 == "2055") ? Icon(Icons.chevron_right): Text(
                   '$myYear2-$myMonth2',
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(34),
@@ -263,10 +263,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Image.asset(
-                          Utils.getImagePath('category/${model.image}'),
-                          width: ScreenUtil.getInstance().setWidth(55),
-                        ),
+                        Icon(Icons.money),
                         Gaps.hGap(12),
                         Text(
                           model.categoryName,
@@ -555,12 +552,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                Utils.getImagePath(
-                                  'category/${model.image}',
-                                ),
-                                width: 18,
-                              ),
+                              
                               Gaps.hGap(5),
                               Text('${model.categoryName}',
                                   textAlign: TextAlign.right, style: descStyle)

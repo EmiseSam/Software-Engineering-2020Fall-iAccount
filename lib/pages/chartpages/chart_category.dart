@@ -98,12 +98,10 @@ class ChartCategoryPageState extends State<StatefulWidget> {
           money += item.money;
         });
 
-        String image = items.first.image ?? '';
-
         double ratio =
             money / (_type == 1 ? _monthExpenMoney : _monthIncomeMoney);
         ChartItemModel itemModel =
-            ChartItemModel(index, key, image, money, ratio, items.length);
+            ChartItemModel(index, key,  money, ratio, items.length);
         chartItems.add(itemModel);
         index += 1;
       });
@@ -342,7 +340,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
           return BillSearchList(
-              model.categoryName, myYear1, myMonth1, myYear2, myMonth2);
+              model.categoryName);
         }));
       },
       child: Container(
@@ -355,10 +353,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
                 bottom: BorderSide(width: 0.6, color: Colours.line))),
         child: Row(
           children: <Widget>[
-            Image.asset(
-              Utils.getImagePath('category/${model.image}'),
-              width: ScreenUtil.getInstance().setWidth(55),
-            ),
+            Icon(Icons.money),
             Gaps.hGap(ScreenUtil.getInstance().setWidth(32)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,11 +395,10 @@ class ChartCategoryPageState extends State<StatefulWidget> {
 class ChartItemModel {
   final int id;
   final String categoryName;
-  final String image;
   final double money;
   final double ratio;
   final int number;
 
-  ChartItemModel(this.id, this.categoryName, this.image, this.money, this.ratio,
-      this.number);
+  ChartItemModel(
+      this.id, this.categoryName, this.money, this.ratio, this.number);
 }

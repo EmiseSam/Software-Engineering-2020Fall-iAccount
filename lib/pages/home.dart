@@ -192,7 +192,10 @@ class _HomePageState extends State<HomePage>
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: FlatButton(
               child: (myYear1 == "1971")
-                  ? Icon(Icons.chevron_left,color: Colors.white,)
+                  ? Icon(
+                      Icons.chevron_left,
+                      color: Colors.white,
+                    )
                   : Text(
                       '$myYear1-$myMonth1',
                       style: TextStyle(
@@ -228,7 +231,10 @@ class _HomePageState extends State<HomePage>
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: FlatButton(
               child: (myYear2 == "2055")
-                  ? Icon(Icons.chevron_right,color: Colors.white,)
+                  ? Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    )
                   : Text(
                       '$myYear2-$myMonth2',
                       style: TextStyle(
@@ -315,7 +321,7 @@ class _HomePageState extends State<HomePage>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                      '${Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
+                      '${(_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)}',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: ScreenUtil.getInstance().setSp(56),
@@ -357,7 +363,7 @@ class _HomePageState extends State<HomePage>
                   child: Column(
                     children: <Widget>[
                       Text(
-                        '${Utils.formatDouble(double.parse(_monthModel.expenMoney.toStringAsFixed(2)))}',
+                        '${_monthModel.expenMoney.toStringAsFixed(2)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -388,7 +394,7 @@ class _HomePageState extends State<HomePage>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '${Utils.formatDouble(double.parse(_monthModel.incomeMoney.toStringAsFixed(2)))}',
+                        '${_monthModel.incomeMoney.toStringAsFixed(2)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -428,10 +434,7 @@ class _HomePageState extends State<HomePage>
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Image.asset(
-                          Utils.getImagePath('category/${model.image}'),
-                          width: ScreenUtil.getInstance().setWidth(55),
-                        ),
+                        Icon(Icons.money),
                         Gaps.hGap(12),
                         Text(
                           model.categoryName,
@@ -443,7 +446,7 @@ class _HomePageState extends State<HomePage>
                         Expanded(
                           flex: 1,
                           child: Text(
-                            '${Utils.formatDouble(model.money)}',
+                            '${model.money.toStringAsFixed(2)}',
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.right,
                             maxLines: 1,
@@ -489,11 +492,11 @@ class _HomePageState extends State<HomePage>
     String moneyString = '';
     if (group.incomeMoney > 0) {
       moneyString = moneyString +
-          '收入${Utils.formatDouble(double.parse(group.incomeMoney.toStringAsFixed(2)))}元';
+          '收入${group.incomeMoney.toStringAsFixed(2)}元';
     }
     if (group.expenMoney > 0) {
       moneyString = moneyString +
-          '${group.incomeMoney > 0 == true ? '  ' : ''}支出${Utils.formatDouble(double.parse(group.expenMoney.toStringAsFixed(2)))}元';
+          '${group.incomeMoney > 0 == true ? '  ' : ''}支出${group.expenMoney.toStringAsFixed(2)}元';
     }
 
     return Container(
@@ -585,9 +588,11 @@ class _HomePageState extends State<HomePage>
                         child: HighLightWell(
                           onTap: () async {
                             // 删除记录
-                            var account = await dbAccount.getAccount(model.account);
+                            var account =
+                                await dbAccount.getAccount(model.account);
                             var typeofA = account.typeofA;
-                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
+                            dbAccount.accountBalanceAdd(
+                                model.account, model.money, typeofA);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);
@@ -716,12 +721,6 @@ class _HomePageState extends State<HomePage>
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                Utils.getImagePath(
-                                  'category/${model.image}',
-                                ),
-                                width: 18,
-                              ),
                               Gaps.hGap(5),
                               Text('${model.categoryName}',
                                   textAlign: TextAlign.right, style: descStyle)

@@ -10,9 +10,6 @@ class CategoryIncomePage extends StatefulWidget {
 }
 
 class _CategoryIncomePageState extends State<CategoryIncomePage> {
-  _getRequests()async{
-
-  }
 
   List categoryNames = new List();
 

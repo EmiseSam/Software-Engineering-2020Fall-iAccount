@@ -29,10 +29,10 @@ class _AccountPageState extends State<AccountPage> {
   );
 
   // 总资产
-  double totalAssets = 0.00;
+  double totalAssets;
 
   // 总负债
-  double totalLiabilities = 0.00;
+  double totalLiabilities;
 
   Future<List> _loadAccountNamesAssets() async {
     List list = await dbAccount.getAccounts(0);
@@ -60,7 +60,6 @@ class _AccountPageState extends State<AccountPage> {
     list.forEach((element) {
       listTemp.add(element.balance.toString());
     });
-    print(accountamountItemsAssets.length);
     return listTemp;
   }
 
@@ -70,7 +69,6 @@ class _AccountPageState extends State<AccountPage> {
     list.forEach((element) {
       listTemp.add(element.balance.toString());
     });
-    print(accountamountItemsDebits.length);
     return listTemp;
   }
 
@@ -162,23 +160,10 @@ class _AccountPageState extends State<AccountPage> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: RichText(
                       text: TextSpan(
-                        text: ((totalAssets - totalLiabilities).toInt() ?? 0)
-                            .toString(),
+                        text: (totalAssets - totalLiabilities).toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 36.0,
                         ),
-                        children: [
-                          TextSpan(text: '.', style: TextStyle(fontSize: 20.0)),
-                          TextSpan(
-                            text: (int.tryParse((totalAssets - totalLiabilities)
-                                .toStringAsFixed(2)
-                                .split('.')[1]))
-                                .toString(),
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
@@ -191,7 +176,7 @@ class _AccountPageState extends State<AccountPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: Text(
-                          (totalAssets.toInt()).toStringAsFixed(2),
+                          (totalAssets).toStringAsFixed(2),
                           style: _bannerText,
                         ),
                       ),
@@ -208,7 +193,7 @@ class _AccountPageState extends State<AccountPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: Text(
-                          (totalLiabilities.toInt()).toStringAsFixed(2),
+                          (totalLiabilities).toStringAsFixed(2),
                           style: _bannerText,
                         ),
                       ),
@@ -225,7 +210,7 @@ class _AccountPageState extends State<AccountPage> {
                   '   资产账户',
                   style: _accountTitleStyle,
                 ),
-                Text(totalAssets.toInt().toStringAsFixed(2),
+                Text(totalAssets.toStringAsFixed(2),
                     style: _accountTitleStyle),
               ],
             ),
@@ -254,7 +239,7 @@ class _AccountPageState extends State<AccountPage> {
                   '   负债账户',
                   style: _accountTitleStyle,
                 ),
-                Text(totalLiabilities.toInt().toStringAsFixed(2),
+                Text(totalLiabilities.toStringAsFixed(2),
                     style: _accountTitleStyle),
               ],
             ),
@@ -354,7 +339,7 @@ class _AccountPageState extends State<AccountPage> {
         style: TextStyle(fontSize: 18),
       ),
       subtitle: new Text(
-        subTitleItem,
+        double.parse(subTitleItem).toStringAsFixed(2)
       ),
       trailing: new Icon(Icons.keyboard_arrow_right),
     );

@@ -1,17 +1,50 @@
 [
     {
-        "name": "三餐",
-        "image": "catering/吃喝_icon",
-        "sort": 0
+        "name": "转账支出",
+        "id": 0
     },
     {
-        "name": "交通",
-        "image": "catering/吃喝_icon",
-        "sort": 1
+        "name": "食品酒水",
+        "id": 1
     },
     {
-        "name": "住房",
-        "image": "catering/吃喝_icon",
-        "sort": 2
+        "name": "衣服饰品",
+        "id": 2
+    },
+    {
+        "name": "居家物业",
+        "id": 3
+    },
+    {
+        "name": "行车交通",
+        "id": 4
+    },
+    {
+        "name": "交流通讯",
+        "id": 5
+    },
+    {
+        "name": "休闲娱乐",
+        "id": 6
+    },
+    {
+        "name": "学习进修",
+        "id": 7
+    },
+    {
+        "name": "人情往来",
+        "id": 8
+    },
+    {
+        "name": "医疗保健",
+        "id": 9
+    },
+    {
+        "name": "金融保险",
+        "id": 10
+    },
+    {
+        "name": "其他支出",
+        "id": 11
     }
 ]

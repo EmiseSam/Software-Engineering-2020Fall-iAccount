@@ -1,0 +1,9 @@
+[
+    {
+        "id": 0,
+		"account": "现金",
+		"sum":500,
+		"balance":500,
+		"typeofA":0
+    }
+]

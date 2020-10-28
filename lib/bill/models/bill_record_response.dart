@@ -3,29 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'bill_record_response.g.dart';
 
 @JsonSerializable()
-class BillRecordResponse extends Object {
-  @JsonKey(name: 'code')
-  int code;
-
-  @JsonKey(name: 'data')
-  List<BillRecordModel> data;
-
-  @JsonKey(name: 'msg')
-  String msg;
-
-  BillRecordResponse(
-    this.code,
-    this.data,
-    this.msg,
-  );
-
-  factory BillRecordResponse.fromJson(Map<String, dynamic> srcJson) =>
-      _$BillRecordResponseFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$BillRecordResponseToJson(this);
-}
-
-@JsonSerializable()
 class BillRecordModel extends Object {
   @JsonKey(name: 'id')
   int id;
@@ -44,9 +21,6 @@ class BillRecordModel extends Object {
 
   @JsonKey(name: 'categoryName')
   String categoryName;
-
-  @JsonKey(name: 'image')
-  String image;
 
   /// 类型 1支出 2收入
   @JsonKey(name: 'type')
@@ -80,7 +54,6 @@ class BillRecordModel extends Object {
     this.remark,
     this.type,
     this.categoryName,
-    this.image,
     this.createTime,
     this.createTimestamp,
     this.updateTime,
@@ -98,7 +71,6 @@ class BillRecordModel extends Object {
       'account': account,
       'remark': remark,
       'categoryName': categoryName,
-      'image': image,
       'createTime': createTime,
       'updateTime': updateTime,
       'money': money,
@@ -110,7 +82,6 @@ class BillRecordModel extends Object {
     if (id != null) {
       map['id'] = id;
     }
-
     return map;
   }
 
@@ -122,7 +93,6 @@ class BillRecordModel extends Object {
     remark = map['remark'];
     type = map['type'];
     categoryName = map['categoryName'];
-    image = map['image'];
     createTime = map['createTime'];
     createTimestamp = map['createTimestamp'];
     updateTime = map['updateTime'];

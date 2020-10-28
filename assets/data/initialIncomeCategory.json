@@ -1,27 +1,34 @@
 [
     {
-        "name": "工资",
-        "image": "income/工资_icon",
+        "name": "转账收入",
         "sort": 0
     },
     {
-        "name": "奖金",
-        "image": "income/奖金_icon",
+        "name": "工资收入",
         "sort": 1
     },
     {
-        "name": "补贴",
-        "image": "income/补贴_icon",
+        "name": "利息收入",
         "sort": 2
     },
     {
-        "name": "理财",
-        "image": "income/理财_icon",
+        "name": "加班收入",
         "sort": 3
     },
     {
-        "name": "其他",
-        "image": "other/其他_icon",
+        "name": "奖金收入",
         "sort": 4
+    },
+    {
+        "name": "投资收入",
+        "sort": 5
+    },
+    {
+        "name": "兼职收入",
+        "sort": 6
+    },
+    {
+        "name": "其他收入",
+        "sort": 7
     }
 ]

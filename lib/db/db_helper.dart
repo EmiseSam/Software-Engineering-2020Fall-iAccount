@@ -51,7 +51,6 @@ class Dbhelper {
       account TEXT,
       remark TEXT,
       categoryName TEXT NOT NULL,
-      image TEXT NOT NULL,
       type INTEGER DEFAULT(1),
       isSync INTEGER DEFAULT(0),
       createTime TEXT,
@@ -91,7 +90,7 @@ class Dbhelper {
         .then((value) {
       List list = jsonDecode(value);
       List<CategoryItem> models =
-      list.map((i) => CategoryItem.fromJson(i)).toList();
+          list.map((i) => CategoryItem.fromJson(i)).toList();
       models.forEach((item) async {
         await db.insert(tableExpenCategory, item.toJson());
       });
@@ -103,7 +102,7 @@ class Dbhelper {
         .then((value) {
       List list = jsonDecode(value);
       List<CategoryItem> models =
-      list.map((i) => CategoryItem.fromJson(i)).toList();
+          list.map((i) => CategoryItem.fromJson(i)).toList();
       models.forEach((item) async {
         await db.insert(tableIncomeCategory, item.toJson());
       });
@@ -237,8 +236,8 @@ class Dbhelper {
     var dbClient = await db;
     var now = DateTime.now();
     String nowTime =
-    DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch)
-        .toString();
+        DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch)
+            .toString();
     //这里不要使用Map 声明map
     var map = {
       'money': model.money,
@@ -247,7 +246,6 @@ class Dbhelper {
       'remark': model.remark,
       'type': model.type,
       'categoryName': model.categoryName,
-      'image': model.image,
       'createTime': model.createTime != null ? model.createTime : nowTime,
       'createTimestamp': model.createTimestamp != null
           ? model.createTimestamp
@@ -263,7 +261,7 @@ class Dbhelper {
         result = await dbClient.insert(tableBill, map);
       } else {
         result =
-        await dbClient.update(tableBill, map, where: 'id == ${model.id}');
+            await dbClient.update(tableBill, map, where: 'id == ${model.id}');
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -281,7 +279,7 @@ class Dbhelper {
         "SELECT * FROM $tableBill WHERE updateTimestamp >= $startTime and updateTimestamp <= $endTime ORDER BY updateTimestamp ASC, id ASC");
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
     DateTime _preTime;
 
     /// 当天总支出金额
@@ -315,11 +313,11 @@ class Dbhelper {
     void buildGroup() {
       recordLsit.insertAll(0, itemList);
       DateTime time =
-      DateTime.fromMillisecondsSinceEpoch(itemList.first.updateTimestamp);
+          DateTime.fromMillisecondsSinceEpoch(itemList.first.updateTimestamp);
       String groupDate =
           '${time.year}-${time.month.toString().padLeft(2, '0')}-${time.day.toString().padLeft(2, '0')}';
       BillRecordGroup group =
-      BillRecordGroup(groupDate, expenMoney, incomeMoney);
+          BillRecordGroup(groupDate, expenMoney, incomeMoney);
       recordLsit.insert(0, group);
 
       // 计算月份金额
@@ -346,7 +344,7 @@ class Dbhelper {
       } else {
         // 存在两条或以上数
         DateTime time =
-        DateTime.fromMillisecondsSinceEpoch(item.updateTimestamp);
+            DateTime.fromMillisecondsSinceEpoch(item.updateTimestamp);
         //判断账单是不是在同一天
         if (time.year == _preTime.year &&
             time.month == _preTime.month &&
@@ -388,17 +386,17 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
 
   /// 查询账单记录 13位时间戳 type类型 1支出 2收入
   Future<List<BillRecordModel>> getBillListType(
-      int startTime,
-      int endTime,
-      int myType,
-      ) async {
+    int startTime,
+    int endTime,
+    int myType,
+  ) async {
     //DESC ASC
     var dbClient = await db;
     var result;
@@ -406,7 +404,7 @@ class Dbhelper {
         "SELECT * FROM $tableBill WHERE updateTimestamp >= $startTime and type = '$myType' and updateTimestamp <= $endTime");
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -426,7 +424,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -447,7 +445,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -467,7 +465,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -488,7 +486,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -562,7 +560,7 @@ class Dbhelper {
     }
     List list = result.toList();
     List<BillRecordModel> models =
-    list.map((i) => BillRecordModel.fromJson(i)).toList();
+        list.map((i) => BillRecordModel.fromJson(i)).toList();
 
     return models;
   }
@@ -600,5 +598,4 @@ class Dbhelper {
       return bills.length;
     }
   }
-
 }

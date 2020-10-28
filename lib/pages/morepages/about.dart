@@ -45,7 +45,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               Gaps.vGap(20),
               Text(
-                "V0.9.0.1028",
+                "V1.0.0.1029",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   //color: Colours.app_main,

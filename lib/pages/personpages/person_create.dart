@@ -5,7 +5,7 @@ import 'package:i_account/pages/morepages/person.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper_account.dart';
-import 'package:i_account/db/member.dart';
+import 'package:i_account/bill/models/member_model.dart';
 
 class AccountCreatePage extends StatefulWidget {
   @override
