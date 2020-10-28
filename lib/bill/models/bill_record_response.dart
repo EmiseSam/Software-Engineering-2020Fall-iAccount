@@ -94,37 +94,38 @@ class BillRecordModel extends Object {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      person: person,
-      account: account,
-      remark: remark,
-      categoryName: categoryName,
-      image: image,
-      createTime: createTime,
-      updateTime: updateTime,
+      'person': person,
+      'account': account,
+      'remark': remark,
+      'categoryName': categoryName,
+      'image': image,
+      'createTime': createTime,
+      'updateTime': updateTime,
+      'money': money,
+      'type': type,
+      'isSync': isSync,
+      'createTimestamp': createTimestamp,
+      'updateTimestamp': updateTimestamp
     };
     if (id != null) {
       map['id'] = id;
     }
-    map['money'] = money;
-    map['type'] = type;
-    map['isSync'] = isSync;
-    map['createTimestamp'] = createTimestamp;
-    map['updateTimestamp'] = updateTimestamp;
+
     return map;
   }
 
   BillRecordModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     money = map['money'];
-    person = map[person];
-    account = map[account];
-    remark = map[remark];
+    person = map['person'];
+    account = map['account'];
+    remark = map['remark'];
     type = map['type'];
-    categoryName = map[categoryName];
-    image = map[image];
-    createTime = map[createTime];
+    categoryName = map['categoryName'];
+    image = map['image'];
+    createTime = map['createTime'];
     createTimestamp = map['createTimestamp'];
-    updateTime = map[updateTime];
+    updateTime = map['updateTime'];
     updateTimestamp = map['updateTimestamp'];
   }
 }

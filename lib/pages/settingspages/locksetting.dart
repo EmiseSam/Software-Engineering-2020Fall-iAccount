@@ -53,11 +53,11 @@ class _LocksettingPageState extends State<LocksettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(
-          titleWidget: _buildAppBarTitle(),
-        ),
-        body: Center(
-            child: ListView(
+      appBar: MyAppBar(
+        titleWidget: _buildAppBarTitle(),
+      ),
+      body: Center(
+        child: ListView(
           children: ListTile.divideTiles(context: context, tiles: [
             ListTile(
               title: Text("启用密码"),
@@ -150,6 +150,8 @@ class _LocksettingPageState extends State<LocksettingPage> {
                   });
                 }),
           ]).toList(),
-        )));
+        ),
+      ),
+    );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:i_account/pages/personpages/person_create.dart';
-import 'package:i_account/pages/tabs.dart';
 import 'package:i_account/pages/personpages/bill_search_person.dart';
 import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/db/db_helper.dart';
+import 'package:i_account/router_jump.dart';
 
 class PersonPage extends StatefulWidget {
   @override
@@ -23,7 +23,6 @@ class _PersonPageState extends State<PersonPage> {
     print(personNames.length);
     return listTemp;
   }
-
 
   @override
   void initState() {
@@ -61,24 +60,23 @@ class _PersonPageState extends State<PersonPage> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        child:ListView.separated(
+        child: ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, item) {
-            return buildListData(context, personNames[item],);
+            return buildListData(
+              context,
+              personNames[item],
+            );
           },
-          separatorBuilder: (BuildContext context, int index) =>
-              Divider(),
-          itemCount: (personNames.length == null)
-              ? 0
-              : personNames.length,
+          separatorBuilder: (BuildContext context, int index) => Divider(),
+          itemCount: (personNames.length == null) ? 0 : personNames.length,
         ),
       ),
     );
   }
 
-  Widget buildListData(
-      BuildContext context, String titleItem) {
+  Widget buildListData(BuildContext context, String titleItem) {
     return new ListTile(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
@@ -107,12 +105,10 @@ class _PersonPageState extends State<PersonPage> {
                 FlatButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    await dbAccount.deleteMember(titleItem);
                     await dbHelp.deleteMemberBills(titleItem);
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return Tabs();
-                    }), (route) => route == null);
+                    await dbAccount.deleteMember(titleItem);
+                    print('test02 删除成员页面测试');
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
                     showDialog<Null>(
                       context: context,
                       barrierDismissible: false,

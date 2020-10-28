@@ -605,7 +605,6 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
 
 
     dbHelp.insertBillRecord(model).then((value) {
-      print("数据库测试 $_accountPerson");
       bus.trigger(bus.bookkeepingEventName);
     });
   }
@@ -695,6 +694,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  /*
                   Image.asset(
                     Utils.getImagePath('category/${item.image}'),
                     width: selectedIndex == index
@@ -704,6 +704,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     color: selectedIndex == index ? Colors.white : Colors.black,
                   ),
                   Gaps.vGap(3),
+                   */
                   Text(
                     item.name,
                     style: TextStyle(
@@ -712,8 +713,8 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                             : Colours.black,
                         fontSize: selectedIndex == index
                             ? ScreenUtil.getInstance()
-                            .setSp(25 + 3 * _tapItemController.value)
-                            : ScreenUtil.getInstance().setSp(25)),
+                            .setSp(35 + 3 * _tapItemController.value)
+                            : ScreenUtil.getInstance().setSp(35)),
                   )
                 ],
               ),

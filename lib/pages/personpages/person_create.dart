@@ -1,7 +1,7 @@
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/tabs.dart';
+import 'package:i_account/pages/morepages/person.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper_account.dart';
@@ -44,10 +44,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         onPressed: () async{
           Member m = new Member(_accountName.text);
           await dbAccount.insertMember(m);
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (BuildContext context) {
-                return Tabs();
-              }), (route) => route == null);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => PersonPage()));
           showDialog<Null>(
             context: context,
             barrierDismissible: false,

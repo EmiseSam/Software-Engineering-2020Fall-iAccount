@@ -51,10 +51,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
           print(_accountTypeDB);
           AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
           await dbAccount.insertAccount(dba);
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (BuildContext context) {
-                return Tabs();
-              }), (route) => route == null);
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Tabs()), ModalRoute.withName('/tabs'));
           showDialog<Null>(
             context: context,
             barrierDismissible: false,

@@ -121,11 +121,7 @@ class _PatternlockPageState extends State<PatternlockPage> {
     }
 
     if(isCorrect){
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(
-              builder: (BuildContext context) {
-                return Tabs();
-              }), (route) => route == null);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {return Tabs();}), (route) => route == null);
     }
 
     setState(() {

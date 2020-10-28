@@ -4,6 +4,7 @@ import 'package:i_account/pages/morepages/about.dart';
 import 'package:i_account/pages/morepages/person.dart';
 import 'package:i_account/pages/morepages/settings.dart';
 import 'package:i_account/pages/morepages/account.dart';
+import 'package:i_account/pages/morepages/category.dart';
 import 'package:i_account/pages/morepages/tabs_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -33,7 +34,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 440.0,
+      height: 528.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -63,6 +64,19 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => PersonPage()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('分类', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('分类管理'),
+              leading: Icon(
+                Icons.category,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CategoryPage()));
               },
             ),
             Divider(),

@@ -17,7 +17,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
               ? MaterialApp(
                   title: 'iAccount',
                   theme: ThemeData(
-                    primarySwatch: Colors.red,
+                    primarySwatch: Colors.blue,
                   ),
                   darkTheme: ThemeData.dark(),
                   home: SplashScreen(),
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
                   theme: darkModeProvider.darkMode == 1
                       ? ThemeData.dark()
                       : ThemeData(
-                          primarySwatch: Colors.red,
+                          primarySwatch: Colors.blue,
                         ),
                   home: SplashScreen(),
                 );

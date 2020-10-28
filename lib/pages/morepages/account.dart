@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/pages/accountpages/account_create.dart';
-import 'package:i_account/pages/tabs.dart';
+import 'package:i_account/router_jump.dart';
 import 'package:i_account/pages/accountpages/bill_search_account.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/db/db_helper_account.dart';
@@ -89,23 +89,23 @@ class _AccountPageState extends State<AccountPage> {
   @override
   void initState() {
     _loadAccountNamesAssets().then((value) => setState(() {
-          accountnameItemsAssets = value;
-        }));
+      accountnameItemsAssets = value;
+    }));
     _loadAccountNamesDebits().then((value) => setState(() {
-          accountnameItemsDebits = value;
-        }));
+      accountnameItemsDebits = value;
+    }));
     _loadAccountAmountAssets().then((value) => setState(() {
-          accountamountItemsAssets = value;
-        }));
+      accountamountItemsAssets = value;
+    }));
     _loadAccountAmountDebits().then((value) => setState(() {
-          accountamountItemsDebits = value;
-        }));
+      accountamountItemsDebits = value;
+    }));
     _loadAssets().then((value) => setState(() {
-          totalAssets = value;
-        }));
+      totalAssets = value;
+    }));
     _loadDebits().then((value) => setState(() {
-          totalLiabilities = value;
-        }));
+      totalLiabilities = value;
+    }));
     super.initState();
   }
 
@@ -171,8 +171,8 @@ class _AccountPageState extends State<AccountPage> {
                           TextSpan(text: '.', style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                             text: (int.tryParse((totalAssets - totalLiabilities)
-                                    .toStringAsFixed(2)
-                                    .split('.')[1]))
+                                .toStringAsFixed(2)
+                                .split('.')[1]))
                                 .toString(),
                             style: TextStyle(
                               fontSize: 20.0,
@@ -311,12 +311,9 @@ class _AccountPageState extends State<AccountPage> {
                 FlatButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
                     await dbAccount.deleteAccount(titleItem);
                     await dbHelp.deleteAccountBills(titleItem);
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return Tabs();
-                    }), (route) => route == null);
                     showDialog<Null>(
                       context: context,
                       barrierDismissible: false,

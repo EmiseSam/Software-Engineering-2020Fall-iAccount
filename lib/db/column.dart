@@ -14,3 +14,8 @@ final String columnMember = '_member';
 final String columnTime = '_time';
 final String columnBalance = '_balance';
 final String columntypeofA = '_typeofA';
+
+
+final String tableBill = '_BillRecord';
+final String tableExpenCategory = '_ExpenCategory';
+final String tableIncomeCategory = '_IncomeCategory';
