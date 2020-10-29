@@ -43,7 +43,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
           children: [
             ListTile(
               title: Text('资产', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('账户信息管理'),
+              subtitle: Text('查看账户信息，增加或删除账户'),
               leading: Icon(
                 Icons.account_balance_wallet,
                 color: Colors.blue[500],
@@ -56,7 +56,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             Divider(),
             ListTile(
               title: Text('成员', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('成员管理'),
+              subtitle: Text('增加或删除账单成员'),
               leading: Icon(
                 Icons.person,
                 color: Colors.blue[500],
@@ -68,8 +68,8 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             ),
             Divider(),
             ListTile(
-              title: Text('分类', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('分类管理'),
+              title: Text('分类管理', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('增加或删除一级分类和二级分类'),
               leading: Icon(
                 Icons.category,
                 color: Colors.blue[500],
@@ -81,8 +81,8 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
             ),
             Divider(),
             ListTile(
-              title: Text('统计', style: TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text('查看收入/支出的图表信息'),
+              title: Text('统计和流水', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('查看收入/支出的图表信息以及流水信息'),
               leading: Icon(
                 Icons.pie_chart,
                 color: Colors.blue[500],

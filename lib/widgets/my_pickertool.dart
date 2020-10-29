@@ -14,13 +14,6 @@ typedef ArrayClickCallback = void Function(
 typedef DateClickCallback = void Function(
     dynamic selectDateStr, dynamic selectDate);
 
-enum DateType {
-  YMD, // y, m, d
-  YM, // y ,m
-  YMD_HM, // y, m, d, hh, mm
-  YMD_AP_HM, // y, m, d, ap, hh, mm
-}
-
 class MyPickerTool {
   /*单列*/
   static void showStringPicker<T>(

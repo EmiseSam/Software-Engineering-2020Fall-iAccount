@@ -37,6 +37,8 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
   String _accountPerson = '';
   var _accountPickerData;
   var _personPickerData;
+  var _incomeCategoryPickerData = ['分类1','分类2','分类3','分类4','分类5',];
+  var _expenCategoryPickerData = ['分类1','分类2','分类3','分类4','分类5',];
   int flagIfHasData = 0;
 
   /// 支出类别数组
@@ -673,7 +675,7 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             _selectedIndexLeft = index;
             _tapItemController.forward();
             MyPickerTool.showStringPicker(context,
-                data: _accountPickerData,
+                data: _expenCategoryPickerData,
                 normalIndex: 0,
                 title: "请选择二级分类", clickCallBack: (int index, var str) {
                   setState(() {
@@ -688,7 +690,7 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             _selectedIndexRight = index;
             _tapItemController.forward();
             MyPickerTool.showStringPicker(context,
-                data: _accountPickerData,
+                data: _incomeCategoryPickerData,
                 normalIndex: 0,
                 title: "请选择二级分类", clickCallBack: (int index, var str) {
                   setState(() {

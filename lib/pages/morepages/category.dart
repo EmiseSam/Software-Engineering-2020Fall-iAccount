@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:i_account/pages/categorypages/category_income.dart';
-import 'package:i_account/pages/categorypages/category_expen.dart';
-import 'package:i_account/pages/categorypages/category_create.dart';
+import 'package:i_account/pages/categorypages/category_income_first.dart';
+import 'package:i_account/pages/categorypages/category_expen_first.dart';
+import 'package:i_account/pages/categorypages/category_create_first.dart';
+import 'package:i_account/pages/categorypages/category_create_second.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -19,23 +20,18 @@ class _CategoryPageState extends State<CategoryPage> {
           color: Colors.black,
         ),
         title: Text(
-          "分类",
+          "分类管理",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              size: 25.0,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CategoryCreatePage()));
-            },
-          ),
+          IconButton(icon: Icon(Icons.looks_one), onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryCreateFirstPage()));
+          }),
+          IconButton(icon: Icon(Icons.looks_two), onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryCreateSecondPage()));
+          }),
         ],
       ),
       body: Center(
@@ -46,7 +42,7 @@ class _CategoryPageState extends State<CategoryPage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return CategoryExpenPage();
+                      return CategoryExpenFirstPage();
                     }));
                 }
             ),
@@ -55,7 +51,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                        return CategoryIncomePage();
+                        return CategoryIncomeFirstPage();
                       }));
                 }),
           ]).toList(),
