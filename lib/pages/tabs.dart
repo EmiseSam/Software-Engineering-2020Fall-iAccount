@@ -12,7 +12,7 @@ class Tabs extends StatefulWidget {
 
 class _TabsState extends State<Tabs> {
   int _currentIndex = 0;
-  List _pageList = [HomePage(), NewPage(), MorePage()];
+  List _pageList = [HomePage(), NewBillPage(), MorePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _TabsState extends State<Tabs> {
           onPressed: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (BuildContext context) {
-              return NewPage();
+              return NewBillPage();
             }));
           },
         ),

@@ -17,15 +17,15 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/my_pickertool.dart';
 
-class NewPage extends StatefulWidget {
-  const NewPage({Key key, this.recordModel}) : super(key: key);
+class NewBillPage extends StatefulWidget {
+  const NewBillPage({Key key, this.recordModel}) : super(key: key);
   final BillRecordModel recordModel;
 
   @override
-  State<StatefulWidget> createState() => _NewPageState();
+  State<StatefulWidget> createState() => _NewBillPageState();
 }
 
-class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
+class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin {
   AnimationController _animationController;
   AnimationController _tapItemController;
   String _remark = '';
@@ -37,7 +37,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
   String _accountPerson = '';
   var _accountPickerData;
   var _personPickerData;
-  int mymoneytemp = 0;
+  int flagIfHasData = 0;
 
   /// 支出类别数组
   List<CategoryItem> _expenObjects = List();
@@ -143,7 +143,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
       }
 
       if (widget.recordModel.money != null) {
-        mymoneytemp = 1;
+        flagIfHasData = 1;
         _numberString = Utils.formatDouble(double.parse(
             _numberString = widget.recordModel.money.toStringAsFixed(2)));
       }
@@ -518,7 +518,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   print(val);
                 });
               }
-              if (mymoneytemp == 1) {
+              if (flagIfHasData == 1) {
                 String ac = widget.recordModel.account;
                 double preMoney = widget.recordModel.money;
                 var account =
@@ -672,6 +672,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
           if (_selectedIndexLeft != index) {
             _selectedIndexLeft = index;
             _tapItemController.forward();
+            MyPickerTool.showStringPicker(context,
+                data: _accountPickerData,
+                normalIndex: 0,
+                title: "请选择二级分类", clickCallBack: (int index, var str) {
+                  setState(() {
+                    //要做的事
+                  });
+                });
             setState(() {});
           }
         } else {
@@ -679,6 +687,14 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
           if (_selectedIndexRight != index) {
             _selectedIndexRight = index;
             _tapItemController.forward();
+            MyPickerTool.showStringPicker(context,
+                data: _accountPickerData,
+                normalIndex: 0,
+                title: "请选择二级分类", clickCallBack: (int index, var str) {
+                  setState(() {
+                    //要做的事
+                  });
+                });
             setState(() {});
           }
         }
@@ -694,27 +710,18 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  /*
-                  Image.asset(
-                    Utils.getImagePath('category/${item.image}'),
-                    width: selectedIndex == index
-                        ? ScreenUtil.getInstance()
-                        .setWidth(60 + _tapItemController.value * 6)
-                        : ScreenUtil.getInstance().setWidth(50),
-                    color: selectedIndex == index ? Colors.white : Colors.black,
-                  ),
-                  Gaps.vGap(3),
-                   */
-                  Text(
-                    item.name,
-                    style: TextStyle(
-                        color: selectedIndex == index
-                            ? Colors.white
-                            : Colours.black,
-                        fontSize: selectedIndex == index
-                            ? ScreenUtil.getInstance()
-                                .setSp(35 + 3 * _tapItemController.value)
-                            : ScreenUtil.getInstance().setSp(35)),
+                  GestureDetector(
+                    child: Text(
+                      item.name,
+                      style: TextStyle(
+                          color: selectedIndex == index
+                              ? Colors.white
+                              : Colours.black,
+                          fontSize: selectedIndex == index
+                              ? ScreenUtil.getInstance()
+                              .setSp(35 + 3 * _tapItemController.value)
+                              : ScreenUtil.getInstance().setSp(35)),
+                    ),
                   )
                 ],
               ),

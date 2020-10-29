@@ -469,7 +469,7 @@ class BillSearchListPersonWithtypeState
                             Navigator.of(context).push(new MaterialPageRoute(
                                 fullscreenDialog: true,
                                 builder: (_) {
-                                  return NewPage(
+                                  return NewBillPage(
                                     recordModel: model,
                                   );
                                 }));

@@ -460,7 +460,7 @@ class BillSearchListtAccountWithTypeState extends State<BillSearchListtAccountWi
                             Navigator.of(context).push(new MaterialPageRoute(
                                 fullscreenDialog: true,
                                 builder: (_) {
-                                  return NewPage(
+                                  return NewBillPage(
                                     recordModel: model,
                                   );
                                 }));

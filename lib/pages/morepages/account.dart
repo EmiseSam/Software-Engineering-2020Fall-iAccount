@@ -316,6 +316,8 @@ class _AccountPageState extends State<AccountPage> {
                   FlatButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
+                      setState(() {
+                      });
                     },
                     child: Text("取消"),
                   ),

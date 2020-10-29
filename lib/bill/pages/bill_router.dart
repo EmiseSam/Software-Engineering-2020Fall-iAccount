@@ -12,6 +12,6 @@ class BillRouter implements IRouterProvider {
     router.define(billPage,
         handler: Handler(handlerFunc: (_, params) => Bill()));
     router.define(bookkeepPage,
-        handler: Handler(handlerFunc: (_, params) => NewPage()));
+        handler: Handler(handlerFunc: (_, params) => NewBillPage()));
   }
 }

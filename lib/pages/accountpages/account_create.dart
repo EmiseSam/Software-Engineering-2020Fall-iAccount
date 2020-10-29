@@ -76,6 +76,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
             ).then((val) {
               print(val);
             });
+          }else{
             showDialog<Null>(
               context: context,
               barrierDismissible: false,
