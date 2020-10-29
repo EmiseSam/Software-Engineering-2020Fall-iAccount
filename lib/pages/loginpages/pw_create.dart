@@ -13,7 +13,7 @@ class PwcreatePage extends StatefulWidget {
 class _PwcreatePageState extends State<PwcreatePage> {
   String pw1;
   String pw2;
-  String _pw_origin;
+  String _pwOrigin;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _PwcreatePageState extends State<PwcreatePage> {
   void _getOriginPW()  async{
     SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     setState(() {
-      _pw_origin = sharedPreferences.get('password') ?? '';
+      _pwOrigin = sharedPreferences.get('password') ?? '';
     });
   }
 
@@ -148,7 +148,7 @@ class _PwcreatePageState extends State<PwcreatePage> {
                                   ],
                                 );
                               });
-                        }else if(_pw_origin == pw1 || _pw_origin == pw2){
+                        }else if(_pwOrigin == pw1 || _pwOrigin == pw2){
                           showDialog(
                               context: context,
                               barrierDismissible: false,

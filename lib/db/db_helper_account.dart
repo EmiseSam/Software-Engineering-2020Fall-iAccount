@@ -124,11 +124,17 @@ class DBHelper {
 
   //删除账户（已完成）
   Future<int> deleteAccount(String account) async {
-    var dbClient = await db;
-    var result = await dbClient.delete(tableAccount,
-        where: '$columnAccount = ?', whereArgs: [account]);
-    print('正在删除账户');
-    return result;
+    if(account == '现金'){
+      print("该账户不能删除！");
+      return 0;
+    }else{
+      var dbClient = await db;
+      var result = await dbClient.delete(tableAccount,
+          where: '$columnAccount = ?', whereArgs: [account]);
+      print('正在删除账户');
+      return result;
+    }
+
   }
 
   //获取单个用户

@@ -68,7 +68,7 @@ class _CategoryIncomePageState extends State<CategoryIncomePage> {
         }));
       },
       onLongPress: () async {
-        if(titleItem == '其他'){
+        if(titleItem == '其他收入'){
           showDialog<Null>(
             context: context,
             barrierDismissible: false,

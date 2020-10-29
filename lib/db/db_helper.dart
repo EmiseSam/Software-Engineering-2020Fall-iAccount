@@ -216,7 +216,7 @@ class Dbhelper {
   //删除分类
   Future<int> deleteSort(String sort, int typeofS) async {
     var dbClient = await db;
-    if (sort == '其他') {
+    if (sort == '其他收入' || sort == '其他支出') {
       print('此分类不可删除');
       return 0;
     }
@@ -576,7 +576,7 @@ class Dbhelper {
         bills.add(BillRecordModel.fromMap(maps[i]));
       }
       for (var i = 0; i < bills.length; i++) {
-        bills[i].categoryName = '其他';
+        bills[i].categoryName = '其他支出';
         await dbClient.update(tableBill, bills[i].toMap(),
             where: 'id = ?', whereArgs: [bills[i].id]);
       }
@@ -590,7 +590,7 @@ class Dbhelper {
         bills.add(BillRecordModel.fromMap(maps[i]));
       }
       for (var i = 0; i < bills.length; i++) {
-        bills[i].categoryName = '其他';
+        bills[i].categoryName = '其他收入';
         await dbClient.update(tableBill, bills[i].toMap(),
             where: 'id = ?', whereArgs: [bills[i].id]);
       }

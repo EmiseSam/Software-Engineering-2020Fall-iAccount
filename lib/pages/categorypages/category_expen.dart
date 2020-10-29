@@ -69,7 +69,7 @@ class _CategoryExpenPageState extends State<CategoryExpenPage> {
         }));
       },
       onLongPress: () async {
-        if(titleItem == '其他'){
+        if(titleItem == '其他支出'){
           showDialog<Null>(
             context: context,
             barrierDismissible: false,

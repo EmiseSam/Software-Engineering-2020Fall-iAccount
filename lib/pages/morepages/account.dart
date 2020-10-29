@@ -275,63 +275,90 @@ class _AccountPageState extends State<AccountPage> {
         }));
       },
       onLongPress: () async {
-        showDialog<Null>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("提示"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[Text("是否删除该账户？")],
+        if(titleItem == '现金'){
+          showDialog<Null>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("提示"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[Text("该账户不能删除！")],
+                  ),
                 ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("取消"),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("确定"),
+                  ),
+                ],
+              );
+            },
+          ).then((val) {
+            print(val);
+          });
+        }else{
+          showDialog<Null>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("提示"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[Text("是否删除该账户？")],
+                  ),
                 ),
-                FlatButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
-                    await dbAccount.deleteAccount(titleItem);
-                    await dbHelp.deleteAccountBills(titleItem);
-                    showDialog<Null>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("提示"),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[Text("已经删除该账户！")],
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("取消"),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+                      await dbAccount.deleteAccount(titleItem);
+                      await dbHelp.deleteAccountBills(titleItem);
+                      showDialog<Null>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("提示"),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[Text("已经删除该账户！")],
+                              ),
                             ),
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("确定"),
-                            ),
-                          ],
-                        );
-                      },
-                    ).then((val) {
-                      print(val);
-                    });
-                  },
-                  child: Text("确定"),
-                ),
-              ],
-            );
-          },
-        ).then((val) {
-          print(val);
-        });
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("确定"),
+                              ),
+                            ],
+                          );
+                        },
+                      ).then((val) {
+                        print(val);
+                      });
+                    },
+                    child: Text("确定"),
+                  ),
+                ],
+              );
+            },
+          ).then((val) {
+            print(val);
+          });
+        }
       },
       leading: Icon(Icons.account_balance_wallet),
       title: new Text(

@@ -2,8 +2,8 @@
     {
         "id": 0,
 		"account": "现金",
-		"sum":500,
-		"balance":500,
-		"typeofA":0
+		"sum": 0,
+		"balance": 0,
+		"typeofA": 0
     }
 ]

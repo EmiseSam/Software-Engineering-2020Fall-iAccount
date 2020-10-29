@@ -37,7 +37,7 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
   }
 
 
-  String _TextBuilding() {
+  String _textBuilding() {
     String _textString = '';
     if (result.length == 0) {
       _textString = '';
@@ -69,7 +69,7 @@ class _PatternlockcreatePageState extends State<PatternlockcreatePage> {
             Container(
               height: 120,
               child: Center(
-                child: Text(_TextBuilding(),
+                child: Text(_textBuilding(),
                   style: TextStyle(
                       fontSize: 24,
                       color: Colors.blue,
