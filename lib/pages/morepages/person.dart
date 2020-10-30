@@ -92,7 +92,7 @@ class _PersonPageState extends State<PersonPage> {
               title: Text("提示"),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: <Widget>[Text("是否删除该成员？")],
+                  children: <Widget>[Text("是否删除该成员？\n删除成员的同时也会删除相应的流水信息。")],
                 ),
               ),
               actions: <Widget>[

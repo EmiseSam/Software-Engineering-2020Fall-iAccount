@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/router_jump.dart';
+import 'package:i_account/widgets/input_textview_dialog_category.dart';
 
 class CategoryExpenSecondPage extends StatefulWidget {
   CategoryExpenSecondPage(this.categoryNameFirst):super();
@@ -79,7 +80,7 @@ class _CategoryExpenSecondPageState extends State<CategoryExpenSecondPage> {
                 title: Text("提示"),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[Text("该分类不能删除！")],
+                    children: <Widget>[Text("该分类不能删除或编辑！")],
                   ),
                 ),
                 actions: <Widget>[
@@ -104,7 +105,7 @@ class _CategoryExpenSecondPageState extends State<CategoryExpenSecondPage> {
                 title: Text("提示"),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[Text("是否删除该分类？")],
+                    children: <Widget>[Text("请选择删除或编辑该分类。\n删除分类的同时也会删除相应的流水信息。")],
                   ),
                 ),
                 actions: <Widget>[
@@ -113,6 +114,24 @@ class _CategoryExpenSecondPageState extends State<CategoryExpenSecondPage> {
                       Navigator.of(context).pop();
                     },
                     child: Text("取消"),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return TextViewDialogCategory(
+                              confirm: (text) {
+                                setState(() {
+                                  //TODO 数据库操作
+                                });
+                              },
+                            );
+                          });
+                    },
+                    child: Text("编辑"),
                   ),
                   FlatButton(
                     onPressed: () async {

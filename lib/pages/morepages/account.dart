@@ -309,7 +309,7 @@ class _AccountPageState extends State<AccountPage> {
                 title: Text("提示"),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[Text("是否删除该账户？")],
+                    children: <Widget>[Text("是否删除该账户？\n\n删除账户的同时也会删除相应的流水信息。")],
                   ),
                 ),
                 actions: <Widget>[
