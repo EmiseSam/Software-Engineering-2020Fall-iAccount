@@ -1,6 +1,6 @@
 # iAccount
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Build Status](https://travis-ci.org/xialonghua/kotmvp.svg?branch=master)](https://travis-ci.org/xialonghua/kotmvp) 
+[![GitHub Contributors](https://img.shields.io/github/contributors/NoobCong/Software-Engineering-2020Fall-iAccount?style=plastic)](https://github.com/NoobCong/Software-Engineering-2020Fall-iAccount/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/NoobCong/Software-Engineering-2020Fall-iAccount?style=plastic)](https://GitHub.com/NoobCong/Software-Engineering-2020Fall-iAccount/issues/)    
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/NoobCong/Software-Engineering-2020Fall-iAccount?style=plastic)](https://GitHub.com/NoobCong/Software-Engineering-2020Fall-iAccount/pull/) 
 一款基于Flutter开发的记账应用
