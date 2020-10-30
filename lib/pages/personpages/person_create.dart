@@ -1,7 +1,7 @@
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/morepages/person.dart';
+import 'package:i_account/router_jump.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper_account.dart';
@@ -42,9 +42,8 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         onPressed: () async {
           if (_personName.text.isNotEmpty) {
             Member m = new Member(_personName.text);
-            await dbAccount.insertMember(m);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => PersonPage()));
+            int idReturn = await dbAccount.insertMember(m);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
               context: context,
               barrierDismissible: false,
@@ -53,7 +52,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[Text("成员创建成功！")],
+                      children: <Widget>[idReturn != -1? Text("成员创建成功！") : Text("已有同名成员！")],
                     ),
                   ),
                   actions: <Widget>[

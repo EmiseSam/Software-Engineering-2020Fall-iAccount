@@ -47,7 +47,7 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
         onPressed: () async {
           if (_categoryName.text.isNotEmpty) {
             CategoryItem category = new CategoryItem(_categoryName.text, null);
-            dbHelp.insertSort(category, _categoryTypeDB);
+            int idReturn = await dbHelp.insertSort(category, _categoryTypeDB);
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => CategoryPage()),
                 ModalRoute.withName('/'));
@@ -59,7 +59,7 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[Text("分类创建成功！")],
+                      children: <Widget>[idReturn != -1? Text("分类创建成功！") : Text("已有同名分类！")],
                     ),
                   ),
                   actions: <Widget>[

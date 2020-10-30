@@ -6,6 +6,7 @@ import 'package:i_account/router_jump.dart';
 import 'package:i_account/pages/accountpages/bill_search_account.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/db/db_helper_account.dart';
+import 'package:i_account/widgets/input_textview_dialog_account.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -284,7 +285,7 @@ class _AccountPageState extends State<AccountPage> {
                 title: Text("提示"),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[Text("该账户不能删除！")],
+                    children: <Widget>[Text("该账户不能删除或编辑！")],
                   ),
                 ),
                 actions: <Widget>[
@@ -320,6 +321,24 @@ class _AccountPageState extends State<AccountPage> {
                       });
                     },
                     child: Text("取消"),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return TextViewDialogAccount(
+                              confirm: (text) {
+                                setState(() {
+                                  //TODO 数据库操作
+                                });
+                              },
+                            );
+                          });
+                    },
+                    child: Text("编辑"),
                   ),
                   FlatButton(
                     onPressed: () async {

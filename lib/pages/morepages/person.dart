@@ -5,6 +5,7 @@ import 'package:i_account/pages/personpages/bill_search_person.dart';
 import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/router_jump.dart';
+import 'package:i_account/widgets/input_textview_dialog_person.dart';
 
 class PersonPage extends StatefulWidget {
   @override
@@ -105,9 +106,26 @@ class _PersonPageState extends State<PersonPage> {
                 FlatButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return TextViewDialogPerson(
+                            confirm: (text) {
+                              setState(() {
+                                //TODO 数据库操作
+                              });
+                            },
+                          );
+                        });
+                  },
+                  child: Text("编辑"),
+                ),
+                FlatButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
                     await dbHelp.deleteMemberBills(titleItem);
                     await dbAccount.deleteMember(titleItem);
-                    print('test02 删除成员页面测试');
                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
                     showDialog<Null>(
                       context: context,

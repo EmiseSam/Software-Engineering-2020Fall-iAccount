@@ -2,7 +2,7 @@ import 'package:i_account/bill/models/account_model.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/tabs.dart';
+import 'package:i_account/router_jump.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/my_pickertool.dart';
 import 'package:i_account/widgets/highlight_well.dart';
@@ -50,8 +50,8 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         onPressed: () async{
           if(_accountName.text.isNotEmpty){
             AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
-            await dbAccount.insertAccount(dba);
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Tabs()), ModalRoute.withName('/tabs'));
+            int idReturn = await dbAccount.insertAccount(dba);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
               context: context,
               barrierDismissible: false,
@@ -60,7 +60,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[Text("账户创建成功！")],
+                      children: <Widget>[idReturn != -1? Text("账户创建成功！") : Text("已有同名账户！")],
                     ),
                   ),
                   actions: <Widget>[
