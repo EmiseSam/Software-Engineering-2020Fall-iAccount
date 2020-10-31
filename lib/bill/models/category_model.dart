@@ -1,63 +1,40 @@
+import 'package:i_account/db/column.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'category_model.g.dart';
-
-List<CategoryModel> getCategoryModelList(List<dynamic> list) {
-  List<CategoryModel> result = [];
-  list.forEach((item) {
-    result.add(CategoryModel.fromJson(item));
-  });
-  return result;
-}
-
-@JsonSerializable()
-class CategoryModel extends Object {
-  @JsonKey(name: 'categoryName')
-  String categoryName;
-
-  @JsonKey(name: 'items')
-  List<CategoryItem> items;
-
-  CategoryModel(
-      this.categoryName,
-      this.items,
-      );
-
-  factory CategoryModel.fromJson(Map<String, dynamic> srcJson) =>
-      _$CategoryModelFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$CategoryModelToJson(this);
-}
 
 @JsonSerializable()
 class CategoryItem extends Object {
   @JsonKey(name: 'id')
   int id;
 
-  @JsonKey(name: 'name')
-  String name;
+  @JsonKey(name: 'classification1')
+  String classification1;
 
-  @JsonKey(name: 'image')
-  String image;
+  @JsonKey(name: 'classification2')
+  String classification2;
 
-  CategoryItem(this.name, this.image, [this.id]);
+  CategoryItem(this.classification1, [this.classification2, this.id]);
+
+  CategoryItem.fromMap(Map<String, dynamic> map) {
+    classification1 = map[columnClassification1];
+    classification2 = map[columnClassification2];
+    id = map[columnId];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      columnClassification1: classification1,
+      columnClassification2: classification2
+    };
+    if (id != null) {
+      map[columnId] = id;
+    }
+    return map;
+  }
 
   factory CategoryItem.fromJson(Map<String, dynamic> srcJson) =>
       _$CategoryItemFromJson(srcJson);
 
   Map<String, dynamic> toJson() => _$CategoryItemToJson(this);
-
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{'name': name, 'image': image};
-    if (id != null) {
-      map['id'] = id;
-    }
-    return map;
-  }
-
-  CategoryItem.fromMap(Map<String, dynamic> map) {
-    name = map['name'];
-    image = map['image'];
-    id = map['id'];
-  }
 }

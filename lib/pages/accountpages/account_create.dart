@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/my_pickertool.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:flutter/services.dart';
-import 'package:i_account/db/db_helper_account.dart';
+import 'package:i_account/db/db_helper.dart';
 
 class AccountCreatePage extends StatefulWidget {
   @override
@@ -50,7 +50,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         onPressed: () async{
           if(_accountName.text.isNotEmpty){
             AccountClassification dba = new AccountClassification(_accountName.text, _accountTypeDB,balance: double.parse(_accountAmount.text));
-            int idReturn = await dbAccount.insertAccount(dba);
+            int idReturn = await dbHelp.insertAccount(dba);
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
               context: context,

@@ -1,66 +1,153 @@
-import 'dart:async';
 import 'package:i_account/bill/models/bill_record_group.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
-import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/util/dateUtils.dart';
+import 'package:i_account/util/fluro_navigator.dart';
 import 'package:i_account/util/utils.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
-import 'package:i_account/widgets/state_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
-import 'package:i_account/pages/newbill.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:i_account/widgets/calendar_page.dart';
+import '../newbill.dart';
 
-class Bill extends StatefulWidget {
+class BillSearchListMemberWithtype extends StatefulWidget {
+  BillSearchListMemberWithtype(this.accountName, this.type) : super();
+  final accountName;
+  final type;
+
   @override
-  _BillState createState() => _BillState();
+  State<StatefulWidget> createState() {
+    return BillSearchListMemberWithtypeState();
+  }
 }
 
-// GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+class BillSearchListMemberWithtypeState
+    extends State<BillSearchListMemberWithtype> {
+  List _datas = List();
+  String myYear1 = "1971";
+  String myMonth1 = "01";
+  String myYear2 = "2055";
+  String myMonth2 = "12";
 
-class _BillState extends State<Bill>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  //保存状态
-  bool get wantKeepAlive => true;
-
-  ScrollController _controller = ScrollController();
-
-  /// 是否显示返回顶部按钮
-  bool _isShowToTopBtn = false;
-
-  BillRecordMonth _monthModel = BillRecordMonth(0, 0, []);
-
-  String _year = "${DateTime.now().year}";
-  String _month = "${DateTime.now().month.toString().padLeft(2, '0')}";
-
-  /// 获取当前月份的数据
-  Future<void> getCurrentMonthDatas() async {
+  // 初始化数据
+  Future _initDatas() async {
     // 时间戳
-    int startTime = DateTime(int.parse(_year), int.parse(_month), 1, 0, 0, 0, 0)
-        .millisecondsSinceEpoch;
+    int startTime =
+        DateTime(int.parse(myYear1), int.parse(myMonth1), 1, 0, 0, 0, 0)
+            .millisecondsSinceEpoch;
     int endTime = DateTime(
-            int.parse(_year),
-            int.parse(_month),
-            DateUtls.getDaysNum(int.parse(_year), int.parse(_month)),
+            int.parse(myYear2),
+            int.parse(myMonth2),
+            DateUtls.getDaysNum(int.parse(myYear2), int.parse(myMonth2)),
             23,
             59,
             59,
             999)
         .millisecondsSinceEpoch;
+    if (startTime > endTime) {
+      var temp;
+      temp = startTime;
+      startTime = endTime;
+      endTime = temp;
+      temp = myYear1;
+      myYear1 = myYear2;
+      myYear2 = temp;
+      temp = myMonth1;
+      myMonth1 = myMonth2;
+      myMonth2 = temp;
+    }
+    dbHelp
+        .getBillListPersonWithType(startTime, endTime, widget.type,
+            categoryName: widget.accountName)
+        .then((models) {
+      DateTime _preTime;
 
-    dbHelp.getBillRecordMonth(startTime, endTime).then((monthModel) {
+      /// 当天总支出金额
+      double expenMoney = 0;
+
+      /// 当日总收入
+      double incomeMoney = 0;
+
+      /// 账单记录
+      List recordLsit = List();
+
+      /// 账单记录
+      List<BillRecordModel> itemList = List();
+
+      void addAction(BillRecordModel item) {
+        itemList.insert(0, item);
+        if (item.typeofB == 1) {
+          // 支出
+          expenMoney += item.money;
+        } else {
+          incomeMoney += item.money;
+        }
+      }
+
+      void buildGroup() {
+        recordLsit.insertAll(0, itemList);
+        DateTime time =
+            DateTime.fromMillisecondsSinceEpoch(itemList.first.updateTimestamp);
+        String groupDate =
+            '${time.year}-${time.month.toString().padLeft(2, '0')}-${time.day.toString().padLeft(2, '0')}';
+        BillRecordGroup group =
+            BillRecordGroup(groupDate, expenMoney, incomeMoney);
+        recordLsit.insert(0, group);
+
+        // 清除重构
+        expenMoney = 0;
+        incomeMoney = 0;
+        itemList = List();
+      }
+
+      int length = models.length;
+
+      List.generate(length, (index) {
+        BillRecordModel item = models[index];
+        //格式化时间戳
+        if (_preTime == null) {
+          _preTime = DateTime.fromMillisecondsSinceEpoch(item.updateTimestamp);
+          addAction(item);
+          if (length == 1) {
+            buildGroup();
+          }
+        } else {
+          // 存在两条或以上数
+          DateTime time =
+              DateTime.fromMillisecondsSinceEpoch(item.updateTimestamp);
+          //判断账单是不是在同一天
+          if (time.year == _preTime.year &&
+              time.month == _preTime.month &&
+              time.day == _preTime.day) {
+            //如果是同一天
+            addAction(item);
+            if (index == length - 1) {
+              //这是最后一条数据
+              buildGroup();
+            }
+          } else {
+            //如果不是同一天 这条数据是某一条的第一条 构建上一条的组
+            buildGroup();
+            addAction(item);
+            if (index == length - 1) {
+              //这是最后一条数据
+              buildGroup();
+            }
+          }
+          _preTime = time;
+        }
+      });
+
       setState(() {
-        _monthModel = monthModel;
+        _datas = recordLsit;
       });
     });
   }
@@ -69,309 +156,99 @@ class _BillState extends State<Bill>
   void initState() {
     super.initState();
 
-    // 获取当月数据
-    getCurrentMonthDatas();
+    _initDatas();
 
     // 订阅监听
     bus.add(bus.bookkeepingEventName, (arg) {
-      getCurrentMonthDatas();
+      _initDatas();
     });
-
-    // 滑动监听
-    _controller.addListener(() {
-      if (_controller.offset < 200 && _isShowToTopBtn) {
-        setState(() {
-          _isShowToTopBtn = false;
-        });
-      } else if (_controller.offset >= 200 && _isShowToTopBtn == false) {
-        setState(() {
-          _isShowToTopBtn = true;
-        });
-      }
-    });
-  }
-
-  double maxOffset = 150;
-  double opacityValue = 0;
-  void _onScrol(offset) {
-    double alpha = offset / maxOffset;
-    if (alpha < 0) {
-      alpha = 0;
-    } else if (alpha > 1) {
-      alpha = 1;
-    }
-    setState(() {
-      opacityValue = alpha;
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    // 适配
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     return Scaffold(
-      // key: _globalKey,
-      // drawer: MyDrawer(), // 左边抽屉
-      // appBar: AppBar(),
-      // body: SafeArea(
-      //   top: false,
-      //   child: CustomScrollView(
-      //     // semanticChildCount: _models.length,
-      //     controller: _controller,
-      //     slivers: _sliverBuilder(),
-      //   ),
-      // ),
-      body: Stack(
-        children: <Widget>[
-          MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: NotificationListener(
-              onNotification: (notification) {
-                //如果是滚动更新通知的值并且深度限制为0[就是监听ListView]
-                if (notification is ScrollUpdateNotification &&
-                    notification.depth == 0) {
-                  //如果是
-                  _onScrol(notification.metrics.pixels);
-                }
-              },
-              child: CustomScrollView(
-                controller: _controller,
-                slivers: _sliverBuilder(),
-              ),
-            ),
-          ),
-          Container(
-            height: appbarHeight + MediaQuery.of(context).padding.top,
-            child: MyAppBar(
-              barStyle: opacityValue < 0.3
-                  ? StatusBarStyle.light
-                  : StatusBarStyle.dark,
-              backgroundColor: Colors.white.withOpacity(1.0 * opacityValue),
-              isBack: false,
-              titleWidget: _buildTitle(),
-            ),
-          )
-        ],
-      ),
-      floatingActionButton: _isShowToTopBtn
-          ? HighLightWell(
-              onTap: () {
-                _controller.animateTo(0,
-                    duration: Duration(milliseconds: 200), curve: Curves.ease);
-              },
-              borderRadius: BorderRadius.circular(20),
-              child: SizedBox(
-                width: 35,
-                height: 35,
-                child: Image.asset(
-                  Utils.getImagePath('icons/arrow_upward'),
-                ),
-              ),
-            )
-          : null,
-    );
-  }
-
-  // 标题
-  _buildTitle() {
-    return FlatButton(
-      child: Text(
-        '$_year-$_month',
-        style: TextStyle(
-            fontSize: ScreenUtil.getInstance().setSp(34),
-            color: opacityValue < 0.3
-                ? Colors.white.withOpacity(1.0 * (1 - opacityValue))
-                : Colours.app_main.withOpacity(1.0 * opacityValue)),
-      ),
-      onPressed: () {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return CalendarMonthDialog(
-              checkTap: (year, month) {
-                if (_year != year || _month != month) {
-                  setState(() {
-                    _year = year;
-                    _month = month;
-                    getCurrentMonthDatas();
-                  });
-                }
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// List
-  List<Widget> _sliverBuilder() {
-    return <Widget>[
-      SliverAppBar(
-        elevation: 0.0, //去除导航栏阴影
-        pinned: false, //导航栏固定
-        expandedHeight: MediaQuery.of(context).padding.top +
-            ScreenUtil.getInstance().setWidth(390),
-        flexibleSpace: _flexibleSpaceBar(),
-        // actions: <Widget>[
-        //   CupertinoButton(
-        //     child: Icon(
-        //       Icons.more_horiz,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       debugPrint('更多');
-        //     },
-        //   )
-        // ],
-      ),
-      _monthModel.recordLsit.length > 0
-          ? SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                var model = _monthModel.recordLsit[index];
-                if (model.runtimeType == BillRecordModel) {
-                  return _buildItem(model);
-                } else {
-                  return _buildTimeTag(model);
-                }
-              }, childCount: _monthModel.recordLsit.length),
-            )
-          : SliverPadding(
-              padding:
-                  EdgeInsets.only(top: ScreenUtil.getInstance().setHeight(120)),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  return const StateLayout(
-                    hintText: '没有账单~',
-                  );
-                }, childCount: 1),
-              ),
-            ),
-    ];
-  }
-
-  /// 头部伸展视图
-  Widget _flexibleSpaceBar() {
-    return FlexibleSpaceBar(
-      background: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  Utils.getImagePath('icons/food05', format: 'jpeg'),
-                ),
-                fit: BoxFit.fill)),
-        child: Column(
+      appBar: MyAppBar(
+        titleWidget: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                      '${Utils.formatDouble(double.parse((_monthModel.incomeMoney - _monthModel.expenMoney).toStringAsFixed(2)))}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: ScreenUtil.getInstance().setSp(56),
-                          color: Colors.white)),
-                  Text(
-                    '结余',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: ScreenUtil.getInstance().setSp(26),
-                        color: Colors.white),
-                  ),
-                  Gaps.vGap(ScreenUtil.getInstance().setHeight(15)),
-                ],
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear1 == "1971")
+                    ? Icon(Icons.chevron_left)
+                    : Text(
+                        '$myYear1-$myMonth1',
+                        style: TextStyle(
+                            fontSize: ScreenUtil.getInstance().setSp(34),
+                            color: Colours.app_main),
+                      ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear1 != year || myMonth1 != month) {
+                            myYear1 = year;
+                            myMonth1 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: _amountWidget(),
-            )
+            Text(
+              widget.accountName == '' ? "未指定成员" : '${widget.accountName}',
+            ),
+            ButtonTheme(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: FlatButton(
+                child: (myYear2 == "2055")
+                    ? Icon(Icons.chevron_right)
+                    : Text(
+                        '$myYear2-$myMonth2',
+                        style: TextStyle(
+                            fontSize: ScreenUtil.getInstance().setSp(34),
+                            color: Colours.app_main),
+                      ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return CalendarMonthDialog(
+                        checkTap: (year, month) {
+                          if (myYear2 != year || myMonth2 != month) {
+                            myYear2 = year;
+                            myMonth2 = month;
+                            _initDatas();
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  ///支出和收入widget
-  Widget _amountWidget() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Container(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Positioned(
-                  bottom: ScreenUtil.getInstance().setHeight(16),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        '${Utils.formatDouble(double.parse(_monthModel.expenMoney.toStringAsFixed(2)))}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: ScreenUtil.getInstance().setSp(36),
-                            color: Colors.white),
-                      ),
-                      Text('${Utils.formatDouble(double.parse(_month))}月支出',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: ScreenUtil.getInstance().setSp(26),
-                              color: Colors.white))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Positioned(
-                  bottom: ScreenUtil.getInstance().setHeight(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '${Utils.formatDouble(double.parse(_monthModel.incomeMoney.toStringAsFixed(2)))}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: ScreenUtil.getInstance().setSp(36),
-                            color: Colors.white),
-                      ),
-                      Text('${Utils.formatDouble(double.parse(_month))}月收入',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: ScreenUtil.getInstance().setSp(26),
-                              color: Colors.white))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
+      body: ListView.builder(
+        itemCount: _datas.length,
+        itemBuilder: (BuildContext context, int index) {
+          var model = _datas[index];
+          if (model.runtimeType == BillRecordModel) {
+            return _buildItem(model);
+          } else {
+            return _buildTimeTag(model);
+          }
+        },
+      ),
     );
   }
 
@@ -392,38 +269,26 @@ class _BillState extends State<Bill>
                   children: <Widget>[
                     Row(
                       children: <Widget>[
+                        Icon(Icons.money),
                         Gaps.hGap(12),
-                        Text(
-                          model.classification1,
-                          style: TextStyle(
+                          Text(
+                            model.classification1,
+                            style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: ScreenUtil.getInstance().setSp(32),
-                              color: Colours.black),
+                              color: Colours.black,
+                              decoration: TextDecoration.none,
+                            ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            '${Utils.formatDouble(model.money)}',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: ScreenUtil.getInstance().setSp(36),
-                                color: Colours.dark),
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
                         Gaps.hGap(12),
                         Text(
                           model.classification2,
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: ScreenUtil.getInstance().setSp(32),
-                              color: Colours.black),
+                            fontWeight: FontWeight.w400,
+                            fontSize: ScreenUtil.getInstance().setSp(32),
+                            color: Colours.black,
+                            decoration: TextDecoration.none,
+                          ),
                         ),
                         Expanded(
                           flex: 1,
@@ -433,6 +298,7 @@ class _BillState extends State<Bill>
                             textAlign: TextAlign.right,
                             maxLines: 1,
                             style: TextStyle(
+                                decoration: TextDecoration.none,
                                 fontWeight: FontWeight.w500,
                                 fontSize: ScreenUtil.getInstance().setSp(36),
                                 color: Colours.dark),
@@ -449,6 +315,7 @@ class _BillState extends State<Bill>
                             child: Text(
                               model.remark,
                               style: TextStyle(
+                                  decoration: TextDecoration.none,
                                   fontWeight: FontWeight.w300,
                                   fontSize: ScreenUtil.getInstance().setSp(30),
                                   color: Colours.black),
@@ -482,7 +349,7 @@ class _BillState extends State<Bill>
     }
 
     return Container(
-      color: Colors.white,
+      color: Colours.line,
       width: double.infinity,
       child: HighLightWell(
         child: Stack(
@@ -496,12 +363,15 @@ class _BillState extends State<Bill>
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(Icons.calendar_today),
-                      Gaps.hGap(10),
+                      Gaps.hGap(8),
                       Text(
                         group.date,
                         style: TextStyle(
-                            fontSize: ScreenUtil.getInstance().setSp(30),
-                            color: Colours.dark),
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScreenUtil.getInstance().setSp(28),
+                          color: Colours.dark,
+                          decoration: TextDecoration.none,
+                        ),
                       ),
                     ],
                   ),
@@ -511,6 +381,7 @@ class _BillState extends State<Bill>
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.right,
                       style: TextStyle(
+                          decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold,
                           fontSize: ScreenUtil.getInstance().setSp(28),
                           color: Colours.dark),
@@ -737,6 +608,40 @@ class _BillState extends State<Bill>
                     ],
                   ),
                 ),
+                Gaps.line,
+                model.project.isNotEmpty
+                    ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('项目', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.project}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                )
+                    : Gaps.empty,
+                Gaps.line,
+                model.store.isNotEmpty
+                    ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('商家', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.store}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                )
+                    : Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),

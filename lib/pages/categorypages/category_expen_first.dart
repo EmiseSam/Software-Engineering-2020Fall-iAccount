@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:i_account/bill/models/category_model.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/router_jump.dart';
 import 'package:i_account/pages/categorypages/category_expen_second.dart';
@@ -11,24 +12,18 @@ class CategoryExpenFirstPage extends StatefulWidget {
 }
 
 class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
-
   List categoryNames = new List();
 
   Future<List> _loadCategoryNames() async {
-    List list = await dbHelp.getExpenCategory();
-    List listTemp = new List();
-    list.forEach((element) {
-      listTemp.add(element.name);
-    });
-    print(categoryNames.length);
-    return listTemp;
+    List list = await dbHelp.getCategories(1);
+    return list;
   }
 
   @override
   void initState() {
     _loadCategoryNames().then((value) => setState(() {
-      categoryNames = value;
-    }));
+          categoryNames = value;
+        }));
     super.initState();
   }
 
@@ -47,11 +42,13 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        child:ListView.separated(
+        child: ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, item) {
-            return buildListData(context, categoryNames[item],
+            return buildListData(
+              context,
+              categoryNames[item],
             );
           },
           separatorBuilder: (BuildContext context, int index) => Divider(),
@@ -64,12 +61,14 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
   Widget buildListData(BuildContext context, String titleItem) {
     return new ListTile(
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return CategoryExpenSecondPage(titleItem);
-        }));
+        if (titleItem != '其他支出') {
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            return CategoryExpenSecondPage(titleItem);
+          }));
+        }
       },
       onLongPress: () async {
-        if(titleItem == '其他支出'){
+        if (titleItem == '其他支出') {
           showDialog<Null>(
             context: context,
             barrierDismissible: false,
@@ -94,7 +93,7 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
           ).then((val) {
             print(val);
           });
-        }else{
+        } else {
           showDialog<Null>(
             context: context,
             barrierDismissible: false,
@@ -103,7 +102,9 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
                 title: Text("提示"),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[Text("请选择删除或编辑该分类。\n删除分类的同时也会删除相应的流水信息。")],
+                    children: <Widget>[
+                      Text("请选择删除或编辑该分类。\n删除分类的同时也会删除相应的流水信息。")
+                    ],
                   ),
                 ),
                 actions: <Widget>[
@@ -121,10 +122,13 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return TextViewDialogCategory(
-                              confirm: (text) {
-                                setState(() {
-                                  //TODO 数据库操作
-                                });
+                              confirm: (text) async {
+                                CategoryItem preCategory =
+                                    await dbHelp.getCategoryid1(titleItem, 1);
+                                await dbHelp.updateCategoryBills(
+                                    preCategory, text, 1);
+                                await dbHelp.insertCategory(
+                                    preCategory, 1, text);
                               },
                             );
                           });
@@ -134,9 +138,12 @@ class _CategoryExpenFirstPageState extends State<CategoryExpenFirstPage> {
                   FlatButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      dbHelp.deleteSort(titleItem, 1);
-                      dbHelp.deleteSortBills(titleItem, 1);
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+                      CategoryItem category = new CategoryItem(titleItem);
+                      dbHelp.deleteCategoryBills(category, 1);
+                      dbHelp.deleteCategory(category, 1);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => RouterJump()),
+                          ModalRoute.withName('/'));
                       showDialog<Null>(
                         context: context,
                         barrierDismissible: false,

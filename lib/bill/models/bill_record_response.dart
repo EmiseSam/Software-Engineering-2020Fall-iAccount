@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-
+import 'package:i_account/db/column.dart';
 part 'bill_record_response.g.dart';
 
 @JsonSerializable()
@@ -10,8 +10,8 @@ class BillRecordModel extends Object {
   @JsonKey(name: 'money')
   double money;
 
-  @JsonKey(name: 'person')
-  String person;
+  @JsonKey(name: 'member')
+  String member;
 
   @JsonKey(name: 'account')
   String account;
@@ -19,20 +19,21 @@ class BillRecordModel extends Object {
   @JsonKey(name: 'remark')
   String remark;
 
-  @JsonKey(name: 'categoryName')
-  String categoryName;
+  @JsonKey(name: 'classification1')
+  String classification1;
+
+  @JsonKey(name: 'classification2')
+  String classification2;
 
   /// 类型 1支出 2收入
-  @JsonKey(name: 'type')
-  int type;
+  @JsonKey(name: 'typeofB')
+  int typeofB;
 
-  /// 是否已同步
-  @JsonKey(name: 'isSync')
-  int isSync;
+  @JsonKey(name: 'project')
+  String project;
 
-  /// 是否已删除
-  @JsonKey(name: 'isDelete')
-  int isDelete;
+  @JsonKey(name: 'store')
+  String store;
 
   @JsonKey(name: 'createTime')
   String createTime;
@@ -49,53 +50,61 @@ class BillRecordModel extends Object {
   BillRecordModel(
     this.id,
     this.money,
-    this.person,
+    this.member,
     this.account,
     this.remark,
-    this.type,
-    this.categoryName,
+    this.typeofB,
+    this.classification1,
+    this.classification2,
+    this.project,
+    this.store,
     this.createTime,
     this.createTimestamp,
     this.updateTime,
     this.updateTimestamp,
   );
 
-  factory BillRecordModel.fromJson(Map<String, dynamic> srcJson) =>
-      _$BillRecordModelFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$BillRecordModelToJson(this);
+  BillRecordModel.fromMap(Map<String, dynamic> map) {
+    id = map[columnId];
+    money = map[columnMoney];
+    member = map[columnMember];
+    account = map[columnAccount];
+    remark = map[columnRemark];
+    typeofB = map[columntypeofB];
+    classification1 = map[columnClassification1];
+    classification2 = map[columnClassification2];
+    project = map[columnProject];
+    store = map[columnStore];
+    createTime = map[columnCreateTime];
+    createTimestamp = map[columnCreateTimestamp];
+    updateTime = map[columnUpdateTime];
+    updateTimestamp = map[columnUpdateTimestamp];
+  }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      'person': person,
-      'account': account,
-      'remark': remark,
-      'categoryName': categoryName,
-      'createTime': createTime,
-      'updateTime': updateTime,
-      'money': money,
-      'type': type,
-      'isSync': isSync,
-      'createTimestamp': createTimestamp,
-      'updateTimestamp': updateTimestamp
+      columnMoney: money,
+      columnMember: member,
+      columnAccount: account,
+      columnRemark: remark,
+      columntypeofB: typeofB,
+      columnClassification1: classification1,
+      columnClassification2: classification2,
+      columnProject: project,
+      columnStore: store,
+      columnCreateTime: createTime,
+      columnCreateTimestamp: createTimestamp,
+      columnUpdateTime: updateTime,
+      columnUpdateTimestamp: updateTimestamp
     };
     if (id != null) {
-      map['id'] = id;
+      map[columnId] = id;
     }
     return map;
   }
 
-  BillRecordModel.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
-    money = map['money'];
-    person = map['person'];
-    account = map['account'];
-    remark = map['remark'];
-    type = map['type'];
-    categoryName = map['categoryName'];
-    createTime = map['createTime'];
-    createTimestamp = map['createTimestamp'];
-    updateTime = map['updateTime'];
-    updateTimestamp = map['updateTimestamp'];
-  }
+  factory BillRecordModel.fromJson(Map<String, dynamic> srcJson) =>
+      _$BillRecordModelFromJson(srcJson);
+
+  Map<String, dynamic> toJson() => _$BillRecordModelToJson(this);
 }

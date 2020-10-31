@@ -1,9 +1,23 @@
 [
     {
-        "id": 0,
-		"account": "现金",
-		"sum": 0,
-		"balance": 0,
-		"typeofA": 0
+        "id": 1,
+		"account":"支付宝",
+		"sum":500.00,
+		"balance":500.00,
+		"typeofA":0
+    },
+    {
+        "id": 2,
+		"account":"微信",
+		"sum":500.00,
+		"balance":500.00,
+		"typeofA":0
+    },
+    {
+        "id": 3,
+		"account":"花呗",
+		"sum":0.00,
+		"balance":0.00,
+		"typeofA":1
     }
 ]

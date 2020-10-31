@@ -1,34 +1,62 @@
 [
     {
-        "name": "转账收入",
-        "sort": 0
+        "classification1": "职业收入",
+		"classification2": "工资收入",
+        "id": 1
     },
     {
-        "name": "工资收入",
-        "sort": 1
+        "classification1": "职业收入",
+		"classification2": "利息收入",
+        "id": 2
     },
     {
-        "name": "利息收入",
-        "sort": 2
+        "classification1": "职业收入",
+		"classification2": "加班收入",
+        "id": 3
+    },
+	{
+        "classification1": "职业收入",
+		"classification2": "奖金收入",
+        "id": 4
     },
     {
-        "name": "加班收入",
-        "sort": 3
+        "classification1": "职业收入",
+		"classification2": "投资收入",
+        "id": 5
     },
     {
-        "name": "奖金收入",
-        "sort": 4
+        "classification1": "职业收入",
+		"classification2": "兼职收入",
+        "id": 6
     },
     {
-        "name": "投资收入",
-        "sort": 5
+        "classification1": "其他收入",
+		"classification2": "其他收入",
+        "id": 7
     },
     {
-        "name": "兼职收入",
-        "sort": 6
+        "classification1": "其他收入",
+		"classification2": "礼金收入",
+        "id": 8
     },
     {
-        "name": "其他收入",
-        "sort": 7
+        "classification1": "其他收入",
+		"classification2": "中奖收入",
+        "id": 9
+    },
+    {
+        "classification1": "其他收入",
+		"classification2": "意外来钱",
+        "id": 10
+    },
+    {
+        "classification1": "其他收入",
+		"classification2": "经营所得",
+        "id": 11
+    },
+    {
+        "classification1": "转账收入",
+		"classification2": "转账收入",
+        "id": 12
     }
 ]

@@ -4,6 +4,7 @@ import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/router_jump.dart';
 import 'package:i_account/pages/categorypages/category_income_second.dart';
 import 'package:i_account/widgets/input_textview_dialog_category.dart';
+import 'package:i_account/bill/models/category_model.dart';
 
 class CategoryIncomeFirstPage extends StatefulWidget {
   @override
@@ -15,13 +16,8 @@ class _CategoryIncomeFirstPageState extends State<CategoryIncomeFirstPage> {
   List categoryNames = new List();
 
   Future<List> _loadCategoryNames() async {
-    List list = await dbHelp.getlIncomeCategory();
-    List listTemp = new List();
-    list.forEach((element) {
-      listTemp.add(element.name);
-    });
-    print(categoryNames.length);
-    return listTemp;
+    List list = await dbHelp.getCategories(2);
+    return list;
   }
 
   @override
@@ -64,9 +60,11 @@ class _CategoryIncomeFirstPageState extends State<CategoryIncomeFirstPage> {
   Widget buildListData(BuildContext context, String titleItem) {
     return new ListTile(
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return CategoryIncomeSecondPage(titleItem);
-        }));
+        if(titleItem != '其他收入'){
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            return CategoryIncomeSecondPage(titleItem);
+          }));
+        }
       },
       onLongPress: () async {
         if(titleItem == '其他收入'){
@@ -121,10 +119,10 @@ class _CategoryIncomeFirstPageState extends State<CategoryIncomeFirstPage> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return TextViewDialogCategory(
-                              confirm: (text) {
-                                setState(() {
-                                  //TODO 数据库操作
-                                });
+                              confirm: (text) async {
+                                  CategoryItem preCategory = await dbHelp.getCategoryid1(titleItem, 2);
+                                  await dbHelp.updateCategoryBills(preCategory, text, 2);
+                                  await dbHelp.insertCategory(preCategory, 2, text);
                               },
                             );
                           });
@@ -134,8 +132,9 @@ class _CategoryIncomeFirstPageState extends State<CategoryIncomeFirstPage> {
                   FlatButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      dbHelp.deleteSort(titleItem, 2);
-                      dbHelp.deleteSortBills(titleItem, 2);
+                      CategoryItem category = new CategoryItem(titleItem);
+                      dbHelp.deleteCategoryBills(category, 2);
+                      dbHelp.deleteCategory(category, 2);
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
                       showDialog<Null>(
                         context: context,

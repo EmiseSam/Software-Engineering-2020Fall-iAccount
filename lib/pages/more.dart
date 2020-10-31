@@ -1,7 +1,7 @@
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/pages/morepages/about.dart';
-import 'package:i_account/pages/morepages/person.dart';
+import 'package:i_account/pages/morepages/member.dart';
 import 'package:i_account/pages/morepages/settings.dart';
 import 'package:i_account/pages/morepages/account.dart';
 import 'package:i_account/pages/morepages/category.dart';
@@ -9,6 +9,9 @@ import 'package:i_account/pages/morepages/tabs_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'morepages/project.dart';
+import 'morepages/store.dart';
 
 class MorePage extends StatefulWidget {
   @override
@@ -34,7 +37,7 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var card = SizedBox(
-      height: 528.0,
+      height: 696.0,
       child: Card(
         elevation: 1.0, //设置阴影
         shape: const RoundedRectangleBorder(
@@ -63,7 +66,33 @@ class _MorePageState extends State<MorePage> with TickerProviderStateMixin {
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PersonPage()));
+                    MaterialPageRoute(builder: (context) => MemberPage()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('项目', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('增加或删除账单项目'),
+              leading: Icon(
+                Icons.drive_file_rename_outline,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProjectPage()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('商家', style: TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: Text('增加或删除账单商家'),
+              leading: Icon(
+                Icons.store,
+                color: Colors.blue[500],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => StorePage()));
               },
             ),
             Divider(),

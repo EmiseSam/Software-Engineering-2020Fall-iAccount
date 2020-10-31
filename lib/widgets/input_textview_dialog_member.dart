@@ -10,17 +10,17 @@ import 'package:i_account/router_jump.dart';
 
 typedef void Confirm(String text);
 
-class TextViewDialogPerson extends StatefulWidget {
-  const TextViewDialogPerson({Key key, this.confirm}) : super(key: key);
+class TextViewDialogMember extends StatefulWidget {
+  const TextViewDialogMember({Key key, this.confirm}) : super(key: key);
   final Confirm confirm;
 
   @override
   State<StatefulWidget> createState() {
-    return _TextViewDialogPersonState();
+    return _TextViewDialogMemberState();
   }
 }
 
-class _TextViewDialogPersonState extends State<TextViewDialogPerson> {
+class _TextViewDialogMemberState extends State<TextViewDialogMember> {
   TextEditingController _editingController = TextEditingController();
   FocusNode _focusNode = FocusNode();
   FocusScopeNode _scopeNode;

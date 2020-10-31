@@ -5,7 +5,6 @@ import 'package:i_account/pages/accountpages/account_create.dart';
 import 'package:i_account/router_jump.dart';
 import 'package:i_account/pages/accountpages/bill_search_account.dart';
 import 'package:i_account/res/styles.dart';
-import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/widgets/input_textview_dialog_account.dart';
 
 class AccountPage extends StatefulWidget {
@@ -30,33 +29,31 @@ class _AccountPageState extends State<AccountPage> {
   );
 
   // 总资产
-  double totalAssets;
+  double totalAssets = 0.00;
 
   // 总负债
-  double totalLiabilities;
+  double totalLiabilities = 0.00;
 
   Future<List> _loadAccountNamesAssets() async {
-    List list = await dbAccount.getAccounts(0);
+    List list = await dbHelp.getAccounts(0);
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.account);
     });
-    print(accountnameItemsAssets.length);
     return listTemp;
   }
 
   Future<List> _loadAccountNamesDebits() async {
-    List list = await dbAccount.getAccounts(1);
+    List list = await dbHelp.getAccounts(1);
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.account);
     });
-    print(accountnameItemsDebits.length);
     return listTemp;
   }
 
   Future<List> _loadAccountAmountAssets() async {
-    List list = await dbAccount.getAccounts(0);
+    List list = await dbHelp.getAccounts(0);
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.balance.toString());
@@ -65,7 +62,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<List> _loadAccountAmountDebits() async {
-    List list = await dbAccount.getAccounts(1);
+    List list = await dbHelp.getAccounts(1);
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.balance.toString());
@@ -75,36 +72,36 @@ class _AccountPageState extends State<AccountPage> {
 
   //计算总资产
   Future<double> _loadAssets() async {
-    double temp = await dbAccount.accountsTotalize(0);
+    double temp = await dbHelp.accountsTotalize(0);
     return temp;
   }
 
   //计算总资产
   Future<double> _loadDebits() async {
-    double temp = await dbAccount.accountsTotalize(1);
+    double temp = await dbHelp.accountsTotalize(1);
     return temp;
   }
 
   @override
   void initState() {
     _loadAccountNamesAssets().then((value) => setState(() {
-      accountnameItemsAssets = value;
-    }));
+          accountnameItemsAssets = value;
+        }));
     _loadAccountNamesDebits().then((value) => setState(() {
-      accountnameItemsDebits = value;
-    }));
+          accountnameItemsDebits = value;
+        }));
     _loadAccountAmountAssets().then((value) => setState(() {
-      accountamountItemsAssets = value;
-    }));
+          accountamountItemsAssets = value;
+        }));
     _loadAccountAmountDebits().then((value) => setState(() {
-      accountamountItemsDebits = value;
-    }));
+          accountamountItemsDebits = value;
+        }));
     _loadAssets().then((value) => setState(() {
-      totalAssets = value;
-    }));
+          totalAssets = value;
+        }));
     _loadDebits().then((value) => setState(() {
-      totalLiabilities = value;
-    }));
+          totalLiabilities = value;
+        }));
     super.initState();
   }
 
@@ -161,7 +158,9 @@ class _AccountPageState extends State<AccountPage> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: RichText(
                       text: TextSpan(
-                        text: (totalAssets - totalLiabilities).toStringAsFixed(2),
+                        text:
+
+                            (totalAssets + totalLiabilities).toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 36.0,
                         ),
@@ -211,13 +210,12 @@ class _AccountPageState extends State<AccountPage> {
                   '   资产账户',
                   style: _accountTitleStyle,
                 ),
-                Text(totalAssets.toStringAsFixed(2),
-                    style: _accountTitleStyle),
+                Text(totalAssets.toStringAsFixed(2), style: _accountTitleStyle),
               ],
             ),
             Gaps.vGap(10),
             Container(
-              height: 84 * accountnameItemsAssets.length.toDouble(),
+              height: 84 * accountnameItemsAssets.length.toDouble() ?? 0.00,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -227,7 +225,7 @@ class _AccountPageState extends State<AccountPage> {
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
-                itemCount: (accountnameItemsAssets.length == null)
+                itemCount: (accountnameItemsAssets.length == null || accountnameItemsAssets.length == 0)
                     ? 0
                     : accountnameItemsAssets.length,
               ),
@@ -246,7 +244,7 @@ class _AccountPageState extends State<AccountPage> {
             ),
             Gaps.vGap(10),
             Container(
-              height: 84 * accountnameItemsDebits.length.toDouble(),
+              height: 84 * accountnameItemsDebits.length.toDouble() ?? 0.00,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -256,7 +254,7 @@ class _AccountPageState extends State<AccountPage> {
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
-                itemCount: (accountnameItemsDebits.length == null)
+                itemCount: (accountnameItemsDebits.length == null || accountnameItemsDebits.length == 0)
                     ? 0
                     : accountnameItemsDebits.length,
               ),
@@ -276,7 +274,7 @@ class _AccountPageState extends State<AccountPage> {
         }));
       },
       onLongPress: () async {
-        if(titleItem == '现金'){
+        if (titleItem == '现金') {
           showDialog<Null>(
             context: context,
             barrierDismissible: false,
@@ -301,7 +299,7 @@ class _AccountPageState extends State<AccountPage> {
           ).then((val) {
             print(val);
           });
-        }else{
+        } else {
           showDialog<Null>(
             context: context,
             barrierDismissible: false,
@@ -317,8 +315,7 @@ class _AccountPageState extends State<AccountPage> {
                   FlatButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      setState(() {
-                      });
+                      setState(() {});
                     },
                     child: Text("取消"),
                   ),
@@ -330,10 +327,11 @@ class _AccountPageState extends State<AccountPage> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return TextViewDialogAccount(
-                              confirm: (text) {
-                                setState(() {
-                                  //TODO 数据库操作
-                                });
+                              confirm: (text) async {
+                                  var tempAccount = await dbHelp.getAccount(titleItem);
+                                  await dbHelp.updateAccountBills(tempAccount, text);
+                                  tempAccount.account = text;
+                                  await dbHelp.insertAccount(tempAccount);
                               },
                             );
                           });
@@ -343,9 +341,10 @@ class _AccountPageState extends State<AccountPage> {
                   FlatButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
-                      await dbAccount.deleteAccount(titleItem);
-                      await dbHelp.deleteAccountBills(titleItem);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => RouterJump()),
+                          ModalRoute.withName('/'));
+                      await dbHelp.deleteAccount(titleItem);
                       showDialog<Null>(
                         context: context,
                         barrierDismissible: false,
@@ -386,9 +385,7 @@ class _AccountPageState extends State<AccountPage> {
         titleItem,
         style: TextStyle(fontSize: 18),
       ),
-      subtitle: new Text(
-        double.parse(subTitleItem).toStringAsFixed(2)
-      ),
+      subtitle: new Text(double.parse(subTitleItem).toStringAsFixed(2)),
       trailing: new Icon(Icons.keyboard_arrow_right),
     );
   }

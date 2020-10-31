@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/pages/personpages/bill_search_person_withtype.dart';
+import 'package:i_account/pages/storepages/bill_search_store_withtype.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/res/styles.dart';
@@ -14,12 +14,12 @@ import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/state_layout.dart';
 
-class ChartPersonPage extends StatefulWidget {
+class ChartStorePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ChartPersonPageState();
+  State<StatefulWidget> createState() => ChartStorePageState();
 }
 
-class ChartPersonPageState extends State<StatefulWidget> {
+class ChartStorePageState extends State<StatefulWidget> {
   @override
   //保存状态
   bool get wantKeepAlive => true;
@@ -74,16 +74,16 @@ class ChartPersonPageState extends State<StatefulWidget> {
       _monthIncomeMoney = 0.0;
       Map map = Map();
       list.forEach((item) {
-        if (item.type == 1) {
+        if (item.typeofB == 1) {
           // 支出
           _monthExpenMoney += item.money;
-        } else if (item.type == 2) {
+        } else if (item.typeofB == 2) {
           // 收入
           _monthIncomeMoney += item.money;
         }
 
-        if (item.type == _type) {
-          map[item.person] = null;
+        if (item.typeofB == _type) {
+          map[item.store] = null;
         }
       });
 
@@ -91,7 +91,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.person == key);
+        var items = list.where((item) => item.store == key);
 
         double money = 0.0;
         items.forEach((item) {
@@ -120,7 +120,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.store} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       } else {
@@ -132,7 +132,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.store} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       }
@@ -295,7 +295,7 @@ class ChartPersonPageState extends State<StatefulWidget> {
             ),
           ),
           Text(
-            "按成员查看",
+            "按商家查看",
             style: TextStyle(
                 fontSize: ScreenUtil.getInstance().setSp(34),
                 color: Colours.app_main),
@@ -340,8 +340,8 @@ class ChartPersonPageState extends State<StatefulWidget> {
     return HighLightWell(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListPersonWithtype(
-              model.person,_type);
+          return BillSearchListStoreWithtype(
+              model.store,_type);
         }));
       },
       child: Container(
@@ -354,13 +354,13 @@ class ChartPersonPageState extends State<StatefulWidget> {
                 bottom: BorderSide(width: 0.6, color: Colours.line))),
         child: Row(
           children: <Widget>[
-            Icon(Icons.person),
+            Icon(Icons.store),
             Gaps.hGap(ScreenUtil.getInstance().setWidth(32)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  model.person == '' ? "未指定成员" : model.person,
+                  model.store == '' ? "未指定商家" : model.store,
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(32),
                       color: Colours.dark),
@@ -395,11 +395,11 @@ class ChartPersonPageState extends State<StatefulWidget> {
 
 class ChartItemModel {
   final int id;
-  final String person;
+  final String store;
   final double money;
   final double ratio;
   final int number;
 
-  ChartItemModel(this.id, this.person, this.money, this.ratio,
+  ChartItemModel(this.id, this.store, this.money, this.ratio,
       this.number);
 }

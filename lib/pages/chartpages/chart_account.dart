@@ -75,15 +75,15 @@ class ChartAccountPageState extends State<StatefulWidget> {
       _monthIncomeMoney = 0.0;
       Map map = Map();
       list.forEach((item) {
-        if (item.type == 1) {
+        if (item.typeofB == 1) {
           // 支出
           _monthExpenMoney += item.money;
-        } else if (item.type == 2) {
+        } else if (item.typeofB == 2) {
           // 收入
           _monthIncomeMoney += item.money;
         }
 
-        if (item.type == _type) {
+        if (item.typeofB == _type) {
           map[item.account] = null;
         }
       });

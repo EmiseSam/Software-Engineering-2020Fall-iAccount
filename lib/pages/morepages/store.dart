@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:i_account/pages/personpages/person_create.dart';
-import 'package:i_account/pages/personpages/bill_search_person.dart';
-import 'package:i_account/db/db_helper_account.dart';
+import 'package:i_account/pages/storepages/bill_search_store.dart';
 import 'package:i_account/db/db_helper.dart';
+import 'package:i_account/pages/storepages/store_create.dart';
 import 'package:i_account/router_jump.dart';
-import 'package:i_account/widgets/input_textview_dialog_person.dart';
+import 'package:i_account/widgets/input_textview_dialog_store.dart';
 
-class PersonPage extends StatefulWidget {
+class StorePage extends StatefulWidget {
   @override
-  _PersonPageState createState() => _PersonPageState();
+  _StorePageState createState() => _StorePageState();
 }
 
-class _PersonPageState extends State<PersonPage> {
+class _StorePageState extends State<StorePage> {
   List personNames = new List();
 
   Future<List> _loadPersonNames() async {
-    List list = await dbAccount.getMember();
+    List list = await dbHelp.getStores();
     List listTemp = new List();
     list.forEach((element) {
-      listTemp.add(element.member);
+      listTemp.add(element.store);
     });
     print(personNames.length);
     return listTemp;
@@ -41,7 +40,7 @@ class _PersonPageState extends State<PersonPage> {
           color: Colors.black,
         ),
         title: Text(
-          "成员",
+          "商家",
           style: TextStyle(color: Colors.black),
         ),
         actions: [
@@ -53,7 +52,7 @@ class _PersonPageState extends State<PersonPage> {
             ),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AccountCreatePage()));
+                  MaterialPageRoute(builder: (context) => StoreCreatePage()));
             },
           ),
         ],
@@ -81,7 +80,7 @@ class _PersonPageState extends State<PersonPage> {
     return new ListTile(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListPerson(titleItem);
+          return BillSearchListStore(titleItem);
         }));
       },
       onLongPress: () async {
@@ -93,7 +92,7 @@ class _PersonPageState extends State<PersonPage> {
               title: Text("提示"),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: <Widget>[Text("是否删除该成员？\n删除成员的同时也会删除相应的流水信息。")],
+                  children: <Widget>[Text("是否删除该商家？\n删除商家的同时也会删除相应的流水信息。")],
                 ),
               ),
               actions: <Widget>[
@@ -110,11 +109,12 @@ class _PersonPageState extends State<PersonPage> {
                         context: context,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
-                          return TextViewDialogPerson(
-                            confirm: (text) {
-                              setState(() {
-                                //TODO 数据库操作
-                              });
+                          return TextViewDialogStore(
+                            confirm: (text) async {
+                                var tempStore = await dbHelp.getStore(titleItem);
+                                await dbHelp.updateStoreBills(tempStore, text);
+                                tempStore.store = text;
+                                await dbHelp.insertStore(tempStore);
                             },
                           );
                         });
@@ -123,10 +123,11 @@ class _PersonPageState extends State<PersonPage> {
                 ),
                 FlatButton(
                   onPressed: () async {
+                    await dbHelp.deleteStore(titleItem);
                     Navigator.of(context).pop();
-                    await dbHelp.deleteMemberBills(titleItem);
-                    await dbAccount.deleteMember(titleItem);
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => RouterJump()),
+                        ModalRoute.withName('/'));
                     showDialog<Null>(
                       context: context,
                       barrierDismissible: false,
@@ -135,7 +136,7 @@ class _PersonPageState extends State<PersonPage> {
                           title: Text("提示"),
                           content: SingleChildScrollView(
                             child: ListBody(
-                              children: <Widget>[Text("已经删除该成员！")],
+                              children: <Widget>[Text("已经删除该商家！")],
                             ),
                           ),
                           actions: <Widget>[

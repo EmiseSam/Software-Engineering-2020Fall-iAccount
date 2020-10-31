@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:i_account/widgets/calendar_page.dart';
-import 'package:i_account/db/db_helper_account.dart';
+
 
 class BillSearchListtAccount extends StatefulWidget {
   BillSearchListtAccount(this.accountName) : super();
@@ -84,7 +84,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
 
       void addAction(BillRecordModel item) {
         itemList.insert(0, item);
-        if (item.type == 1) {
+        if (item.typeofB == 1) {
           // 支出
           expenMoney += item.money;
         } else {
@@ -266,7 +266,17 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                         Icon(Icons.money),
                         Gaps.hGap(12),
                         Text(
-                          model.categoryName,
+                          model.classification1,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: ScreenUtil.getInstance().setSp(32),
+                            color: Colours.black,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        Gaps.hGap(12),
+                        Text(
+                          model.classification2,
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: ScreenUtil.getInstance().setSp(32),
@@ -425,9 +435,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                         child: HighLightWell(
                           onTap: () async {
                             // 删除记录
-                            var account = await dbAccount.getAccount(model.account);
-                            var typeofA = account.typeofA;
-                            dbAccount.accountBalanceAdd(model.account, model.money, typeofA);
+                            dbHelp.getAccountBalance(model.account);
                             dbHelp.deleteBillRecord(model.id).then((value) {
                               bus.trigger(bus.bookkeepingEventName);
                               NavigatorUtils.goBack(context);
@@ -520,7 +528,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                   ),
                 ):Gaps.empty,
                 Gaps.line,
-                model.person.isNotEmpty ? Padding(
+                model.member.isNotEmpty ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
                     children: <Widget>[
@@ -528,7 +536,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                       Gaps.hGap(20),
                       Expanded(
                         flex: 1,
-                        child: Text('${model.person}',
+                        child: Text('${model.member}',
                             textAlign: TextAlign.right, style: descStyle),
                       )
                     ],
@@ -541,7 +549,7 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Text('分类', style: titleStyle),
+                      Text('一级分类', style: titleStyle),
                       Gaps.hGap(23),
                       Expanded(
                         flex: 1,
@@ -552,10 +560,9 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              
                               Gaps.hGap(5),
-                              Text('${model.categoryName}',
-                                  textAlign: TextAlign.right, style: descStyle)
+                              Text('${model.classification1}',
+                                  textAlign: TextAlign.right, style: descStyle),
                             ],
                           ),
                         ),
@@ -563,6 +570,68 @@ class BillSearchListtAccountState extends State<BillSearchListtAccount> {
                     ],
                   ),
                 ),
+                Gaps.line,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text('二级分类', style: titleStyle),
+                      Gaps.hGap(23),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Gaps.hGap(5),
+                              Text('${model.classification2}',
+                                  textAlign: TextAlign.right, style: descStyle),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Gaps.line,
+                model.project.isNotEmpty
+                    ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('项目', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.project}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                )
+                    : Gaps.empty,
+                Gaps.line,
+                model.store.isNotEmpty
+                    ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: <Widget>[
+                      Text('商家', style: titleStyle),
+                      Gaps.hGap(20),
+                      Expanded(
+                        flex: 1,
+                        child: Text('${model.store}',
+                            textAlign: TextAlign.right, style: descStyle),
+                      )
+                    ],
+                  ),
+                )
+                    : Gaps.empty,
                 Gaps.line,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),

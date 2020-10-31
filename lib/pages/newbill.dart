@@ -1,14 +1,11 @@
-import 'package:i_account/db/db_helper_account.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
-import 'package:i_account/bill/models/category_model.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/util/utils.dart';
-import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/input_textview_dialog.dart';
 import 'package:i_account/widgets/number_keyboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_account/widgets/my_pickertool.dart';
+import 'package:i_account/router_jump.dart';
 
 class NewBillPage extends StatefulWidget {
   const NewBillPage({Key key, this.recordModel}) : super(key: key);
@@ -25,7 +23,8 @@ class NewBillPage extends StatefulWidget {
   State<StatefulWidget> createState() => _NewBillPageState();
 }
 
-class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin {
+class _NewBillPageState extends State<NewBillPage>
+    with TickerProviderStateMixin {
   AnimationController _animationController;
   AnimationController _tapItemController;
   String _remark = '';
@@ -33,19 +32,24 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
   String _dateString = '';
   String _numberString = '';
   bool _isAdd = false;
-  String _accountAccount = '';
-  String _accountPerson = '';
+  String _accountString = '';
+  String _memberString = '';
+  String _projectString = '';
+  String _storeString = '';
+  String _expenCategory1String = '';
+  String _incomeCategory1String = '';
+  String _expenCategory2String = '';
+  String _incomeCategory2String = '';
+
   var _accountPickerData;
-  var _personPickerData;
-  var _incomeCategoryPickerData = ['分类1','分类2','分类3','分类4','分类5',];
-  var _expenCategoryPickerData = ['分类1','分类2','分类3','分类4','分类5',];
+  var _memberPickerData;
+  var _projectPickerData;
+  var _storePickerData;
+  var _incomeCategory1PickerData;
+  var _incomeCategory2PickerData;
+  var _expenCategory1PickerData;
+  var _expenCategory2PickerData;
   int flagIfHasData = 0;
-
-  /// 支出类别数组
-  List<CategoryItem> _expenObjects = List();
-
-  /// 收入类别数组
-  List<CategoryItem> _inComeObjects = List();
 
   TabController _tabController;
 
@@ -60,7 +64,7 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
   ];
 
   Future<void> _loadAccountNames() async {
-    List list = await dbAccount.getAccountList();
+    List list = await dbHelp.getAccountList();
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.account);
@@ -68,50 +72,51 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
     _accountPickerData = listTemp;
   }
 
-  Future<void> _loadPersonNames() async {
-    List list = await dbAccount.getMember();
+  Future<void> _loadMemberNames() async {
+    List list = await dbHelp.getMembers();
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.member);
     });
-    _personPickerData = listTemp;
+    _memberPickerData = listTemp;
   }
 
-  /// 获取支出类别数据
-  Future<void> _loadExpenDatas() async {
-    dbHelp.getInitialExpenCategory().then((list) {
-      List<CategoryItem> models =
-          list.map((i) => CategoryItem.fromJson(i)).toList();
-      if (_expenObjects.length > 0) {
-        _expenObjects.removeRange(0, _expenObjects.length);
-      }
-      _expenObjects.addAll(models);
-
-      if (widget.recordModel != null && widget.recordModel.type == 1) {
-        _selectedIndexLeft = _expenObjects
-            .indexWhere((item) => item.name == widget.recordModel.categoryName);
-      }
-
-      setState(() {});
+  Future<void> _loadProjectNames() async {
+    List list = await dbHelp.getProjects();
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.project);
     });
+    _projectPickerData = listTemp;
   }
 
-  Future<void> _loadIncomeDatas() async {
-    dbHelp.getInitialIncomeCategory().then((list) {
-      List<CategoryItem> models =
-          list.map((i) => CategoryItem.fromJson(i)).toList();
-      if (_inComeObjects.length > 0) {
-        _inComeObjects.removeRange(0, _inComeObjects.length);
-      }
-      _inComeObjects.addAll(models);
-
-      if (widget.recordModel != null && widget.recordModel.type == 2) {
-        _selectedIndexRight = _inComeObjects
-            .indexWhere((item) => item.name == widget.recordModel.categoryName);
-      }
-
-      setState(() {});
+  Future<void> _loadStoreNames() async {
+    List list = await dbHelp.getStores();
+    List listTemp = new List();
+    list.forEach((element) {
+      listTemp.add(element.store);
     });
+    _storePickerData = listTemp;
+  }
+
+  Future<void> _loadExpenCategory1Data() async {
+    List list = await dbHelp.getCategories(1);
+    _expenCategory1PickerData = list;
+  }
+
+  Future<void> _loadIncomeCategory1Data() async {
+    List list = await dbHelp.getCategories(2);
+    _incomeCategory1PickerData = list;
+  }
+
+  Future<void> _loadExpenCategory2Data(categoryName1) async {
+    List list = await dbHelp.getCategories(1, categoryName1);
+    _expenCategory2PickerData = list;
+  }
+
+  Future<void> _loadIncomeCategory2Data(categoryName1) async {
+    List list = await dbHelp.getCategories(2, categoryName1);
+    _incomeCategory2PickerData = list;
   }
 
   void _updateInitData() {
@@ -132,12 +137,20 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
       }
 
-      if (widget.recordModel.person.isNotEmpty) {
-        _accountPerson = widget.recordModel.person;
+      if (widget.recordModel.member.isNotEmpty) {
+        _memberString = widget.recordModel.member;
+      }
+
+      if (widget.recordModel.project.isNotEmpty) {
+        _projectString = widget.recordModel.project;
+      }
+
+      if (widget.recordModel.store.isNotEmpty) {
+        _storeString = widget.recordModel.store;
       }
 
       if (widget.recordModel.account.isNotEmpty) {
-        _accountAccount = widget.recordModel.account;
+        _accountString = widget.recordModel.account;
       }
 
       if (widget.recordModel.remark.isNotEmpty) {
@@ -150,8 +163,21 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             _numberString = widget.recordModel.money.toStringAsFixed(2)));
       }
 
-      if (widget.recordModel.type == 2) {
+      if (widget.recordModel.typeofB == 2) {
         _tabController.index = 1;
+        if (widget.recordModel.classification1.isNotEmpty) {
+          _incomeCategory1String = widget.recordModel.classification1;
+        }
+        if (widget.recordModel.classification2.isNotEmpty) {
+          _incomeCategory2String = widget.recordModel.classification2;
+        }
+      } else {
+        if (widget.recordModel.classification1.isNotEmpty) {
+          _expenCategory1String = widget.recordModel.classification1;
+        }
+        if (widget.recordModel.classification2.isNotEmpty) {
+          _expenCategory2String = widget.recordModel.classification2;
+        }
       }
     } else {
       _time = DateTime.now();
@@ -193,10 +219,12 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
           });
 
     _updateInitData();
-    _loadExpenDatas();
-    _loadIncomeDatas();
+    _loadExpenCategory1Data();
+    _loadIncomeCategory1Data();
     _loadAccountNames();
-    _loadPersonNames();
+    _loadMemberNames();
+    _loadProjectNames();
+    _loadStoreNames();
   }
 
   @override
@@ -246,191 +274,307 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
   }
 
   _buildBody() {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
+    return Container(
+      child: TabBarView(
+        controller: _tabController,
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: TabBarView(
-              controller: _tabController,
-              children: <Widget>[
-                _buildExpenCategory(),
-                _buildIncomeCategory(),
-              ],
+          _buildExpenBody(),
+          _buildIncomeBody(),
+        ],
+      ),
+    );
+  }
+
+  /// 相加
+  void _addNumber() {
+    _isAdd = false;
+    List<String> numbers = _numberString.split('+');
+    double number = 0.0;
+    for (String item in numbers) {
+      if (item.isEmpty == false) {
+        number += double.parse(item);
+      }
+    }
+    String numberString = number.toString();
+    if (numberString.split('.').last == '0') {
+      numberString = numberString.substring(0, numberString.length - 2);
+    }
+    _numberString = numberString;
+  }
+
+  /// 记账保存
+  void _record(int value) {
+    String categoryOne;
+    String categoryTwo;
+
+    if (_numberString.isEmpty) {
+      return;
+    }
+
+    _isAdd = false;
+
+    if (_tabController.index == 0) {
+      categoryOne = _expenCategory1String;
+      categoryTwo = _expenCategory2String;
+    } else {
+      categoryOne = _incomeCategory1String;
+      categoryTwo = _incomeCategory2String;
+    }
+
+    BillRecordModel model = BillRecordModel(
+        widget.recordModel != null ? widget.recordModel.id : null,
+        double.parse(_numberString),
+        _memberString,
+        _accountString,
+        _remark,
+        _tabController.index + 1,
+        categoryOne,
+        categoryTwo,
+        _projectString,
+        _storeString,
+        DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
+            .toString(),
+        _time.millisecondsSinceEpoch,
+        DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
+            .toString(),
+        _time.millisecondsSinceEpoch);
+
+    dbHelp.insertBillRecord(model).then((value) {
+      bus.trigger(bus.bookkeepingEventName);
+    });
+  }
+
+  /// 清零
+  void _clearZero() {
+    setState(() {
+      _isAdd = false;
+      _numberString = '';
+    });
+  }
+
+  /// 支出构建
+  _buildExpenBody() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.money,
+                color: Colors.blueGrey,
+              ),
+              title: Text("金额"),
+              trailing: Text(
+                _numberString.isEmpty ? '0.00' : _numberString,
+              ),
             ),
           ),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: HighLightWell(
-                  onTap: () {
-                    DatePicker.showDateTimePicker(context,
-                        showTitleActions: true,
-                        theme: DatePickerTheme(
-                            doneStyle: TextStyle(
-                                fontSize: 16, color: Colours.app_main),
-                            cancelStyle:
-                                TextStyle(fontSize: 16, color: Colours.gray)),
-                        locale: LocaleType.zh, onConfirm: (date) {
-                      _time = date;
-                      DateTime now = DateTime.now();
-                      if (_time.year == now.year &&
-                          _time.month == now.month &&
-                          _time.day == now.day) {
-                        _dateString =
-                            '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                      } else if (_time.year != now.year) {
-                        _dateString =
-                            '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                      } else {
-                        _dateString =
-                            '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
-                      }
-                      setState(() {});
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colours.gray, width: 0.6)),
-                    child: Text(_dateString),
-                  ),
-                ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.category,
+                color: Colors.deepOrangeAccent,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: HighLightWell(
-                  onTap: () {
-                    MyPickerTool.showStringPicker(context,
-                        data: _accountPickerData,
-                        normalIndex: 0,
-                        title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _accountAccount = str;
-                      });
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colours.gray, width: 0.6)),
-                    child:
-                        Text(_accountAccount.isEmpty ? '账户' : _accountAccount),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: HighLightWell(
-                  onTap: () {
-                    MyPickerTool.showStringPicker(context,
-                        data: _personPickerData,
-                        normalIndex: 0,
-                        title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _accountPerson = str;
-                      });
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colours.gray, width: 0.6)),
-                    child: Text(_accountPerson.isEmpty ? '成员' : _accountPerson),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Gaps.vGap(10),
-          HighLightWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return TextViewDialog(
-                      confirm: (text) {
-                        setState(() {
-                          _remark = text;
-                        });
-                      },
-                    );
+              title: Text("一级分类"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _expenCategory1PickerData,
+                    normalIndex: 0,
+                    title: "请选择一级分类", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _expenCategory1String = str;
+                    _loadExpenCategory2Data(str);
                   });
-            },
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 44,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          _remark.isEmpty ? '备注...' : _remark,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontSize: ScreenUtil.getInstance().setSp(28),
-                              color: _remark.isEmpty
-                                  ? Colours.gray
-                                  : Colours.black),
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-          ),
-          Gaps.vGap(3),
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Text(
-                    _numberString.isEmpty ? '0.0' : _numberString,
-                    style: TextStyle(
-                      fontSize: ScreenUtil.getInstance().setSp(48),
-                    ),
-                    maxLines: 1,
-                    textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                });
+              },
+              trailing: Text(
+                _expenCategory1String == '' ? '一级分类' : _expenCategory1String,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
               ),
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (BuildContext context, Widget child) {
-                  return Container(
-                    margin: const EdgeInsets.only(right: 14),
-                    width: 2,
-                    height: ScreenUtil.getInstance().setSp(40),
-                    decoration: BoxDecoration(
-                        color: Colours.app_main
-                            .withOpacity(0.8 * _animationController.value)),
-                  );
-                },
-              ),
-            ],
+            ),
           ),
-          Gaps.vGap(10),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.category_outlined,
+                color: Colors.deepOrangeAccent,
+              ),
+              title: Text("二级分类"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _expenCategory2PickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _expenCategory2String = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _expenCategory2String == '' ? '二级分类' : _expenCategory2String,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.access_time,
+                color: Colors.greenAccent,
+              ),
+              title: Text("时间"),
+              onTap: () {
+                DatePicker.showDateTimePicker(context,
+                    showTitleActions: true,
+                    theme: DatePickerTheme(
+                        doneStyle:
+                            TextStyle(fontSize: 16, color: Colours.app_main),
+                        cancelStyle:
+                            TextStyle(fontSize: 16, color: Colours.gray)),
+                    locale: LocaleType.zh, onConfirm: (date) {
+                  _time = date;
+                  DateTime now = DateTime.now();
+                  if (_time.year == now.year &&
+                      _time.month == now.month &&
+                      _time.day == now.day) {
+                    _dateString =
+                        '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  } else if (_time.year != now.year) {
+                    _dateString =
+                        '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  } else {
+                    _dateString =
+                        '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  }
+                  setState(() {});
+                });
+              },
+              trailing: Text(
+                _dateString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.account_balance_wallet,
+                color: Colors.redAccent,
+              ),
+              title: Text("账户"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _accountPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _accountString = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _accountString.isEmpty ? '账户' : _accountString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.person,
+                color: Colors.lightGreen,
+              ),
+              title: Text("成员"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _memberPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _memberString = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _memberString.isEmpty ? '成员' : _memberString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.drive_file_rename_outline,
+                color: Colors.lightGreen,
+              ),
+              title: Text("项目"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _projectPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                      setState(() {
+                        _projectString = str;
+                      });
+                    });
+              },
+              trailing: Text(
+                _projectString.isEmpty ? '项目' : _projectString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.store,
+                color: Colors.lightGreen,
+              ),
+              title: Text("商家"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _storePickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                      setState(() {
+                        _storeString = str;
+                      });
+                    });
+              },
+              trailing: Text(
+                _storeString.isEmpty ? '商家' : _storeString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.mark_chat_read_outlined,
+                color: Colors.lightGreen,
+              ),
+              title: Text("备注"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return TextViewDialog(
+                        confirm: (text) {
+                          setState(() {
+                            _remark = text;
+                          });
+                        },
+                      );
+                    });
+              },
+              trailing: Text(
+                _remark.isEmpty ? '备注' : _remark,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Gaps.vGap(73),
           Gaps.vGapLine(gap: 0.3),
           MyKeyBoard(
             isAdd: _isAdd,
@@ -457,7 +601,9 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             },
             //继续
             nextCallback: () async {
-              if (_accountAccount.isEmpty) {
+              if (_accountString.isEmpty ||
+                  _expenCategory1String.isEmpty ||
+                  _expenCategory2String.isEmpty) {
                 showDialog<Null>(
                   context: context,
                   barrierDismissible: false,
@@ -466,7 +612,9 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
                       title: Text("提示"),
                       content: SingleChildScrollView(
                         child: ListBody(
-                          children: <Widget>[Text("没有选择账户")],
+                          children: <Widget>[
+                            Text("没有选择账户/没有选择一级分类/没有选择二级分类，请重新检查！")
+                          ],
                         ),
                       ),
                       actions: <Widget>[
@@ -486,7 +634,7 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
               if (_isAdd == true) {
                 _addNumber();
               }
-              var res = await dbAccount.getAccount(_accountAccount);
+              var res = await dbHelp.getAccount(_accountString);
               int typeAccount = res.typeofA;
               _record(typeAccount);
               _clearZero();
@@ -494,7 +642,9 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
             },
             // 保存
             saveCallback: () async {
-              if (_accountAccount.isEmpty) {
+              if (_accountString.isEmpty ||
+                  _expenCategory1String.isEmpty ||
+                  _expenCategory2String.isEmpty) {
                 showDialog<Null>(
                   context: context,
                   barrierDismissible: false,
@@ -503,7 +653,309 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
                       title: Text("提示"),
                       content: SingleChildScrollView(
                         child: ListBody(
-                          children: <Widget>[Text("没有选择账户")],
+                          children: <Widget>[
+                            Text("没有选择账户/没有选择一级分类/没有选择二级分类，请重新检查！")
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
+              } else {
+                if (flagIfHasData == 1) {
+                  String ac = widget.recordModel.account;
+                  dbHelp.getAccountBalance(ac);
+                } else {
+                  dbHelp.getAccountBalance(_accountString);
+                }
+                var res = await dbHelp.getAccount(_accountString);
+                int typeAccount = res.typeofA;
+                _record(typeAccount);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+              }
+            },
+          ),
+          MediaQuery.of(context).padding.bottom > 0
+              ? Gaps.vGapLine(gap: 0.3)
+              : Gaps.empty,
+        ],
+      ),
+    );
+  }
+
+  /// 收入构建
+  _buildIncomeBody() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.money,
+                color: Colors.blueGrey,
+              ),
+              title: Text("金额"),
+              trailing: Text(
+                _numberString.isEmpty ? '0.00' : _numberString,
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.category,
+                color: Colors.deepOrangeAccent,
+              ),
+              title: Text("一级分类"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _incomeCategory1PickerData,
+                    normalIndex: 0,
+                    title: "请选择一级分类", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _incomeCategory1String = str;
+                    _loadIncomeCategory2Data(str);
+                  });
+                });
+              },
+              trailing: Text(
+                _incomeCategory1String == '' ? '一级分类' : _incomeCategory1String,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.category_outlined,
+                color: Colors.deepOrangeAccent,
+              ),
+              title: Text("二级分类"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _incomeCategory2PickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _incomeCategory2String = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _incomeCategory2String == '' ? '二级分类' : _incomeCategory2String,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.access_time,
+                color: Colors.greenAccent,
+              ),
+              title: Text("时间"),
+              onTap: () {
+                DatePicker.showDateTimePicker(context,
+                    showTitleActions: true,
+                    theme: DatePickerTheme(
+                        doneStyle:
+                            TextStyle(fontSize: 16, color: Colours.app_main),
+                        cancelStyle:
+                            TextStyle(fontSize: 16, color: Colours.gray)),
+                    locale: LocaleType.zh, onConfirm: (date) {
+                  _time = date;
+                  DateTime now = DateTime.now();
+                  if (_time.year == now.year &&
+                      _time.month == now.month &&
+                      _time.day == now.day) {
+                    _dateString =
+                        '今天 ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  } else if (_time.year != now.year) {
+                    _dateString =
+                        '${_time.year}-${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  } else {
+                    _dateString =
+                        '${_time.month.toString().padLeft(2, '0')}-${_time.day.toString().padLeft(2, '0')} ${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
+                  }
+                  setState(() {});
+                });
+              },
+              trailing: Text(
+                _dateString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.account_balance_wallet,
+                color: Colors.redAccent,
+              ),
+              title: Text("账户"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _accountPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _accountString = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _accountString.isEmpty ? '账户' : _accountString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.person,
+                color: Colors.lightGreen,
+              ),
+              title: Text("成员"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _memberPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                  setState(() {
+                    _memberString = str;
+                  });
+                });
+              },
+              trailing: Text(
+                _memberString.isEmpty ? '成员' : _memberString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.drive_file_rename_outline,
+                color: Colors.lightGreen,
+              ),
+              title: Text("项目"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _projectPickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                      setState(() {
+                        _projectString = str;
+                      });
+                    });
+              },
+              trailing: Text(
+                _projectString.isEmpty ? '项目' : _projectString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.store,
+                color: Colors.lightGreen,
+              ),
+              title: Text("商家"),
+              onTap: () {
+                MyPickerTool.showStringPicker(context,
+                    data: _storePickerData,
+                    normalIndex: 0,
+                    title: "请选择", clickCallBack: (int index, var str) {
+                      setState(() {
+                        _storeString = str;
+                      });
+                    });
+              },
+              trailing: Text(
+                _storeString.isEmpty ? '商家' : _storeString,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.mark_chat_read_outlined,
+                color: Colors.lightGreen,
+              ),
+              title: Text("备注"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return TextViewDialog(
+                        confirm: (text) {
+                          setState(() {
+                            _remark = text;
+                          });
+                        },
+                      );
+                    });
+              },
+              trailing: Text(
+                _remark.isEmpty ? '备注' : _remark,
+                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              ),
+            ),
+          ),
+          Gaps.vGap(73),
+          Gaps.vGapLine(gap: 0.3),
+          MyKeyBoard(
+            isAdd: _isAdd,
+            // 键盘输入
+            numberCallback: (number) => inputVerifyNumber(number),
+            // 删除
+            deleteCallback: () {
+              if (_numberString.length > 0) {
+                setState(() {
+                  _numberString =
+                      _numberString.substring(0, _numberString.length - 1);
+                });
+              }
+            },
+            // 清除
+            clearZeroCallback: () {
+              _clearZero();
+            },
+            // 等于
+            equalCallback: () {
+              setState(() {
+                _addNumber();
+              });
+            },
+            //继续
+            nextCallback: () async {
+              if (_accountString.isEmpty ||
+                  _incomeCategory1String.isEmpty ||
+                  _incomeCategory2String.isEmpty) {
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text("没有选择账户/没有选择一级分类/没有选择二级分类，请重新检查！")
+                          ],
                         ),
                       ),
                       actions: <Widget>[
@@ -520,216 +972,64 @@ class _NewBillPageState extends State<NewBillPage> with TickerProviderStateMixin
                   print(val);
                 });
               }
-              if (flagIfHasData == 1) {
-                String ac = widget.recordModel.account;
-                double preMoney = widget.recordModel.money;
-                var account =
-                    await dbAccount.getAccount(widget.recordModel.account);
-                int typeofA = account.typeofA;
-                if (_tabController.index == 0) {
-                  await dbAccount.accountBalanceAdd(ac, preMoney, typeofA);
-                  await dbAccount.accountBalanceCal(
-                      ac, double.parse(_numberString), typeofA);
-                } else {
-                  await dbAccount.accountBalanceAdd(ac, preMoney, typeofA);
-                  await dbAccount.accountBalanceCal(
-                      ac, 0 - double.parse(_numberString), typeofA);
-                }
-              } else {
-                var account = await dbAccount.getAccount(_accountAccount);
-                int typeofA = account.typeofA;
-                if (_tabController.index == 0) {
-                  await dbAccount.accountBalanceCal(
-                      _accountAccount, double.parse(_numberString), typeofA);
-                } else {
-                  await dbAccount.accountBalanceCal(_accountAccount,
-                      0 - double.parse(_numberString), typeofA);
-                }
+              if (_isAdd == true) {
+                _addNumber();
               }
-              var res = await dbAccount.getAccount(_accountAccount);
+              var res = await dbHelp.getAccount(_accountString);
               int typeAccount = res.typeofA;
               _record(typeAccount);
-              NavigatorUtils.goBack(context);
+              _clearZero();
+              setState(() {});
+            },
+            // 保存
+            saveCallback: () async {
+              if (_accountString.isEmpty ||
+                  _incomeCategory1String.isEmpty ||
+                  _incomeCategory2String.isEmpty) {
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text("没有选择账户/没有选择一级分类/没有选择二级分类，请重新检查！")
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
+              } else {
+                if (flagIfHasData == 1) {
+                  String ac = widget.recordModel.account;
+                  dbHelp.getAccountBalance(ac);
+                } else {
+                  dbHelp.getAccountBalance(_accountString);
+                }
+                var res = await dbHelp.getAccount(_accountString);
+                int typeAccount = res.typeofA;
+                _record(typeAccount);
+                NavigatorUtils.goBack(context);
+              }
             },
           ),
           MediaQuery.of(context).padding.bottom > 0
               ? Gaps.vGapLine(gap: 0.3)
               : Gaps.empty,
         ],
-      ),
-    );
-  }
-
-  /// 相加
-  void _addNumber() {
-    _isAdd = false;
-    List<String> numbers = _numberString.split('+');
-    double number = 0.0;
-    for (String item in numbers) {
-      if (item.isEmpty == false) {
-        number += double.parse(item);
-      }
-    }
-    String numberString = number.toString();
-    if (numberString.split('.').last == '0') {
-      numberString = numberString.substring(0, numberString.length - 2);
-    }
-    _numberString = numberString;
-  }
-
-  /// 记账保存
-  void _record(int value) {
-    if (_numberString.isEmpty || _numberString == '0.') {
-      return;
-    }
-
-    _isAdd = false;
-    CategoryItem item;
-    if (_tabController.index == 0) {
-      item = _expenObjects[_selectedIndexLeft];
-    } else {
-      item = _inComeObjects[_selectedIndexRight];
-    }
-
-    BillRecordModel model = BillRecordModel(
-        widget.recordModel != null ? widget.recordModel.id : null,
-        double.parse(_numberString),
-        _accountPerson,
-        _accountAccount,
-        _remark,
-        _tabController.index + 1,
-        item.name,
-        DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
-            .toString(),
-        _time.millisecondsSinceEpoch,
-        DateTime.fromMillisecondsSinceEpoch(_time.millisecondsSinceEpoch)
-            .toString(),
-        _time.millisecondsSinceEpoch);
-
-    dbHelp.insertBillRecord(model).then((value) {
-      bus.trigger(bus.bookkeepingEventName);
-    });
-  }
-
-  /// 清零
-  void _clearZero() {
-    setState(() {
-      _isAdd = false;
-      _numberString = '';
-    });
-  }
-
-  /// 选中index
-  int _selectedIndexLeft = 0;
-
-  /// 支出构建
-  _buildExpenCategory() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: GridView.builder(
-        key: PageStorageKey<String>("0"), //保存状态
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 1,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 8),
-        itemCount: _expenObjects.length,
-        itemBuilder: (context, index) {
-          return _getCategoryItem(
-              _expenObjects[index], index, _selectedIndexLeft);
-        },
-      ),
-    );
-  }
-
-  /// 选中index
-  int _selectedIndexRight = 0;
-
-  /// 收入构建
-  _buildIncomeCategory() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: GridView.builder(
-        key: PageStorageKey<String>("1"), //保存状态
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 1,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 8),
-        itemCount: _inComeObjects.length,
-        itemBuilder: (context, index) {
-          return _getCategoryItem(
-              _inComeObjects[index], index, _selectedIndexRight);
-        },
-      ),
-    );
-  }
-
-  /// 构建类别item
-  _getCategoryItem(CategoryItem item, int index, selectedIndex) {
-    return GestureDetector(
-      onTap: () {
-        if (_tabController.index == 0) {
-          //左边支出类别
-          if (_selectedIndexLeft != index) {
-            _selectedIndexLeft = index;
-            _tapItemController.forward();
-            MyPickerTool.showStringPicker(context,
-                data: _expenCategoryPickerData,
-                normalIndex: 0,
-                title: "请选择二级分类", clickCallBack: (int index, var str) {
-                  setState(() {
-                    //要做的事
-                  });
-                });
-            setState(() {});
-          }
-        } else {
-          //右边收入类别
-          if (_selectedIndexRight != index) {
-            _selectedIndexRight = index;
-            _tapItemController.forward();
-            MyPickerTool.showStringPicker(context,
-                data: _incomeCategoryPickerData,
-                normalIndex: 0,
-                title: "请选择二级分类", clickCallBack: (int index, var str) {
-                  setState(() {
-                    //要做的事
-                  });
-                });
-            setState(() {});
-          }
-        }
-      },
-      child: AnimatedBuilder(
-        animation: _tapItemController,
-        builder: (BuildContext context, Widget child) {
-          return ClipOval(
-            child: Container(
-              color: selectedIndex == index ? Colours.app_main : Colors.white,
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  GestureDetector(
-                    child: Text(
-                      item.name,
-                      style: TextStyle(
-                          color: selectedIndex == index
-                              ? Colors.white
-                              : Colours.black,
-                          fontSize: selectedIndex == index
-                              ? ScreenUtil.getInstance()
-                              .setSp(35 + 3 * _tapItemController.value)
-                              : ScreenUtil.getInstance().setSp(35)),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }

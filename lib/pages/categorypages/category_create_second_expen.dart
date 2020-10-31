@@ -1,31 +1,29 @@
 import 'package:i_account/bill/models/category_model.dart';
-import 'package:i_account/pages/morepages/category.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
+import 'package:i_account/router_jump.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/widgets/my_pickertool.dart';
-import 'package:i_account/widgets/highlight_well.dart';
 import 'package:flutter/services.dart';
 import 'package:i_account/db/db_helper.dart';
 
-class CategoryCreateFirstPage extends StatefulWidget {
+
+class CategoryCreateSecondExpenPage extends StatefulWidget {
+  CategoryCreateSecondExpenPage(this.categoryName1) : super();
+  final categoryName1;
   @override
-  _CategoryCreateFirstPageState createState() => _CategoryCreateFirstPageState();
+  _CategoryCreateSecondExpenPageState createState() => _CategoryCreateSecondExpenPageState();
 }
 
-class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
+class _CategoryCreateSecondExpenPageState extends State<CategoryCreateSecondExpenPage> {
   TextEditingController _categoryName = new TextEditingController();
-  var _typePickerData = ["支出分类", "收入分类"];
-  String _categoryType = '';
-  int _categoryTypeDB = 1;
 
   _buildAppBarTitle() {
     return Container(
       child: ButtonTheme(
         padding: const EdgeInsets.symmetric(horizontal: 0),
         child: Text(
-          '创建一级分类',
+          '创建${widget.categoryName1}分类下的二级分类',
           style: TextStyle(
               fontSize: 18,
               color: Colours.app_main,
@@ -46,17 +44,11 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
         actionName: "确定",
         onPressed: () async {
           if (_categoryName.text.isNotEmpty) {
-            CategoryItem category = new CategoryItem(_categoryName.text, '未指定分类');
-            int idReturn = await dbHelp.insertCategory(category, _categoryTypeDB);
-            if(idReturn != -1 && _categoryTypeDB == 1){
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => CategoryPage()),
-                  ModalRoute.withName('/'));
-            }else if(idReturn != -1 && _categoryTypeDB == 2){
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => CategoryPage()),
-                  ModalRoute.withName('/'));
-            }
+            CategoryItem tempItem = new CategoryItem(widget.categoryName1,_categoryName.text);
+            await dbHelp.insertCategory(tempItem, 1);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => RouterJump()),
+                ModalRoute.withName('/'));
             showDialog<Null>(
               context: context,
               barrierDismissible: false,
@@ -65,7 +57,7 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[idReturn != -1? Text("分类创建成功！") : Text("已有同名分类！")],
+                      children: <Widget>[Text("分类创建成功！")],
                     ),
                   ),
                   actions: <Widget>[
@@ -117,13 +109,13 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
               padding: EdgeInsets.only(left: 16, right: 16),
               alignment: Alignment.centerLeft,
               child: Text(
-                "分类名称",
+                "二级分类名称",
                 style: TextStyle(fontSize: 18),
               ),
             ),
             TextField(
               decoration: new InputDecoration(
-                hintText: "请输入分类名称",
+                hintText: "请输入二级分类名称",
                 border: const UnderlineInputBorder(
                   borderSide: BorderSide(style: BorderStyle.solid),
                 ),
@@ -133,42 +125,6 @@ class _CategoryCreateFirstPageState extends State<CategoryCreateFirstPage> {
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,
-            ),
-            Container(
-              height: 48,
-              padding: EdgeInsets.only(left: 16, right: 16),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "分类类型",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 1),
-              child: HighLightWell(
-                onTap: () {
-                  MyPickerTool.showStringPicker(context,
-                      data: _typePickerData,
-                      normalIndex: 0,
-                      title: "请选择", clickCallBack: (int index, var str) {
-                    setState(() {
-                      _categoryType = str;
-                      _categoryTypeDB = index + 1;
-                      print(_categoryTypeDB);
-                    });
-                  });
-                },
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  height: 30,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colours.gray, width: 0.6)),
-                  child: Text(_categoryType.isEmpty ? '支出分类' : _categoryType),
-                ),
-              ),
             ),
           ],
         ),

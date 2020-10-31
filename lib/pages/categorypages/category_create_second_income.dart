@@ -1,26 +1,29 @@
+import 'package:i_account/bill/models/category_model.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:i_account/widgets/appbar.dart';
-import 'package:i_account/router_jump.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
-import 'package:i_account/db/db_helper_account.dart';
-import 'package:i_account/bill/models/member_model.dart';
+import 'package:i_account/db/db_helper.dart';
+import '../../router_jump.dart';
 
-class AccountCreatePage extends StatefulWidget {
+
+class CategoryCreateSecondIncomePage extends StatefulWidget {
+  CategoryCreateSecondIncomePage(this.categoryName1) : super();
+  final categoryName1;
   @override
-  _AccountCreatePageState createState() => _AccountCreatePageState();
+  _CategoryCreateSecondIncomePageState createState() => _CategoryCreateSecondIncomePageState();
 }
 
-class _AccountCreatePageState extends State<AccountCreatePage> {
-  TextEditingController _personName = new TextEditingController();
+class _CategoryCreateSecondIncomePageState extends State<CategoryCreateSecondIncomePage> {
+  TextEditingController _categoryName = new TextEditingController();
 
   _buildAppBarTitle() {
     return Container(
       child: ButtonTheme(
         padding: const EdgeInsets.symmetric(horizontal: 0),
         child: Text(
-          '创建成员',
+          '创建${widget.categoryName1}分类下的二级分类',
           style: TextStyle(
               fontSize: 18,
               color: Colours.app_main,
@@ -40,10 +43,12 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
         onPressed: () async {
-          if (_personName.text.isNotEmpty) {
-            Member m = new Member(_personName.text);
-            int idReturn = await dbAccount.insertMember(m);
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+          if (_categoryName.text.isNotEmpty) {
+            CategoryItem tempItem = new CategoryItem(widget.categoryName1,_categoryName.text);
+            await dbHelp.insertCategory(tempItem, 2);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => RouterJump()),
+                ModalRoute.withName('/'));
             showDialog<Null>(
               context: context,
               barrierDismissible: false,
@@ -52,12 +57,12 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[idReturn != -1? Text("成员创建成功！") : Text("已有同名成员！")],
+                      children: <Widget>[Text("分类创建成功！")],
                     ),
                   ),
                   actions: <Widget>[
                     FlatButton(
-                      onPressed: () async {
+                      onPressed: () {
                         Navigator.of(context).pop();
                       },
                       child: Text("确定"),
@@ -77,7 +82,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                   title: Text("提示"),
                   content: SingleChildScrollView(
                     child: ListBody(
-                      children: <Widget>[Text("成员名不能为空！")],
+                      children: <Widget>[Text("分类名不能为空！")],
                     ),
                   ),
                   actions: <Widget>[
@@ -104,19 +109,19 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
               padding: EdgeInsets.only(left: 16, right: 16),
               alignment: Alignment.centerLeft,
               child: Text(
-                "成员名称",
+                "二级分类名称",
                 style: TextStyle(fontSize: 18),
               ),
             ),
             TextField(
               decoration: new InputDecoration(
-                hintText: "请输入成员名称",
+                hintText: "请输入二级分类名称",
                 border: const UnderlineInputBorder(
                   borderSide: BorderSide(style: BorderStyle.solid),
                 ),
-                prefixIcon: Icon(Icons.person),
+                prefixIcon: Icon(Icons.category),
               ),
-              controller: _personName,
+              controller: _categoryName,
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,

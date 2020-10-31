@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_account/pages/categorypages/bill_search_category_first.dart';
 import 'package:i_account/res/colours.dart';
 import 'package:i_account/widgets/appbar.dart';
+import 'package:i_account/pages/memberpages/bill_search_member_withtype.dart';
 import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/res/styles.dart';
@@ -14,12 +14,12 @@ import 'package:i_account/widgets/calendar_page.dart';
 import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/state_layout.dart';
 
-class ChartCategoryPage extends StatefulWidget {
+class ChartMemberPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ChartCategoryPageState();
+  State<StatefulWidget> createState() => ChartMemberPageState();
 }
 
-class ChartCategoryPageState extends State<StatefulWidget> {
+class ChartMemberPageState extends State<StatefulWidget> {
   @override
   //保存状态
   bool get wantKeepAlive => true;
@@ -69,7 +69,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
       myMonth1 = myMonth2;
       myMonth2 = temp;
     }
-    dbHelp.getBillList(startTime, endTime).then((list) {
+    dbHelp.getBillListType(startTime, endTime, _type).then((list) {
       _monthExpenMoney = 0.0;
       _monthIncomeMoney = 0.0;
       Map map = Map();
@@ -83,7 +83,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
         }
 
         if (item.typeofB == _type) {
-          map[item.classification1] = null;
+          map[item.member] = null;
         }
       });
 
@@ -91,17 +91,18 @@ class ChartCategoryPageState extends State<StatefulWidget> {
       int index = 1;
       map.keys.forEach((key) {
         // 查找相同分类的账单
-        var items = list.where((item) => item.classification1 == key);
+        var items = list.where((item) => item.member == key);
 
         double money = 0.0;
         items.forEach((item) {
           money += item.money;
         });
 
+
         double ratio =
             money / (_type == 1 ? _monthExpenMoney : _monthIncomeMoney);
         ChartItemModel itemModel =
-            ChartItemModel(index, key,  money, ratio, items.length);
+            ChartItemModel(index, key, money, ratio, items.length);
         chartItems.add(itemModel);
         index += 1;
       });
@@ -119,7 +120,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       } else {
@@ -131,7 +132,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.categoryName} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       }
@@ -143,7 +144,9 @@ class ChartCategoryPageState extends State<StatefulWidget> {
   @override
   void initState() {
     super.initState();
+
     _initDatas();
+
     // 订阅监听
     bus.add(bus.bookkeepingEventName, (arg) {
       _initDatas();
@@ -177,7 +180,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
                         child: Row(
                           children: [
                             Icon(Icons.indeterminate_check_box_outlined),
-                            Text(
+                            Text(_monthExpenMoney == 0 ?"支出":
                               '支出  ¥${Utils.formatDouble(double.parse(_monthExpenMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
@@ -192,7 +195,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
                         child: Row(
                           children: [
                             Icon(Icons.add_box),
-                            Text(
+                            Text(_monthIncomeMoney == 0 ? '收入' :
                               '收入  ¥${Utils.formatDouble(double.parse(_monthIncomeMoney.toStringAsFixed(2)))}',
                               style: TextStyle(fontSize: 16),
                             ),
@@ -292,7 +295,7 @@ class ChartCategoryPageState extends State<StatefulWidget> {
             ),
           ),
           Text(
-            "按分类查看",
+            "按成员查看",
             style: TextStyle(
                 fontSize: ScreenUtil.getInstance().setSp(34),
                 color: Colours.app_main),
@@ -336,7 +339,10 @@ class ChartCategoryPageState extends State<StatefulWidget> {
     ChartItemModel model = _datas[index];
     return HighLightWell(
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {return BillSearchCategoryFirst(model.categoryName);}));
+        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+          return BillSearchListMemberWithtype(
+              model.person,_type);
+        }));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -348,13 +354,13 @@ class ChartCategoryPageState extends State<StatefulWidget> {
                 bottom: BorderSide(width: 0.6, color: Colours.line))),
         child: Row(
           children: <Widget>[
-            Icon(Icons.money),
+            Icon(Icons.person),
             Gaps.hGap(ScreenUtil.getInstance().setWidth(32)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  model.categoryName,
+                  model.person == '' ? "未指定成员" : model.person,
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(32),
                       color: Colours.dark),
@@ -389,11 +395,11 @@ class ChartCategoryPageState extends State<StatefulWidget> {
 
 class ChartItemModel {
   final int id;
-  final String categoryName;
+  final String person;
   final double money;
   final double ratio;
   final int number;
 
-  ChartItemModel(
-      this.id, this.categoryName, this.money, this.ratio, this.number);
+  ChartItemModel(this.id, this.person, this.money, this.ratio,
+      this.number);
 }

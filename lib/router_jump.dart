@@ -8,7 +8,14 @@ class RouterJump extends StatefulWidget {
 
 class _RouterJumpState extends State<RouterJump> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    setState(() {
+    });
     return MaterialApp(home: Tabs());
   }
 }

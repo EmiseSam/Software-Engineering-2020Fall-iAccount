@@ -26,7 +26,7 @@ class _TabsState extends State<Tabs> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add,color:Colors.lightBlue),
-              label: "记账",
+              label: "记一笔",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz,color:Colors.lightBlue),

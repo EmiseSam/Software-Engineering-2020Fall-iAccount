@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:i_account/pages/categorypages/category_income_first.dart';
 import 'package:i_account/pages/categorypages/category_expen_first.dart';
 import 'package:i_account/pages/categorypages/category_create_first.dart';
-import 'package:i_account/pages/categorypages/category_create_second.dart';
+
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -28,9 +28,6 @@ class _CategoryPageState extends State<CategoryPage> {
         actions: [
           IconButton(icon: Icon(Icons.looks_one), onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryCreateFirstPage()));
-          }),
-          IconButton(icon: Icon(Icons.looks_two), onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryCreateSecondPage()));
           }),
         ],
       ),

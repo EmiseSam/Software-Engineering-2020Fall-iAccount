@@ -6,14 +6,27 @@ part 'account_model.g.dart';
 class AccountClassification extends Object {
   @JsonKey(name: 'id')
   int id;
+
   @JsonKey(name: 'account')
   String account;
+
   @JsonKey(name: 'sum')
   double sum;
+
   @JsonKey(name: 'balance')
   double balance;
+
   @JsonKey(name: 'typeofA')
   int typeofA;
+
+  AccountClassification(String account, int typeofA,
+      {int id, double sum = 0.00, double balance = 0.00}) {
+    this.id = id;
+    this.account = account;
+    this.sum = sum;
+    this.balance = balance;
+    this.typeofA = typeofA;
+  }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -26,15 +39,6 @@ class AccountClassification extends Object {
       map[columnId] = id;
     }
     return map;
-  }
-
-  AccountClassification(String account, int typeofA,
-      {int id, double sum = 0.00, double balance = 0.00}) {
-    this.id = id;
-    this.account = account;
-    this.sum = sum;
-    this.balance = balance;
-    this.typeofA = typeofA;
   }
 
   AccountClassification.fromMap(Map<String, dynamic> map) {
