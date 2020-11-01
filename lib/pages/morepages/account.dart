@@ -13,11 +13,11 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  List accountnameItemsAssets = new List();
-  List accountamountItemsAssets = new List();
+  List accountNameAssets = new List();
+  List accountAmountAssets = new List();
 
-  List accountnameItemsDebits = new List();
-  List accountamountItemsDebits = new List();
+  List accountNameDebits = new List();
+  List accountAmountDebits = new List();
 
   TextStyle _bannerText = TextStyle(
     fontSize: 14.0,
@@ -84,23 +84,23 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   void initState() {
-    _loadAccountNamesAssets().then((value) => setState(() {
-          accountnameItemsAssets = value;
-        }));
-    _loadAccountNamesDebits().then((value) => setState(() {
-          accountnameItemsDebits = value;
-        }));
-    _loadAccountAmountAssets().then((value) => setState(() {
-          accountamountItemsAssets = value;
-        }));
-    _loadAccountAmountDebits().then((value) => setState(() {
-          accountamountItemsDebits = value;
-        }));
     _loadAssets().then((value) => setState(() {
           totalAssets = value;
         }));
     _loadDebits().then((value) => setState(() {
           totalLiabilities = value;
+        }));
+    _loadAccountNamesAssets().then((value) => setState(() {
+          accountNameAssets = value;
+        }));
+    _loadAccountNamesDebits().then((value) => setState(() {
+          accountNameDebits = value;
+        }));
+    _loadAccountAmountAssets().then((value) => setState(() {
+          accountAmountAssets = value;
+        }));
+    _loadAccountAmountDebits().then((value) => setState(() {
+          accountAmountDebits = value;
         }));
     super.initState();
   }
@@ -159,7 +159,6 @@ class _AccountPageState extends State<AccountPage> {
                     child: RichText(
                       text: TextSpan(
                         text:
-
                             (totalAssets + totalLiabilities).toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 36.0,
@@ -215,19 +214,17 @@ class _AccountPageState extends State<AccountPage> {
             ),
             Gaps.vGap(10),
             Container(
-              height: 84 * accountnameItemsAssets.length.toDouble() ?? 0.00,
+              height: 84 * accountNameAssets.length.toDouble() ?? 0.00,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, item) {
-                  return buildListData(context, accountnameItemsAssets[item],
-                      accountamountItemsAssets[item]);
+                  return buildListData(context, accountNameAssets[item],
+                      accountAmountAssets[item]);
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
-                itemCount: (accountnameItemsAssets.length == null || accountnameItemsAssets.length == 0)
-                    ? 0
-                    : accountnameItemsAssets.length,
+                itemCount: accountNameAssets.length ?? 0,
               ),
             ),
             Gaps.vGap(10),
@@ -244,19 +241,17 @@ class _AccountPageState extends State<AccountPage> {
             ),
             Gaps.vGap(10),
             Container(
-              height: 84 * accountnameItemsDebits.length.toDouble() ?? 0.00,
+              height: 84 * accountNameDebits.length.toDouble() ?? 0.00,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, item) {
-                  return buildListData(context, accountnameItemsDebits[item],
-                      accountamountItemsDebits[item]);
+                  return buildListData(context, accountNameDebits[item],
+                      accountAmountDebits[item]);
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
-                itemCount: (accountnameItemsDebits.length == null || accountnameItemsDebits.length == 0)
-                    ? 0
-                    : accountnameItemsDebits.length,
+                itemCount: accountNameDebits.length ?? 0,
               ),
             ),
           ],
@@ -328,10 +323,12 @@ class _AccountPageState extends State<AccountPage> {
                           builder: (BuildContext context) {
                             return TextViewDialogAccount(
                               confirm: (text) async {
-                                  var tempAccount = await dbHelp.getAccount(titleItem);
-                                  await dbHelp.updateAccountBills(tempAccount, text);
-                                  tempAccount.account = text;
-                                  await dbHelp.insertAccount(tempAccount);
+                                var tempAccount =
+                                    await dbHelp.getAccount(titleItem);
+                                await dbHelp.updateAccountBills(
+                                    tempAccount, text);
+                                tempAccount.account = text;
+                                await dbHelp.insertAccount(tempAccount);
                               },
                             );
                           });

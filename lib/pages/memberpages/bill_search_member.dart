@@ -18,17 +18,17 @@ import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:i_account/widgets/calendar_page.dart';
 
-class BillSearchListPerson extends StatefulWidget {
-  BillSearchListPerson(this.accountName) : super();
+class BillSearchListMember extends StatefulWidget {
+  BillSearchListMember(this.accountName) : super();
   final accountName;
 
   @override
   State<StatefulWidget> createState() {
-    return BillSearchListPersonState();
+    return BillSearchListMemberState();
   }
 }
 
-class BillSearchListPersonState extends State<BillSearchListPerson> {
+class BillSearchListMemberState extends State<BillSearchListMember> {
   List _datas = List();
   String myYear1 = "1971";
   String myMonth1 = "01";
@@ -63,7 +63,7 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
       myMonth2 = temp;
     }
     dbHelp
-        .getBillListPerson(startTime, endTime, categoryName: widget.accountName)
+        .getBillListMember(startTime, endTime, categoryName: widget.accountName)
         .then((models) {
       DateTime _preTime;
 

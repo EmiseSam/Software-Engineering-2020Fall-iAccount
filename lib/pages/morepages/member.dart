@@ -12,22 +12,22 @@ class MemberPage extends StatefulWidget {
 }
 
 class _MemberPageState extends State<MemberPage> {
-  List personNames = new List();
+  List memberNames = new List();
 
-  Future<List> _loadPersonNames() async {
+  Future<List> _loadMemberNames() async {
     List list = await dbHelp.getMembers();
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.member);
     });
-    print(personNames.length);
+    print(memberNames.length);
     return listTemp;
   }
 
   @override
   void initState() {
-    _loadPersonNames().then((value) => setState(() {
-          personNames = value;
+    _loadMemberNames().then((value) => setState(() {
+          memberNames = value;
         }));
     super.initState();
   }
@@ -66,11 +66,11 @@ class _MemberPageState extends State<MemberPage> {
           itemBuilder: (context, item) {
             return buildListData(
               context,
-              personNames[item],
+              memberNames[item],
             );
           },
           separatorBuilder: (BuildContext context, int index) => Divider(),
-          itemCount: (personNames.length == null) ? 0 : personNames.length,
+          itemCount: (memberNames.length == null) ? 0 : memberNames.length,
         ),
       ),
     );
@@ -80,7 +80,7 @@ class _MemberPageState extends State<MemberPage> {
     return new ListTile(
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return BillSearchListPerson(titleItem);
+          return BillSearchListMember(titleItem);
         }));
       },
       onLongPress: () async {

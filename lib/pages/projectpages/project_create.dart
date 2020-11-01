@@ -13,7 +13,7 @@ class ProjectCreatePage extends StatefulWidget {
 }
 
 class _ProjectCreatePageState extends State<ProjectCreatePage> {
-  TextEditingController _personName = new TextEditingController();
+  TextEditingController _projectName = new TextEditingController();
 
   _buildAppBarTitle() {
     return Container(
@@ -40,8 +40,8 @@ class _ProjectCreatePageState extends State<ProjectCreatePage> {
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
         onPressed: () async {
-          if (_personName.text.isNotEmpty) {
-            Project m = new Project(_personName.text);
+          if (_projectName.text.isNotEmpty) {
+            Project m = new Project(_projectName.text);
             int idReturn = await dbHelp.insertProject(m);
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
@@ -116,7 +116,7 @@ class _ProjectCreatePageState extends State<ProjectCreatePage> {
                 ),
                 prefixIcon: Icon(Icons.person),
               ),
-              controller: _personName,
+              controller: _projectName,
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,

@@ -135,9 +135,7 @@ class _BillState extends State<Bill>
             child: NotificationListener(
               onNotification: (notification) {
                 //如果是滚动更新通知的值并且深度限制为0[就是监听ListView]
-                if (notification is ScrollUpdateNotification &&
-                    notification.depth == 0) {
-                  //如果是
+                if (notification is ScrollUpdateNotification && notification.depth == 0) {
                   _onScrol(notification.metrics.pixels);
                 }
               },

@@ -12,22 +12,22 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  List personNames = new List();
+  List projectNames = new List();
 
-  Future<List> _loadPersonNames() async {
+  Future<List> _loadProjectNames() async {
     List list = await dbHelp.getProjects();
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.project);
     });
-    print(personNames.length);
+    print(projectNames.length);
     return listTemp;
   }
 
   @override
   void initState() {
-    _loadPersonNames().then((value) => setState(() {
-          personNames = value;
+    _loadProjectNames().then((value) => setState(() {
+          projectNames = value;
         }));
     super.initState();
   }
@@ -66,11 +66,11 @@ class _ProjectPageState extends State<ProjectPage> {
           itemBuilder: (context, item) {
             return buildListData(
               context,
-              personNames[item],
+              projectNames[item],
             );
           },
           separatorBuilder: (BuildContext context, int index) => Divider(),
-          itemCount: (personNames.length == null) ? 0 : personNames.length,
+          itemCount: (projectNames.length == null) ? 0 : projectNames.length,
         ),
       ),
     );

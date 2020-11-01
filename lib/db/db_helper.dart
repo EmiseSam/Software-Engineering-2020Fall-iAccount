@@ -426,7 +426,7 @@ class Dbhelper {
   }
 
   /// 查询账单记录成员版 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListPerson(int startTime, int endTime,
+  Future<List<BillRecordModel>> getBillListMember(int startTime, int endTime,
       {String categoryName}) async {
     //DESC ASC
     var dbClient = await db;
@@ -492,7 +492,7 @@ class Dbhelper {
   }
 
   /// 查询账单记录成员版 13位时间戳 type类型 1支出 2收入
-  Future<List<BillRecordModel>> getBillListPersonWithType(
+  Future<List<BillRecordModel>> getBillListMemberWithType(
       int startTime, int endTime, int myType,
       {String categoryName}) async {
     //DESC ASC

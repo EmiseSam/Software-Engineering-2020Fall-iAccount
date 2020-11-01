@@ -51,7 +51,7 @@ packages:
     source: hosted
     version: "1.1.0-nullsafety.1"
   collection:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: collection
       url: "https://pub.flutter-io.cn"
@@ -71,6 +71,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
+  cookie_jar:
+    dependency: transitive
+    description:
+      name: cookie_jar
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   crypto:
     dependency: transitive
     description:
@@ -78,13 +85,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.5"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.0"
   date_format:
     dependency: "direct main"
     description:
@@ -99,13 +99,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.5"
-  english_words:
-    dependency: "direct main"
+  dio:
+    dependency: transitive
     description:
-      name: english_words
+      name: dio
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.1.5"
+    version: "3.0.10"
+  dio_cookie_manager:
+    dependency: "direct main"
+    description:
+      name: dio_cookie_manager
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -198,13 +205,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
-  groovin_widgets:
-    dependency: "direct main"
+  http_parser:
+    dependency: transitive
     description:
-      name: groovin_widgets
+      name: http_parser
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.6.0"
+    version: "3.1.4"
   intl:
     dependency: transitive
     description:
@@ -212,13 +219,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.16.1"
-  intro_slider:
-    dependency: "direct main"
-    description:
-      name: intro_slider
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.2.3"
   json_annotation:
     dependency: "direct main"
     description:
@@ -419,7 +419,7 @@ packages:
       name: sqflite
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.3.1+2"
+    version: "1.3.2+1"
   sqflite_common:
     dependency: transitive
     description:
@@ -505,5 +505,5 @@ packages:
     source: hosted
     version: "0.1.2"
 sdks:
-  dart: ">=2.10.0-110 <2.11.0"
-  flutter: ">=1.22.0 <2.0.0"
+  dart: ">=2.10.2 <2.11.0"
+  flutter: ">=1.22.2 <2.0.0"

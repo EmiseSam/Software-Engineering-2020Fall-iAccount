@@ -120,7 +120,7 @@ class ChartMemberPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.member} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       } else {
@@ -132,7 +132,7 @@ class ChartMemberPageState extends State<StatefulWidget> {
             data: chartItems,
             overlaySeries: true,
             labelAccessorFn: (ChartItemModel item, _) =>
-                '${item.person} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
+                '${item.member} ${Utils.formatDouble(double.parse((item.ratio * 100).toStringAsFixed(2)))}%',
           ),
         ];
       }
@@ -341,7 +341,7 @@ class ChartMemberPageState extends State<StatefulWidget> {
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
           return BillSearchListMemberWithtype(
-              model.person,_type);
+              model.member,_type);
         }));
       },
       child: Container(
@@ -360,7 +360,7 @@ class ChartMemberPageState extends State<StatefulWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  model.person == '' ? "未指定成员" : model.person,
+                  model.member == '' ? "未指定成员" : model.member,
                   style: TextStyle(
                       fontSize: ScreenUtil.getInstance().setSp(32),
                       color: Colours.dark),
@@ -395,11 +395,11 @@ class ChartMemberPageState extends State<StatefulWidget> {
 
 class ChartItemModel {
   final int id;
-  final String person;
+  final String member;
   final double money;
   final double ratio;
   final int number;
 
-  ChartItemModel(this.id, this.person, this.money, this.ratio,
+  ChartItemModel(this.id, this.member, this.money, this.ratio,
       this.number);
 }

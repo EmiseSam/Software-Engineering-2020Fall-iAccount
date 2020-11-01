@@ -12,22 +12,22 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
-  List personNames = new List();
+  List storeNames = new List();
 
-  Future<List> _loadPersonNames() async {
+  Future<List> _loadStoreNames() async {
     List list = await dbHelp.getStores();
     List listTemp = new List();
     list.forEach((element) {
       listTemp.add(element.store);
     });
-    print(personNames.length);
+    print(storeNames.length);
     return listTemp;
   }
 
   @override
   void initState() {
-    _loadPersonNames().then((value) => setState(() {
-          personNames = value;
+    _loadStoreNames().then((value) => setState(() {
+          storeNames = value;
         }));
     super.initState();
   }
@@ -66,11 +66,11 @@ class _StorePageState extends State<StorePage> {
           itemBuilder: (context, item) {
             return buildListData(
               context,
-              personNames[item],
+              storeNames[item],
             );
           },
           separatorBuilder: (BuildContext context, int index) => Divider(),
-          itemCount: (personNames.length == null) ? 0 : personNames.length,
+          itemCount: (storeNames.length == null) ? 0 : storeNames.length,
         ),
       ),
     );

@@ -13,7 +13,7 @@ class MemberCreatePage extends StatefulWidget {
 }
 
 class _MemberCreatePageState extends State<MemberCreatePage> {
-  TextEditingController _personName = new TextEditingController();
+  TextEditingController _memberName = new TextEditingController();
 
   _buildAppBarTitle() {
     return Container(
@@ -40,8 +40,8 @@ class _MemberCreatePageState extends State<MemberCreatePage> {
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
         onPressed: () async {
-          if (_personName.text.isNotEmpty) {
-            Member m = new Member(_personName.text);
+          if (_memberName.text.isNotEmpty) {
+            Member m = new Member(_memberName.text);
             int idReturn = await dbHelp.insertMember(m);
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
@@ -116,7 +116,7 @@ class _MemberCreatePageState extends State<MemberCreatePage> {
                 ),
                 prefixIcon: Icon(Icons.person),
               ),
-              controller: _personName,
+              controller: _memberName,
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,

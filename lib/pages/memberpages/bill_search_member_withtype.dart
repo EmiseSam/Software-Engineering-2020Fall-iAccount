@@ -65,7 +65,7 @@ class BillSearchListMemberWithtypeState
       myMonth2 = temp;
     }
     dbHelp
-        .getBillListPersonWithType(startTime, endTime, widget.type,
+        .getBillListMemberWithType(startTime, endTime, widget.type,
             categoryName: widget.accountName)
         .then((models) {
       DateTime _preTime;

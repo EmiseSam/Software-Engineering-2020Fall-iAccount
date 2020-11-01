@@ -13,7 +13,7 @@ class StoreCreatePage extends StatefulWidget {
 }
 
 class _StoreCreatePageState extends State<StoreCreatePage> {
-  TextEditingController _personName = new TextEditingController();
+  TextEditingController _storeName = new TextEditingController();
 
   _buildAppBarTitle() {
     return Container(
@@ -40,8 +40,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
         titleWidget: _buildAppBarTitle(),
         actionName: "确定",
         onPressed: () async {
-          if (_personName.text.isNotEmpty) {
-            Store m = new Store(_personName.text);
+          if (_storeName.text.isNotEmpty) {
+            Store m = new Store(_storeName.text);
             int idReturn = await dbHelp.insertStore(m);
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
             showDialog<Null>(
@@ -116,7 +116,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 ),
                 prefixIcon: Icon(Icons.person),
               ),
-              controller: _personName,
+              controller: _storeName,
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               textCapitalization: TextCapitalization.sentences,
