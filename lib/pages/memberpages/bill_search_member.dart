@@ -424,7 +424,7 @@ class BillSearchListPersonState extends State<BillSearchListPerson> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: 60,
+                  height: 50,
                   width: double.infinity,
                   child: Stack(
                     alignment: Alignment.center,

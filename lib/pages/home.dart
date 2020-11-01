@@ -572,7 +572,7 @@ class _HomePageState extends State<HomePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: 60,
+                  height: 50,
                   width: double.infinity,
                   child: Stack(
                     alignment: Alignment.center,

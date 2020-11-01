@@ -574,7 +574,6 @@ class _NewBillPageState extends State<NewBillPage>
               ),
             ),
           ),
-          Gaps.vGap(73),
           Gaps.vGapLine(gap: 0.3),
           MyKeyBoard(
             isAdd: _isAdd,
@@ -915,7 +914,6 @@ class _NewBillPageState extends State<NewBillPage>
               ),
             ),
           ),
-          Gaps.vGap(73),
           Gaps.vGapLine(gap: 0.3),
           MyKeyBoard(
             isAdd: _isAdd,
