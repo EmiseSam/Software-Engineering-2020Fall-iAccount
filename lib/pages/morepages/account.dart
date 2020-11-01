@@ -25,7 +25,6 @@ class _AccountPageState extends State<AccountPage> {
   );
   TextStyle _accountTitleStyle = TextStyle(
     fontSize: 15.0,
-    color: Colors.black,
   );
 
   // 总资产
@@ -84,12 +83,6 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   void initState() {
-    _loadAssets().then((value) => setState(() {
-          totalAssets = value;
-        }));
-    _loadDebits().then((value) => setState(() {
-          totalLiabilities = value;
-        }));
     _loadAccountNamesAssets().then((value) => setState(() {
           accountNameAssets = value;
         }));
@@ -101,6 +94,12 @@ class _AccountPageState extends State<AccountPage> {
         }));
     _loadAccountAmountDebits().then((value) => setState(() {
           accountAmountDebits = value;
+        }));
+    _loadAssets().then((value) => setState(() {
+          totalAssets = value;
+        }));
+    _loadDebits().then((value) => setState(() {
+          totalLiabilities = value;
         }));
     super.initState();
   }

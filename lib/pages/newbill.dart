@@ -1,4 +1,3 @@
-import 'package:i_account/res/colours.dart';
 import 'package:i_account/res/styles.dart';
 import 'package:i_account/widgets/appbar.dart';
 import 'package:i_account/bill/models/bill_record_response.dart';
@@ -6,6 +5,7 @@ import 'package:i_account/common/eventBus.dart';
 import 'package:i_account/db/db_helper.dart';
 import 'package:i_account/routers/fluro_navigator.dart';
 import 'package:i_account/util/utils.dart';
+import 'package:i_account/widgets/highlight_well.dart';
 import 'package:i_account/widgets/input_textview_dialog.dart';
 import 'package:i_account/widgets/number_keyboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -248,9 +248,9 @@ class _NewBillPageState extends State<NewBillPage>
           // tabbar菜单
           controller: _tabController,
           tabs: tabs,
-          indicatorColor: Colours.app_main,
-          unselectedLabelColor: Colours.app_main.withOpacity(0.8),
-          labelColor: Colours.app_main,
+          indicatorColor: Colors.black,
+          unselectedLabelColor: Colors.black.withOpacity(0.8),
+          labelColor: Colors.black,
           labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           indicatorWeight: 1,
           // 下划线高度
@@ -260,7 +260,7 @@ class _NewBillPageState extends State<NewBillPage>
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 18),
           child: Icon(
             Icons.close,
-            color: Colours.app_main,
+            color: Colors.black,
           ),
           onPressed: () {
             NavigatorUtils.goBack(context);
@@ -375,44 +375,45 @@ class _NewBillPageState extends State<NewBillPage>
                 Icons.category,
                 color: Colors.deepOrangeAccent,
               ),
-              title: Text("一级分类"),
-              onTap: () {
-                MyPickerTool.showStringPicker(context,
-                    data: _expenCategory1PickerData,
-                    normalIndex: 0,
-                    title: "请选择一级分类", clickCallBack: (int index, var str) {
-                  setState(() {
-                    _expenCategory1String = str;
-                    _loadExpenCategory2Data(str);
-                  });
-                });
-              },
-              trailing: Text(
-                _expenCategory1String == '' ? '一级分类' : _expenCategory1String,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
-              ),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(
-                Icons.category_outlined,
-                color: Colors.deepOrangeAccent,
-              ),
-              title: Text("二级分类"),
-              onTap: () {
-                MyPickerTool.showStringPicker(context,
-                    data: _expenCategory2PickerData,
-                    normalIndex: 0,
-                    title: "请选择", clickCallBack: (int index, var str) {
-                  setState(() {
-                    _expenCategory2String = str;
-                  });
-                });
-              },
-              trailing: Text(
-                _expenCategory2String == '' ? '二级分类' : _expenCategory2String,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              title: Row(
+                children: [
+                  HighLightWell(
+                    onTap: () {
+                      MyPickerTool.showStringPicker(context,
+                          data: _expenCategory1PickerData,
+                          normalIndex: 0,
+                          title: "请选择一级分类",
+                          clickCallBack: (int index, var str) {
+                        setState(() {
+                          _expenCategory1String = str;
+                          _expenCategory2String = '二级分类';
+                          _loadExpenCategory2Data(str);
+                        });
+                      });
+                    },
+                    child: Text(_expenCategory1String == ''
+                        ? '一级分类'
+                        : _expenCategory1String),
+                  ),
+                  Icon(Icons.chevron_right),
+                  HighLightWell(
+                    onTap: () {
+                      if(_expenCategory1String != ''){
+                        MyPickerTool.showStringPicker(context,
+                            data: _expenCategory2PickerData,
+                            normalIndex: 0,
+                            title: "请选择", clickCallBack: (int index, var str) {
+                              setState(() {
+                                _expenCategory2String = str;
+                              });
+                            });
+                      }
+                    },
+                    child: Text(_expenCategory2String == ''
+                        ? '二级分类'
+                        : _expenCategory2String),
+                  ),
+                ],
               ),
             ),
           ),
@@ -428,9 +429,9 @@ class _NewBillPageState extends State<NewBillPage>
                     showTitleActions: true,
                     theme: DatePickerTheme(
                         doneStyle:
-                            TextStyle(fontSize: 16, color: Colours.app_main),
+                            TextStyle(fontSize: 16),
                         cancelStyle:
-                            TextStyle(fontSize: 16, color: Colours.gray)),
+                            TextStyle(fontSize: 16)),
                     locale: LocaleType.zh, onConfirm: (date) {
                   _time = date;
                   DateTime now = DateTime.now();
@@ -451,7 +452,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _dateString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -474,7 +475,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _accountString.isEmpty ? '账户' : _accountString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -497,7 +498,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _memberString.isEmpty ? '成员' : _memberString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -513,14 +514,14 @@ class _NewBillPageState extends State<NewBillPage>
                     data: _projectPickerData,
                     normalIndex: 0,
                     title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _projectString = str;
-                      });
-                    });
+                  setState(() {
+                    _projectString = str;
+                  });
+                });
               },
               trailing: Text(
                 _projectString.isEmpty ? '项目' : _projectString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -536,14 +537,14 @@ class _NewBillPageState extends State<NewBillPage>
                     data: _storePickerData,
                     normalIndex: 0,
                     title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _storeString = str;
-                      });
-                    });
+                  setState(() {
+                    _storeString = str;
+                  });
+                });
               },
               trailing: Text(
                 _storeString.isEmpty ? '商家' : _storeString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -570,7 +571,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _remark.isEmpty ? '备注' : _remark,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -680,7 +681,9 @@ class _NewBillPageState extends State<NewBillPage>
                 var res = await dbHelp.getAccount(_accountString);
                 int typeAccount = res.typeofA;
                 _record(typeAccount);
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RouterJump()), ModalRoute.withName('/'));
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => RouterJump()),
+                    ModalRoute.withName('/'));
               }
             },
           ),
@@ -715,44 +718,45 @@ class _NewBillPageState extends State<NewBillPage>
                 Icons.category,
                 color: Colors.deepOrangeAccent,
               ),
-              title: Text("一级分类"),
-              onTap: () {
-                MyPickerTool.showStringPicker(context,
-                    data: _incomeCategory1PickerData,
-                    normalIndex: 0,
-                    title: "请选择一级分类", clickCallBack: (int index, var str) {
-                  setState(() {
-                    _incomeCategory1String = str;
-                    _loadIncomeCategory2Data(str);
-                  });
-                });
-              },
-              trailing: Text(
-                _incomeCategory1String == '' ? '一级分类' : _incomeCategory1String,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
-              ),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(
-                Icons.category_outlined,
-                color: Colors.deepOrangeAccent,
-              ),
-              title: Text("二级分类"),
-              onTap: () {
-                MyPickerTool.showStringPicker(context,
-                    data: _incomeCategory2PickerData,
-                    normalIndex: 0,
-                    title: "请选择", clickCallBack: (int index, var str) {
-                  setState(() {
-                    _incomeCategory2String = str;
-                  });
-                });
-              },
-              trailing: Text(
-                _incomeCategory2String == '' ? '二级分类' : _incomeCategory2String,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+              title: Row(
+                children: [
+                  HighLightWell(
+                    onTap: () {
+                      MyPickerTool.showStringPicker(context,
+                          data: _incomeCategory1PickerData,
+                          normalIndex: 0,
+                          title: "请选择一级分类",
+                          clickCallBack: (int index, var str) {
+                        setState(() {
+                          _incomeCategory1String = str;
+                          _incomeCategory2String = '二级分类';
+                          _loadIncomeCategory2Data(str);
+                        });
+                      });
+                    },
+                    child: Text(_incomeCategory1String == ''
+                        ? '一级分类'
+                        : _incomeCategory1String),
+                  ),
+                  Icon(Icons.chevron_right),
+                  HighLightWell(
+                    onTap: () {
+                      if(_incomeCategory1String != ''){
+                        MyPickerTool.showStringPicker(context,
+                            data: _incomeCategory2PickerData,
+                            normalIndex: 0,
+                            title: "请选择", clickCallBack: (int index, var str) {
+                              setState(() {
+                                _incomeCategory2String = str;
+                              });
+                            });
+                      }
+                    },
+                    child: Text(_incomeCategory2String == ''
+                        ? '二级分类'
+                        : _incomeCategory2String),
+                  ),
+                ],
               ),
             ),
           ),
@@ -768,9 +772,9 @@ class _NewBillPageState extends State<NewBillPage>
                     showTitleActions: true,
                     theme: DatePickerTheme(
                         doneStyle:
-                            TextStyle(fontSize: 16, color: Colours.app_main),
+                            TextStyle(fontSize: 16),
                         cancelStyle:
-                            TextStyle(fontSize: 16, color: Colours.gray)),
+                            TextStyle(fontSize: 16)),
                     locale: LocaleType.zh, onConfirm: (date) {
                   _time = date;
                   DateTime now = DateTime.now();
@@ -791,7 +795,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _dateString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -814,7 +818,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _accountString.isEmpty ? '账户' : _accountString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -837,7 +841,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _memberString.isEmpty ? '成员' : _memberString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -853,14 +857,14 @@ class _NewBillPageState extends State<NewBillPage>
                     data: _projectPickerData,
                     normalIndex: 0,
                     title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _projectString = str;
-                      });
-                    });
+                  setState(() {
+                    _projectString = str;
+                  });
+                });
               },
               trailing: Text(
                 _projectString.isEmpty ? '项目' : _projectString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -876,14 +880,14 @@ class _NewBillPageState extends State<NewBillPage>
                     data: _storePickerData,
                     normalIndex: 0,
                     title: "请选择", clickCallBack: (int index, var str) {
-                      setState(() {
-                        _storeString = str;
-                      });
-                    });
+                  setState(() {
+                    _storeString = str;
+                  });
+                });
               },
               trailing: Text(
                 _storeString.isEmpty ? '商家' : _storeString,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
@@ -910,7 +914,7 @@ class _NewBillPageState extends State<NewBillPage>
               },
               trailing: Text(
                 _remark.isEmpty ? '备注' : _remark,
-                style: TextStyle(fontSize: 16, color: Colours.app_main),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
